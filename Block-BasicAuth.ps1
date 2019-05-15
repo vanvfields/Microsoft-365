@@ -1,6 +1,18 @@
-﻿## This script will create two authentication policies which allow you to limit your attack surface:
+﻿##########################################################################################################################################################################################
+## Description:
+## This script can be used to block basic authentication in Exchange Online
+## Prerequisites:
+## The tenant will require any Exchange Online plan
+## Connect to Exchange Online via PowerShell using MFA:
+## https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-exchange-online-powershell/mfa-connect-to-exchange-online-powershell?view=exchange-ps
+## 
+## WARNING: Script provided as-is. Author is not responsible for its use and application. Use at your own risk.
+##########################################################################################################################################################################################
+
+
+## This script will create two authentication policies which allow you to limit your attack surface:
 ## "Block basic auth" = will be set as the default policy and disables basic authentication
-## "Allow basic auth" = another policy which can be used to enable IMAP, POP, SMTP, EWS, etc.
+## "Allow basic auth exceptions" = another policy which can be used to enable IMAP, POP, SMTP, EWS, etc.
 
 ## Create an authentication policy to block basic authentication
 
@@ -38,7 +50,4 @@ New-AuthenticationPolicy "Allow Basic Auth Exceptions"
 ## To assign the exception authentication policy on an account use:
 ## $ExceptionUser = username@domain.com
 ## Set-User -Identity $ExceptionUser -AuthenticationPolicy "Allow Basic Auth Exceptions"
-
-
-
 
