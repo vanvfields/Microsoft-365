@@ -14,6 +14,9 @@
 ## "Block basic auth" = will be set as the default policy and disables basic authentication
 ## "Allow basic auth exceptions" = another policy which can be used to enable IMAP, POP, SMTP, EWS, etc.
 
+## Enable modern authentication for Exchange Online:
+Set-OrganizationConfig -OAuth2ClientProfileEnabled $true
+
 ## Create an authentication policy to block basic authentication
 
 New-AuthenticationPolicy -Name "Block Basic Auth"
