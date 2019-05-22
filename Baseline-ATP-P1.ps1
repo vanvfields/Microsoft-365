@@ -48,7 +48,8 @@ $SafeLinksPolicyParam=@{
    'DoNotTrackUserClicks' = $false;
    'EnableForInternalSender' = $true;
    'ScanUrls' = $true;
-   'TrackClicks' = $true
+   'TrackClicks' = $true;
+   'IsEnabled' = $true
 }
 
 New-SafeLinksPolicy @SafeLinksPolicyParam
