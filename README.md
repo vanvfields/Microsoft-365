@@ -11,9 +11,10 @@ Office 365 Email Security scripts:
 	• Setup-DKIM.ps1: This script helps with configuring DKIM; use: .\Setup-DKIM.ps1 -DomainName "yourdomainhere.com"
 	• Disable-Forwarding.ps1: This script will disable auto-forwarding and also output csv of existing forwarders to C:\temp
 
-Setup Intune scripts:
-Note: the Intune scripts are (mostly) taken and modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
-None of the policies will be assigned when you import the JSON files; simply review, adjust and test settings before assigning them
+Scripts to setup Intune:
+
+	Note: the Intune scripts are (mostly) taken and modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
+	None of the policies will be assigned when you import the JSON files; simply review, adjust and test settings before assigning them
 
 MAM scripts:
 
