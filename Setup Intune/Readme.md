@@ -4,21 +4,26 @@ Note: the Intune scripts are (mostly) taken and modified from Microsoft: https:/
 
 None of the policies will be assigned when you import the JSON files; simply review, adjust and test settings before assigning them
 
+Intune deployment script:
+
+	• Setup-Intune.ps1 = Imports all the baseline policies from JSON (but does not assign them)
+
 MAM scripts:
 
 	• Export-MAMPolicy.ps1 = Prompts for authentication user, then exports to JSON all existing MAM policies
 	• Import-MAMPolicy.ps1 = Prompts for authentication user, and prompts for path to JSON file for import
-	  
+
+App Protection (MAM) policy JSON files:
+ 
+	• AppProtection-iOS: Basic iOS MAM policy (will not restrict copy/paste)
+	• AppProtection-Android: Basic Android MAM policy (will not restrict copy/paste)
+
 MDM scripts:
 
 	• Export-Compliance.ps1 = Prompts for authentication user, then exports to JSON all existing Compliance policies
 	• Import-Compliance.ps1 = Prompts for authentication user, and prompts for path to JSON file for import
 	• Export-DeviceConfig.ps1 = Prompts for authentication user, then exports to JSON all existing Device profiles
 	• Import-DeviceConfig.ps1 = Prompts for authentication user, and prompts for path to JSON file for import
-
-Intune deployment script:
-
-	• Setup-Intune.ps1 = Imports all the baseline policies from JSON (but does not assign them)
 
 Compliance policy JSON files:
 
@@ -37,7 +42,3 @@ Compliance policy JSON files:
 	• Endpoint-Win10ProBasic: Basic Windows Endpoint protection (configurable via 365 admin center)
 	• Endpoint-Win10ProAdvanced: Advanced Endpoint protection (recommended to review, test and deploy in rings)
   
- App Protection policy JSON files:
- 
-	• AppProtection-iOS: Basic iOS MAM policy (will not restrict copy/paste)
-	• AppProtection-Android: Basic Android MAM policy (will not restrict copy/paste)
