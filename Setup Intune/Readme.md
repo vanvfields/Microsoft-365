@@ -1,6 +1,7 @@
 Scripts to setup Intune:
 
 Note: the Intune scripts are (mostly) taken and modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
+
 None of the policies will be assigned when you import the JSON files; simply review, adjust and test settings before assigning them
 
 MAM scripts:
