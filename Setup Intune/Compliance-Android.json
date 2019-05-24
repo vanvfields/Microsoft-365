@@ -1,0 +1,34 @@
+{
+    "@odata.type":  "#microsoft.graph.androidCompliancePolicy",
+    "roleScopeTagIds":  [
+
+                        ],
+    "description":  "Block rooted devices, Require Google Play services and the Verify apps feature",
+    "displayName":  "Android Baseline Compliance Policy",
+    "passwordRequired":  false,
+    "passwordMinimumLength":  null,
+    "passwordRequiredType":  "deviceDefault",
+    "passwordMinutesOfInactivityBeforeLock":  null,
+    "passwordExpirationDays":  null,
+    "passwordPreviousPasswordBlockCount":  null,
+    "passwordSignInFailureCountBeforeFactoryReset":  null,
+    "securityPreventInstallAppsFromUnknownSources":  false,
+    "securityDisableUsbDebugging":  false,
+    "securityRequireVerifyApps":  true,
+    "deviceThreatProtectionEnabled":  false,
+    "deviceThreatProtectionRequiredSecurityLevel":  "unavailable",
+    "securityBlockJailbrokenDevices":  true,
+    "osMinimumVersion":  null,
+    "osMaximumVersion":  null,
+    "minAndroidSecurityPatchLevel":  null,
+    "storageRequireEncryption":  false,
+    "securityRequireSafetyNetAttestationBasicIntegrity":  false,
+    "securityRequireSafetyNetAttestationCertifiedDevice":  false,
+    "securityRequireGooglePlayServices":  true,
+    "securityRequireUpToDateSecurityProviders":  false,
+    "securityRequireCompanyPortalAppIntegrity":  false,
+    "conditionStatementId":  null,
+    "restrictedApps":  [
+
+                       ]
+}

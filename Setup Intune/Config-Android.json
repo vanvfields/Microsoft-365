@@ -1,0 +1,72 @@
+{
+    "@odata.type":  "#microsoft.graph.androidGeneralDeviceConfiguration",
+    "id":  "13268c47-7c19-426c-b9e4-d672605d3d86",
+    "lastModifiedDateTime":  "2019-05-23T05:09:53.020348Z",
+    "roleScopeTagIds":  [
+
+                        ],
+    "supportsScopeTags":  true,
+    "createdDateTime":  "2019-05-23T04:46:21.7956112Z",
+    "description":  "Enforce 4-digit passcode and device encryption",
+    "displayName":  "Android Baseline Config",
+    "version":  2,
+    "appsBlockClipboardSharing":  false,
+    "appsBlockCopyPaste":  false,
+    "appsBlockYouTube":  false,
+    "bluetoothBlocked":  false,
+    "cameraBlocked":  false,
+    "cellularBlockDataRoaming":  false,
+    "cellularBlockMessaging":  false,
+    "cellularBlockVoiceRoaming":  false,
+    "cellularBlockWiFiTethering":  false,
+    "compliantAppListType":  "none",
+    "diagnosticDataBlockSubmission":  false,
+    "locationServicesBlocked":  false,
+    "googleAccountBlockAutoSync":  false,
+    "googlePlayStoreBlocked":  false,
+    "kioskModeBlockSleepButton":  false,
+    "kioskModeBlockVolumeButtons":  false,
+    "dateAndTimeBlockChanges":  false,
+    "nfcBlocked":  false,
+    "passwordBlockFingerprintUnlock":  false,
+    "passwordBlockTrustAgents":  false,
+    "passwordExpirationDays":  null,
+    "passwordMinimumLength":  4,
+    "passwordMinutesOfInactivityBeforeScreenTimeout":  5,
+    "passwordPreviousPasswordBlockCount":  null,
+    "passwordSignInFailureCountBeforeFactoryReset":  null,
+    "passwordRequiredType":  "numeric",
+    "passwordRequired":  true,
+    "powerOffBlocked":  false,
+    "factoryResetBlocked":  false,
+    "screenCaptureBlocked":  false,
+    "deviceSharingAllowed":  false,
+    "storageBlockGoogleBackup":  false,
+    "storageBlockRemovableStorage":  false,
+    "storageRequireDeviceEncryption":  true,
+    "storageRequireRemovableStorageEncryption":  false,
+    "voiceAssistantBlocked":  false,
+    "voiceDialingBlocked":  false,
+    "webBrowserBlockPopups":  false,
+    "webBrowserBlockAutofill":  false,
+    "webBrowserBlockJavaScript":  false,
+    "webBrowserBlocked":  false,
+    "webBrowserCookieSettings":  "browserDefault",
+    "wiFiBlocked":  false,
+    "securityRequireVerifyApps":  false,
+    "compliantAppsList":  [
+
+                          ],
+    "kioskModeApps":  [
+
+                      ],
+    "appsInstallAllowList":  [
+
+                             ],
+    "appsLaunchBlockList":  [
+
+                            ],
+    "appsHideList":  [
+
+                     ]
+}

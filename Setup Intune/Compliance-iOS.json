@@ -1,0 +1,28 @@
+{
+    "@odata.type":  "#microsoft.graph.iosCompliancePolicy",
+    "roleScopeTagIds":  [
+
+                        ],
+    "description":  "Block jailbroken devices",
+    "displayName":  "iOS Baseline Compliance Policy",
+    "passcodeBlockSimple":  false,
+    "passcodeExpirationDays":  null,
+    "passcodeMinimumLength":  null,
+    "passcodeMinutesOfInactivityBeforeLock":  null,
+    "passcodeMinutesOfInactivityBeforeScreenTimeout":  null,
+    "passcodePreviousPasscodeBlockCount":  null,
+    "passcodeMinimumCharacterSetCount":  null,
+    "passcodeRequiredType":  "deviceDefault",
+    "passcodeRequired":  false,
+    "osMinimumVersion":  null,
+    "osMaximumVersion":  null,
+    "osMinimumBuildVersion":  null,
+    "osMaximumBuildVersion":  null,
+    "securityBlockJailbrokenDevices":  true,
+    "deviceThreatProtectionEnabled":  false,
+    "deviceThreatProtectionRequiredSecurityLevel":  "unavailable",
+    "managedEmailProfileRequired":  false,
+    "restrictedApps":  [
+
+                       ]
+}

@@ -1,0 +1,42 @@
+{
+    "@odata.type":  "#microsoft.graph.windows10CompliancePolicy",
+    "roleScopeTagIds":  [
+
+                        ],
+    "description":  "Require Firewall, Antivirus, Antispyware",
+    "displayName":  "Windows 10 Baseline Compliance policy",
+    "version":  4,
+    "passwordRequired":  false,
+    "passwordBlockSimple":  false,
+    "passwordRequiredToUnlockFromIdle":  false,
+    "passwordMinutesOfInactivityBeforeLock":  null,
+    "passwordExpirationDays":  null,
+    "passwordMinimumLength":  null,
+    "passwordMinimumCharacterSetCount":  null,
+    "passwordRequiredType":  "deviceDefault",
+    "passwordPreviousPasswordBlockCount":  null,
+    "requireHealthyDeviceReport":  false,
+    "osMinimumVersion":  null,
+    "osMaximumVersion":  null,
+    "mobileOsMinimumVersion":  null,
+    "mobileOsMaximumVersion":  null,
+    "earlyLaunchAntiMalwareDriverEnabled":  false,
+    "bitLockerEnabled":  false,
+    "secureBootEnabled":  false,
+    "codeIntegrityEnabled":  false,
+    "storageRequireEncryption":  false,
+    "activeFirewallRequired":  true,
+    "defenderEnabled":  false,
+    "defenderVersion":  null,
+    "signatureOutOfDate":  false,
+    "rtpEnabled":  false,
+    "antivirusRequired":  true,
+    "antiSpywareRequired":  true,
+    "deviceThreatProtectionEnabled":  false,
+    "deviceThreatProtectionRequiredSecurityLevel":  "unavailable",
+    "configurationManagerComplianceRequired":  false,
+    "tpmRequired":  false,
+    "validOperatingSystemBuildRanges":  [
+
+                                        ]
+}

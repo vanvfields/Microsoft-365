@@ -1,0 +1,28 @@
+{
+    "@odata.type":  "#microsoft.graph.macOSCompliancePolicy",
+    "roleScopeTagIds":  [
+
+                        ],
+    "description":  "Require encryption and system integrity",
+    "displayName":  "macOS Baseline Compliance policy",
+    "passwordRequired":  false,
+    "passwordBlockSimple":  false,
+    "passwordExpirationDays":  null,
+    "passwordMinimumLength":  null,
+    "passwordMinutesOfInactivityBeforeLock":  null,
+    "passwordPreviousPasswordBlockCount":  null,
+    "passwordMinimumCharacterSetCount":  null,
+    "passwordRequiredType":  "deviceDefault",
+    "osMinimumVersion":  null,
+    "osMaximumVersion":  null,
+    "osMinimumBuildVersion":  null,
+    "osMaximumBuildVersion":  null,
+    "systemIntegrityProtectionEnabled":  true,
+    "deviceThreatProtectionEnabled":  false,
+    "deviceThreatProtectionRequiredSecurityLevel":  "unavailable",
+    "storageRequireEncryption":  true,
+    "gatekeeperAllowedAppSource":  "notConfigured",
+    "firewallEnabled":  false,
+    "firewallBlockAllIncoming":  false,
+    "firewallEnableStealthMode":  false
+}
