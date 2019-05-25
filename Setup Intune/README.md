@@ -1,6 +1,6 @@
 Scripts to setup Intune:
 
-Note: the Intune scripts are (mostly) taken and modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
+Note: (mostly) taken and modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
 
 None of the policies will be assigned when you import the JSON files; simply review, adjust and test settings before assigning them
 
@@ -41,3 +41,4 @@ Compliance policy JSON files:
 	• Endpoint-Win10Pro: Pro version Endpoint protection (Application Guard, UAC, firewall and more)
 	• Endpoint-Win10Enterprise: Enterprise Endpoint protection (adds Credential Guard, Exploit Guard and more)
   
+The original article which corresponds with these scripts is located here: https://www.itpromentor.com/setup-intune
