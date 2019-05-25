@@ -37,8 +37,7 @@ Compliance policy JSON files:
 	• Config-iOS: Basic device restriction profile (including 4-digit PIN)
 	• Config-Android: Basic device restriction profile (including 4-digit PIN)
 	• Config-macOS: Basic device restriction profile
-	• Config-Win10ProBasic: Basic Windows Defender (configurable via 365 admin center)
-	• Config-Win10ProAdvanced: Advanced Windows Defender (recommended to review, test and deploy in rings)
-	• Endpoint-Win10ProBasic: Basic Windows Endpoint protection (configurable via 365 admin center)
-	• Endpoint-Win10ProAdvanced: Advanced Endpoint protection (recommended to review, test and deploy in rings)
+	• Config-Win10Defender: Advanced Windows Defender configuration
+	• Endpoint-Win10Pro: Pro version Endpoint protection (Application Guard, UAC, firewall and more)
+	• Endpoint-Win10Enterprise: Enterprise Endpoint protection (adds Credential Guard, Exploit Guard and more)
   
