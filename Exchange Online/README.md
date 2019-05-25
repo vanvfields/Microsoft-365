@@ -8,3 +8,5 @@ The Office 365 Email Security Checklist scripts:
 	• Disable-Forwarding.ps1: This script will disable auto-forwarding and also output csv of existing forwarders to C:\temp
 
 Be sure to read the comments and variables at the beginning of each script. You are responsible for your own implementation, use at your own risk.
+
+These follow the guide published at: https://www.itpromentor.com/email-security-checklist/
