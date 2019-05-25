@@ -1,5 +1,5 @@
 ﻿##
-## This script leverages other Microsoft Graph scripts in order to import the JSON files which deploy the baseline policies
+## This script leverages Microsoft Graph scripts in order to import the JSON files which deploy the baseline policies
 ## Before running the script, ensure all scripts and JSON files are present in the same working directory
 ## 
 ## Enter your admin username (e.g. intuneadmin@itpromentor.com); if the variable is not specified the script will prompt
@@ -34,10 +34,9 @@ if($User -eq $null -or $User -eq ""){
 
 ## Import the Windows 10 MDM policies
 .\Import-Compliance.ps1 -ImportPath .\Compliance-Win10.json -User $User
-.\Import-DeviceConfig.ps1 -ImportPath .\Config-Win10ProBasic.json -User $User
-.\Import-DeviceConfig.ps1 -ImportPath .\Config-Win10ProAdvanced.json -User $User
-.\Import-DeviceConfig.ps1 -ImportPath .\Endpoint-Win10ProBasic.json -User $User
-.\Import-DeviceConfig.ps1 -ImportPath .\Endpoint-Win10ProAdvanced.json -User $User
+.\Import-DeviceConfig.ps1 -ImportPath .\Config-Win10Defender.json -User $User
+.\Import-DeviceConfig.ps1 -ImportPath .\Endpoint-Win10Pro.json -User $User
+.\Import-DeviceConfig.ps1 -ImportPath .\Endpoint-Win10Enterprise.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Update-Win10.json -User $User
 
 ## Import the MAM policies for iOS and Android

@@ -1,15 +1,12 @@
 {
     "@odata.type":  "#microsoft.graph.windowsUpdateForBusinessConfiguration",
-    "id":  "54121506-071b-440f-a636-f0fed5a9c749",
-    "lastModifiedDateTime":  "2019-05-23T04:46:26.0000345Z",
     "roleScopeTagIds":  [
 
                         ],
     "supportsScopeTags":  true,
     "createdDateTime":  "2019-05-23T04:46:26.0000345Z",
     "description":  "Default update settings configurable via the Microsoft 365 admin center",
-    "displayName":  "Update policy for Windows 10 devices",
-    "version":  1,
+    "displayName":  "Default Update policy for Windows 10 devices",
     "deliveryOptimizationMode":  "httpWithPeeringNat",
     "prereleaseFeatures":  "userDefined",
     "automaticUpdateMode":  "autoInstallAtMaintenanceTime",

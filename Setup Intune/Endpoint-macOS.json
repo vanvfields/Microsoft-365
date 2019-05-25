@@ -1,15 +1,11 @@
 {
     "@odata.type":  "#microsoft.graph.macOSEndpointProtectionConfiguration",
-    "id":  "8489bcfa-9043-4b64-a837-6d99d4f68a2f",
-    "lastModifiedDateTime":  "2019-05-23T05:21:14.0988847Z",
     "roleScopeTagIds":  [
 
                         ],
     "supportsScopeTags":  true,
-    "createdDateTime":  "2019-05-23T04:46:22.9974473Z",
     "description":  "Enable Firewall with Stealth mode",
     "displayName":  "macOS Baseline Endpoint Protection",
-    "version":  2,
     "gatekeeperAllowedAppSource":  "notConfigured",
     "gatekeeperBlockOverride":  false,
     "firewallEnabled":  true,

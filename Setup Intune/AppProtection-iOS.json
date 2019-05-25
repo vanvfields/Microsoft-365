@@ -2,13 +2,9 @@
     "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/iosManagedAppProtections/$entity",
     "displayName":  "iOS Baseline MAM Policy",
     "description":  "iOS Baseline MAM Policy",
-    "createdDateTime":  "2019-05-23T04:46:26.3148403Z",
-    "lastModifiedDateTime":  "2019-05-23T05:33:04Z",
     "roleScopeTagIds":  [
 
                         ],
-    "id":  "T_e5c9d34b-a660-4df6-9f1e-8fb86cf4bcd0",
-    "version":  "\"58cbfc57-6d71-47d4-9de3-7b5380566639\"",
     "periodOfflineBeforeAccessCheck":  "PT12H",
     "periodOnlineBeforeAccessCheck":  "PT2H",
     "allowedInboundDataTransferSources":  "allApps",

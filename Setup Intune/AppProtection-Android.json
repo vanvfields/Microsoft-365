@@ -2,13 +2,9 @@
     "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/androidManagedAppProtections/$entity",
     "displayName":  "Android Baseline MAM Policy",
     "description":  "Android Baseline MAM Policy",
-    "createdDateTime":  "2019-05-23T04:46:26.8148378Z",
-    "lastModifiedDateTime":  "2019-05-23T05:32:40Z",
     "roleScopeTagIds":  [
 
                         ],
-    "id":  "T_0f394e20-5c8b-4c28-9a6e-fae21c7bef2d",
-    "version":  "\"32348cbf-25d3-4d6e-a9ff-ccbc62f543bc\"",
     "periodOfflineBeforeAccessCheck":  "PT12H",
     "periodOnlineBeforeAccessCheck":  "PT2H",
     "allowedInboundDataTransferSources":  "allApps",

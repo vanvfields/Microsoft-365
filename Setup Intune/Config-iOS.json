@@ -1,15 +1,11 @@
 {
     "@odata.type":  "#microsoft.graph.iosGeneralDeviceConfiguration",
-    "id":  "8f14ccd7-5ac2-48b5-abe7-a9c2f97f1191",
-    "lastModifiedDateTime":  "2019-05-23T05:10:50.0805078Z",
     "roleScopeTagIds":  [
 
                         ],
     "supportsScopeTags":  true,
-    "createdDateTime":  "2019-05-23T04:46:20.9375259Z",
     "description":  "Enforce 4-digit passcode and device encryption",
     "displayName":  "iOS Baseline Config",
-    "version":  2,
     "accountBlockModification":  false,
     "activationLockAllowWhenSupervised":  false,
     "airDropBlocked":  false,

@@ -1,15 +1,12 @@
 {
     "@odata.type":  "#microsoft.graph.macOSGeneralDeviceConfiguration",
     "id":  "070e0033-ee00-400d-b743-a50b8eaa2ee9",
-    "lastModifiedDateTime":  "2019-05-23T05:22:24.4524154Z",
     "roleScopeTagIds":  [
 
                         ],
     "supportsScopeTags":  true,
-    "createdDateTime":  "2019-05-23T04:46:22.6441869Z",
     "description":  "Enforce device password",
     "displayName":  "macOS Baseline Config",
-    "version":  3,
     "compliantAppListType":  "none",
     "emailInDomainSuffixes":  [
 

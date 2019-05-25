@@ -5,7 +5,6 @@
                         ],
     "description":  "Require Firewall, Antivirus, Antispyware",
     "displayName":  "Windows 10 Baseline Compliance policy",
-    "version":  4,
     "passwordRequired":  false,
     "passwordBlockSimple":  false,
     "passwordRequiredToUnlockFromIdle":  false,
