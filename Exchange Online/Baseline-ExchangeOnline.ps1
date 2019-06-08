@@ -122,7 +122,7 @@ $MalwarePolicyParam = @{
     'EnableInternalSenderAdminNotifications' = $true;
     'InternalSenderAdminAddress' =  $AlertAddress;
     'Enableinternalsendernotifications' =  $true;
-    'Zap' = $true
+    'ZapEnabled' = $true
 }
 New-MalwareFilterPolicy @MalwarePolicyParam
     
