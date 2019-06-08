@@ -1,6 +1,6 @@
-Scripts to setup Intune:
+<H1>Scripts to setup Intune:</H1>
 
-Note: (mostly) taken and modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
+<b><u>Note</u></b>: (mostly) modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
 
 Download scripts and JSONs into the same working directory before running Setup-Intune.ps1.
 
