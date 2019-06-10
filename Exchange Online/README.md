@@ -1,6 +1,6 @@
 <H1>The Office 365 Email Security Checklist scripts:</H1>
 
-<H2>You can either run the entire recommended baseline, or run the parts individually:</H2>
+<H2>You can either run the entire recommended baseline (Baseline-ExchangeOnline), or run the scripts individually:</H2>
 
 <p>• Baseline-ATP-P1.ps1: Configures Office 365 Advanced Threat Protection (plan 1)
 <p>• Baseline-ExchangeOnline.ps1: Configures Exchange Online tenant with all of the baseline settings and policies, except ATP
