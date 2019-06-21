@@ -1,5 +1,5 @@
 # Microsoft-365
-Scripts to help configure Microsoft 365 
+Scripts and other resources to help configure Microsoft 365 
 
 The Office 365 Email Security Checklist scripts are in the Exchange Online folder
 
