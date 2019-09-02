@@ -1,12 +1,18 @@
 {
     "@odata.type":  "#microsoft.graph.macOSGeneralDeviceConfiguration",
-    "id":  "070e0033-ee00-400d-b743-a50b8eaa2ee9",
+    "id":  "dea04720-0848-463d-a143-384a196671ad",
+    "lastModifiedDateTime":  "2019-05-26T22:06:22.7037805Z",
     "roleScopeTagIds":  [
-
+                            "0"
                         ],
     "supportsScopeTags":  true,
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "createdDateTime":  "2019-05-26T22:06:22.7037805Z",
     "description":  "Enforce device password",
     "displayName":  "macOS Baseline Config",
+    "version":  1,
     "compliantAppListType":  "none",
     "emailInDomainSuffixes":  [
 
@@ -55,6 +61,7 @@
     "classroomForceAutomaticallyJoinClasses":  false,
     "classroomForceRequestPermissionToLeaveClasses":  false,
     "classroomForceUnpromptedAppAndDeviceLock":  false,
+    "iCloudBlockActivityContinuation":  false,
     "compliantAppsList":  [
 
                           ]

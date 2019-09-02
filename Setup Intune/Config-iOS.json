@@ -1,11 +1,18 @@
 {
     "@odata.type":  "#microsoft.graph.iosGeneralDeviceConfiguration",
+    "id":  "84ac15cd-9311-490e-ad8c-a574603e21d9",
+    "lastModifiedDateTime":  "2019-05-26T22:06:19.4457765Z",
     "roleScopeTagIds":  [
-
+                            "0"
                         ],
     "supportsScopeTags":  true,
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "createdDateTime":  "2019-05-26T22:06:19.4457765Z",
     "description":  "Enforce 4-digit passcode and device encryption",
     "displayName":  "iOS Baseline Config",
+    "version":  1,
     "accountBlockModification":  false,
     "activationLockAllowWhenSupervised":  false,
     "airDropBlocked":  false,
@@ -77,11 +84,16 @@
     "kioskModeAllowAssistiveSpeak":  false,
     "kioskModeAllowAssistiveTouchSettings":  false,
     "kioskModeAllowAutoLock":  false,
+    "kioskModeBlockAutoLock":  false,
     "kioskModeAllowColorInversionSettings":  false,
     "kioskModeAllowRingerSwitch":  false,
+    "kioskModeBlockRingerSwitch":  false,
     "kioskModeAllowScreenRotation":  false,
+    "kioskModeBlockScreenRotation":  false,
     "kioskModeAllowSleepButton":  false,
+    "kioskModeBlockSleepButton":  false,
     "kioskModeAllowTouchscreen":  false,
+    "kioskModeBlockTouchscreen":  false,
     "kioskModeAllowVoiceOverSettings":  false,
     "kioskModeAllowVolumeButtons":  false,
     "kioskModeBlockVolumeButtons":  false,
@@ -170,6 +182,11 @@
     "contactsAllowUnmanagedToManagedRead":  false,
     "cellularBlockPersonalHotspotModification":  false,
     "siriDisableServerLogging":  false,
+    "continuousPathKeyboardBlocked":  false,
+    "findMyDeviceInFindMyAppBlocked":  false,
+    "findMyFriendsInFindMyAppBlocked":  false,
+    "wiFiBlockPowerModification":  false,
+    "iTunesBlocked":  false,
     "appsSingleAppModeList":  [
 
                               ],

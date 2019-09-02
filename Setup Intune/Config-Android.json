@@ -1,11 +1,18 @@
 {
     "@odata.type":  "#microsoft.graph.androidGeneralDeviceConfiguration",
+    "id":  "b2fe9bd2-20b8-42fb-bcff-d7bca753dae0",
+    "lastModifiedDateTime":  "2019-05-26T22:06:21.4926148Z",
     "roleScopeTagIds":  [
-
+                            "0"
                         ],
     "supportsScopeTags":  true,
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "createdDateTime":  "2019-05-26T22:06:21.4926148Z",
     "description":  "Enforce 4-digit passcode and device encryption",
     "displayName":  "Android Baseline Config",
+    "version":  1,
     "appsBlockClipboardSharing":  false,
     "appsBlockCopyPaste":  false,
     "appsBlockYouTube":  false,

@@ -19,6 +19,9 @@ if($User -eq $null -or $User -eq ""){
 }
 
 
+## Import enrollment restrictions - currently this just blocks Windows mobile platform
+.\Import-EnrollmentRestrictions.ps1 -User $User
+
 ## Import the iOS MDM policies
 .\Import-Compliance.ps1 -ImportPath .\Compliance-iOS.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Config-iOS.json -User $User
@@ -41,11 +44,22 @@ if($User -eq $null -or $User -eq ""){
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-ExploitBasic.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-ExploitEnterprise.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-Firewall.json -User $User
-.\Import-DeviceConfig.ps1 -ImportPath .\Win10-Passcode.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-SecurityCenter.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-SmartScreen.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-UAC.json -User $User
 
+## Import the Windows 10 Update policies
+.\Import-DeviceConfig.ps1 -ImportPath .\Update-PilotRing.json -User $User
+.\Import-DeviceConfig.ps1 -ImportPath .\Update-BroadRing.json -User $User
+
+## Import the Office 365 application deployment policies
+.\Import-Applications.ps1 -ImportPath .\Apps64-SAC.json -User $User
+.\Import-Applications.ps1 -ImportPath .\Apps64-Monthly.json -User $User
+.\Import-Applications.ps1 -ImportPath .\Apps32-SAC.json -User $User
+.\Import-Applications.ps1 -ImportPath .\Apps32-Monthly.json -User $User
+
 ## Import the MAM policies for iOS and Android
-.\Import-MAMPolicy.ps1 -ImportPath .\AppProtection-iOS.json -User $User
-.\Import-MAMPolicy.ps1 -ImportPath .\AppProtection-Android.json -User $User
+.\Import-MAMPolicy.ps1 -ImportPath .\APP-AndroidBaseline.json -User $User
+.\Import-MAMPolicy.ps1 -ImportPath .\APP-AndroidSensitive.json -User $User
+.\Import-MAMPolicy.ps1 -ImportPath .\APP-iosBaseline.json -User $User
+.\Import-MAMPolicy.ps1 -ImportPath .\APP-iosSensitive.json -User $User
