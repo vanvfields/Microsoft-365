@@ -429,29 +429,35 @@ $OrgConfig = Get-OrganizationConfig
  }
 
 ## Create an authentication policy to block basic authentication
-$PolicyName = "Block Basic Auth"
-$CheckPolicy = Get-AuthenticationPolicy | Where-Object {$_.Name -contains $PolicyName}
-if (!$CheckPolicy) {
-    New-AuthenticationPolicy -Name $PolicyName
-    Write-Host 
-    Write-Host -ForegroundColor $MessageColor "Block Basic Auth policy has been created"
+if ($OrgConfig.DefaultAuthenticationPolicy -eq $null -or $OrgConfig.DefaultAuthenticationPolicy -eq "") {
+        $AuthAnswer = Read-Host "There is no default authentication policy in place. Would you like to block basic authentication by default? WARNING: Legacy clients will no longer be able to connect. Type Y or N and press Enter to continue"
+        if ($AuthAnswer -eq "y" -or $AuthAnswer -eq "yes") {
+                $PolicyName = "Block Basic Auth"
+                $CheckPolicy = Get-AuthenticationPolicy | Where-Object {$_.Name -contains $PolicyName}
+                if (!$CheckPolicy) {
+                    New-AuthenticationPolicy -Name $PolicyName
+                    Write-Host
+                    Write-Host -ForegroundColor $MessageColor "Block Basic Auth policy has been created"
+                    } else {
+                    Write-Host
+                    Write-Host  -ForegroundColor $MessageColor "Block Basic Auth policy already exists"
+                    }
+                Set-OrganizationConfig -DefaultAuthenticationPolicy $PolicyName
+                Write-Host
+                Write-Host -ForegroundColor $MessageColor "Block Basic Auth has been set as the default authentication policy for the organization; to create exceptions to this policy, please see the comments included at the end of this script."
+                Write-Host
+        } else {
+                Write-Host
+                Write-Host -ForegroundColor $AssessmentColor "Block Basic Auth will not be set as the default authentication policy."
+                Write-Host
+                }
     } else {
+    Write-Host
+    Write-Host -ForegroundColor $AssessmentColor "There is already a default authentication policy in place. No changes will be made. To change the authentication policy for individual users, please see the comments at the end of this script. Your default authentication policy is:"
+    Write-Host
+    $OrgConfig.DefaultAuthenticationPolicy
     Write-Host 
-    Write-Host -ForegroundColor $MessageColor "Block Basic Auth policy already exists"
-}
-
-## Prompt whether or not to make Block Basic Auth the default policy for the organization
-Write-Host 
-$AuthAnswer = Read-Host "Do you want to make 'Block Basic Auth' the default authentication policy for the organization? WARNING: This action will prevent older clients from connecting to Exchange Online. Type Y or N and press Enter to continue"
- if ($AuthAnswer -eq 'y'-or $AuthAnswer -eq 'yes') {
-    Set-OrganizationConfig -DefaultAuthenticationPolicy "Block Basic Auth"
-    Write-Host 
-    Write-Host -ForegroundColor $MessageColor "Block Basic Auth has been set as the default authentication policy for the organization; to create exceptions to this policy, please see the comments included at the end of this script"
-    } else {
-    Write-Host 
-    Write-Host -ForegroundColor $AssessmentColor "Block Basic Auth will not be set as the default policy. Please assign this policy to users individually using: Set-User -Identity <username> -AuthenticationPolicy 'Block Basic Auth' "
-    Write-Host 
-}
+    }
 
 ## OPTIONAL: Assign the 'Block Basic Auth' policy explicitly to all users
 ## Get-User -ResultSize unlimited | Set-User -AuthenticationPolicy "Block Basic Auth"
