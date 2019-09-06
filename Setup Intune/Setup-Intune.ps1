@@ -44,7 +44,6 @@ if($User -eq $null -or $User -eq ""){
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-ExploitBasic.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-ExploitEnterprise.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-Firewall.json -User $User
-.\Import-DeviceConfig.ps1 -ImportPath .\Win10-SecurityCenter.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-SmartScreen.json -User $User
 .\Import-DeviceConfig.ps1 -ImportPath .\Win10-UAC.json -User $User
 
