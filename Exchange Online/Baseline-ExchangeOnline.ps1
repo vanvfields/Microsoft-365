@@ -12,6 +12,7 @@
 ## DEFINE THE VARIABLES FIRST:
 $MessageColor = "Cyan"
 $AssessmentColor = "Yellow"
+## 
 ################################################################################################################################################################################### 
 ## NOTE: If the script errors out, you may need to set your execution policy.
 ## You may also need to run: Enable-OrganizationCustomization
@@ -40,12 +41,12 @@ if ($AuditLogConfig.UnifiedAuditLogIngestionEnabled) {
 
 ## Prompt for the audit log age limit on all mailboxes:
 Write-Host 
+$CurrentAge = (get-mailbox -resultsize unlimited).auditlogagelimit
+Write-Host -ForegroundColor $AssessmentColor "Current audit log age limit (age and number of mailboxes):"
+$CurrentAge | group | select name, count | ft
 $Answer = Read-Host "Do you want to set the audit log age limit and enable all auditing actions on all mailboxes? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         Write-Host 
-        $currentage = (get-mailbox -resultsize unlimited).auditlogagelimit
-        Write-Host "Current Auditlog age limit (number of mailboxes and Age)"
-        $currentage | group | select name, count | ft
         $AuditLogAgeLimit = Read-Host "Enter the new audit log age limit in days; recommended value 365 or greater (or press Enter to continue without making changes)"
         if ($AuditLogAgeLimit -eq $null -or $AuditLogAgeLimit -eq "" -or $AuditLogAgeLimit -eq 'n' -or $AuditLogAgeLimit -eq 'no'){
             Write-Host
@@ -68,10 +69,14 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         }
 
 
+
 ###################################################################################################################################################################################
 ## This section of the script will set all mailboxes to keep deleted items for the maximum of 30 days:
 Write-Host 
-$Answer = Read-Host "By default Exchange Online retains deleted items for 14 days; would you like to enforce the maximum allowed value of 30 days for all mailboxes? Type Y or N and press Enter to continue"
+$CurrentRetention = (Get-Mailbox -ResultSize Unlimited).RetainDeletedItemsFor
+Write-Host -ForegroundColor $AssessmentColor "Current retention limit (in days and number of mailboxes):"
+$CurrentRetention | group | select name, count | ft
+$Answer = Read-Host "Would you like to enforce the maximum allowed value of 30 days retention of deleted items for all mailboxes? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     Get-Mailbox -ResultSize Unlimited | Set-Mailbox -RetainDeletedItemsFor 30
     Write-Host 
@@ -124,7 +129,7 @@ if (!$IRMConfig.SimplifiedClientAccessEnabled) {
 }
 
 ###################################################################################################################################################################################
-## This section of the script will present the option to disable saving to outside storage locations like GoogleDrive or consumer OneDrive
+## This section of the script will present the option to disable connecting to outside storage locations like GoogleDrive or consumer OneDrive
 $OwaPolicy = Get-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default
 if ($OwaPolicy.AdditionalStorageProvidersAvailable) {
     Write-Host 
@@ -157,18 +162,14 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
     if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         Set-RemoteDomain Default -AutoForwardEnabled $false
         Write-Host 
-        Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is now disabled"
+        Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is now disabled"        
         } else {
         Write-Host
-        Write-Host -ForegroundColor $AssessmentColor "Auto-forwarding to remote domains will not be disabled"}
-} else {
+        Write-Host -ForegroundColor $AssessmentColor "Auto-forwarding to remote domains will not be disabled"
+        }
     Write-Host 
-    Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is already disabled"
- }
-
- Write-Host 
- $Answer = Read-Host "Do you want to export to CSV a list of mailboxes that might be impacted by disabling auto-forward to remote domains? Type Y or N and press Enter to continue"
- if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+    $Answer2 = Read-Host "Do you want to export to CSV a list of mailboxes that might be impacted by disabling auto-forward to remote domains? Type Y or N and press Enter to continue"
+    if ($Answer2 -eq 'y' -or $Answer2 -eq 'yes') {
         ## Collect existing mailbox forwarding into CSV files at C:\temp\DomainName-MailboxForwarding.csv and DomainName-InboxRules.csv
         Write-Host 
         Write-Host -ForegroundColor $AssessmentColor "Exporting known mailbox forwarders and inbox rules that auto-forward"
@@ -181,7 +182,11 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
         Write-Host 
         Write-Host  -ForegroundColor $MessageColor "Run the script again if you wish to export auto-forwarding mailboxes and inbox rules"
         }
-
+} else {
+    Write-Host 
+    Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is already disabled"
+ }
+ 
 
 ###################################################################################################################################################################################
 ## This section will reset the default spam filter policy with the recommended baseline settings
@@ -285,8 +290,6 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         $AlertAddress = Read-Host "Enter the email address where you would like to recieve alerts about outbound spam"
         $OutboundPolicyParam = @{
                 "identity" = 'Default';
-                'bccsuspiciousoutboundadditionalrecipients' =  $AlertAddress;
-                'bccsuspiciousoutboundmail' = $true;
                 'notifyoutboundspam' = $true;
                 'NotifyOutboundSpamRecipients' = $AlertAddress
             }
@@ -296,8 +299,6 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         } else {
             $OutboundPolicyParam = @{
                 "identity" = 'Default';
-                'bccsuspiciousoutboundadditionalrecipients' =  $AlertAddress;
-                'bccsuspiciousoutboundmail' = $true;
                 'notifyoutboundspam' = $true;
                 'NotifyOutboundSpamRecipients' = $AlertAddress
             }
@@ -358,6 +359,10 @@ if($Answer -eq 'y' -or $Answer -eq 'yes') {
 
     ## Prompt whether or not to enable the Archive mailbox for all users
     Write-Host 
+    $CurrentArchive = (get-mailbox -resultsize unlimited).ArchiveStatus
+    Write-Host -ForegroundColor $AssessmentColor "Current Archive status by mailbox count:"
+    $CurrentArchive | group | select name, count | ft
+    Write-Host 
     $ArchiveAnswer = Read-Host "Do you want to enable the Archive mailbox for all user mailboxes? NOTE: Works against cloud-only accounts; does not work against AD synchronized accounts. Type Y or N and press Enter to continue"
     if ($ArchiveAnswer -eq 'y'-or $ArchiveAnswer -eq 'yes') {
         Get-Mailbox -ResultSize Unlimited -Filter {ArchiveStatus -Eq "None" -AND RecipientTypeDetails -eq "UserMailbox"} | Enable-Mailbox -Archive
@@ -369,6 +374,10 @@ if($Answer -eq 'y' -or $Answer -eq 'yes') {
     }
 
      ## Prompt whether or not to enable Litigation Hold for all mailboxes
+    Write-Host 
+    $CurrentLegalHold = (get-mailbox -resultsize unlimited).LitigationHoldEnabled
+    Write-Host -ForegroundColor $AssessmentColor "Current Legal Hold status by mailbox count:"
+    $CurrentLegalHold | group | select name, count | ft
     Write-Host 
     $LegalHoldAnswer = Read-Host "Do you want to enable Litigation Hold for all mailboxes? Type Y or N and press Enter to continue"
     if ($LegalHoldAnswer -eq 'y' -or $LegalHoldAnswer -eq 'yes') {
@@ -391,6 +400,14 @@ Write-Host -ForegroundColor $AssessmentColor "Archiving and Litigation Hold will
 
 ## Prompt whether or not to disable POP and IMAP on all mailboxes
 Write-Host 
+$CurrentIMAPbyMailbox = (get-casmailbox -resultsize unlimited).ImapEnabled
+Write-Host -ForegroundColor $AssessmentColor "Current IMAP status by mailbox count:"
+$CurrentIMAPbyMailbox | group | select name, count | ft
+Write-Host 
+$CurrentPOPbyMailbox = (get-casmailbox -resultsize unlimited).PopEnabled
+Write-Host -ForegroundColor $AssessmentColor "Current POP status by mailbox count:"
+$CurrentPOPbyMailbox | group | select name, count | ft
+Write-Host
 $Answer = Read-Host "Do you want to disable POP and IMAP on all mailboxes? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y'-or $Answer -eq 'yes') {
     Get-CASMailbox -ResultSize Unlimited -Filter {ImapEnabled -eq $True} | Set-CASMailbox -ImapEnabled $False 
@@ -428,6 +445,7 @@ $OrgConfig = Get-OrganizationConfig
          }
  }
 
+
 ## Create an authentication policy to block basic authentication
 if ($OrgConfig.DefaultAuthenticationPolicy -eq $null -or $OrgConfig.DefaultAuthenticationPolicy -eq "") {
         $AuthAnswer = Read-Host "There is no default authentication policy in place. Would you like to block basic authentication by default? WARNING: Legacy clients will no longer be able to connect. Type Y or N and press Enter to continue"
@@ -459,14 +477,19 @@ if ($OrgConfig.DefaultAuthenticationPolicy -eq $null -or $OrgConfig.DefaultAuthe
     Write-Host 
     }
 
-## OPTIONAL: Assign the 'Block Basic Auth' policy explicitly to all users
+
+
+
+## OPTIONAL: 
+## Create and assign the 'Block Basic Auth' policy explicitly to all users:
+## New-AuthenticationPolicy "Block Basic Auth"
 ## Get-User -ResultSize unlimited | Set-User -AuthenticationPolicy "Block Basic Auth"
 
 ## OPTIONAL: 
 ## Create additional authentication policies for allowing exceptions for basic authentication (e.g. for service accounts)
 
 ## EXAMPLE:
-## New-AuthenticationPolicy "Allow Basic Auth Exception"
+## New-AuthenticationPolicy "Allow Basic Auth Exceptions"
 
 ## Then use Set-AuthenticationPolicy to allow basic auth for one or more of these protocols:
 ## AllowBasicAuthActiveSync           
