@@ -28,7 +28,7 @@ if($DomainName -eq $null -or $DomainName -eq ""){
 Write-Host -ForegroundColor $MessageColor "Enter the (Points to) CNAME values in DNS for selector1._domainkey and selector2._domainkey:"
 Write-Host 
 
-Get-DkimSigningConfig $DomainName | fl *cname 
+Get-DkimSigningConfig $DomainName | fl Domain,*cname 
 
 ## Pause the script to allow time for entering DKIM records
 Write-Host  
