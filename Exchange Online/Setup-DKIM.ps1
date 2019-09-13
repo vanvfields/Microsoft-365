@@ -19,7 +19,7 @@ $DomainName
 
 if($DomainName -eq $null -or $DomainName -eq ""){
     Write-Host 
-    $DomainName = Read-Host -Prompt "Please specify the domain name in quotation marks"
+    $DomainName = Read-Host -Prompt "Please specify the domain name"
     Write-Host
 }
 
