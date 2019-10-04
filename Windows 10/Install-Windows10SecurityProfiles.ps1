@@ -1,21 +1,20 @@
 <##################################################################################################
 #
 .SYNOPSIS
-This is a script imports the Security configuration profiles for Windows 10 Business
-By design the sript enable hardening and logging, and is designed to be a step towards the High security workstation profile. 
+This is a script imports the Enhanced security baseline and configurations as a starting point for 
+By design the sripts enable hardening and logging, and is designed to be a step towards the secured workstation. 
 
 
 .NOTES
     FileName:    Install-Windows10SecurityProfiles.ps1
-    Author:      Alex Fields, ITProMentor.com
-	Based on:    Per Larsen / Frank Simorjay @ Microsoft
+    Author:      Alex Fields 
+	Based on:    Per Larsen / Frank Simorjay
     Created:     10-03-2019
 	Revised:     10-03-2019
     Version:     1.0 hardended
     
 #>
 ###################################################################################################
-
 <#
 
 .COPYRIGHT
@@ -272,6 +271,7 @@ $JSON
 
 }
 
+
 ####################################################
 
 Function Add-DeviceCompliancePolicybaseline(){
@@ -333,73 +333,126 @@ Function Add-DeviceCompliancePolicybaseline(){
         }
     
     }
-    
+
 ####################################################
+
+
 
 Function Add-MDMApplication(){
 
+
+
 <#
+
 .SYNOPSIS
+
 This function is used to add an MDM application using the Graph API REST interface
+
 .DESCRIPTION
+
 The function connects to the Graph API Interface and adds an MDM application from the itunes store
+
 .EXAMPLE
+
 Add-MDMApplication -JSON $JSON
+
 Adds an application into Intune
+
 .NOTES
+
 NAME: Add-MDMApplication
+
 #>
+
+
 
 [cmdletbinding()]
 
+
+
 param
+
 (
+
     $JSON
+
 )
 
+
+
 $graphApiVersion = "Beta"
+
 $App_resource = "deviceAppManagement/mobileApps"
+
+
 
     try {
 
+
+
         if(!$JSON){
 
+
+
         write-host "No JSON was passed to the function, provide a JSON variable" -f Red
+
         break
+
+
 
         }
 
+
+
         Test-JSON -JSON $JSON
 
+
+
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($App_resource)"
+
         Invoke-RestMethod -Uri $uri -Method Post -ContentType "application/json" -Body $JSON -Headers $authToken
 
+
+
     }
+
+
 
     catch {
 
+
+
     $ex = $_.Exception
+
     $errorResponse = $ex.Response.GetResponseStream()
+
     $reader = New-Object System.IO.StreamReader($errorResponse)
+
     $reader.BaseStream.Position = 0
+
     $reader.DiscardBufferedData()
+
     $responseBody = $reader.ReadToEnd();
+
     Write-Host "Response content:`n$responseBody" -f Red
+
     Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
+
     write-host
+
     break
+
+
 
     }
 
+
+
 }
 
-####################################################
 
-
+    
     ####################################################
-
-    ####################################################
-
 ####################################################
 
 #region Authentication
@@ -458,23 +511,16 @@ $global:authToken = Get-AuthToken -User $User
 
 ####################################################
 
+
 $EnhancedEP = @"
+
 
 {
     "@odata.type":  "#microsoft.graph.windows10EndpointProtectionConfiguration",
-    "id":  "173cec6e-a10f-4baa-af68-a3914922c529",
-    "lastModifiedDateTime":  "2019-10-03T16:59:28.7694088Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
     "createdDateTime":  "2019-09-26T20:13:36.0636289Z",
     "description":  "Basic security profile for Windows 10 Business edition that is also BYOD friendly.",
     "displayName":  "Enhanced security - Endpoint protection (Windows 10 Business)",
-    "version":  2,
+    "version":  1,
     "dmaGuardDeviceEnumerationPolicy":  "deviceDefault",
     "userRightsAccessCredentialManagerAsTrustedCaller":  null,
     "userRightsAllowAccessFromNetwork":  null,
@@ -772,27 +818,21 @@ $EnhancedEP = @"
                                       }
 }
 
+
 "@
 
 ####################################################
 
+
 $EnhancedDR = @"
+
 
 {
     "@odata.type":  "#microsoft.graph.windows10GeneralConfiguration",
-    "id":  "1d9e0f31-de93-418b-9429-db0790a69fcf",
-    "lastModifiedDateTime":  "2019-10-03T17:51:49.288285Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
     "createdDateTime":  "2019-09-26T20:13:36.5169672Z",
     "description":  "Basic security profile for Windows 10 Business edition that is also BYOD friendly.",
     "displayName":  "Enhanced security - Device restrictions (Windows 10 Business)",
-    "version":  2,
+    "version":  1,
     "taskManagerBlockEndTask":  false,
     "energySaverOnBatteryThresholdPercentage":  0,
     "energySaverPluggedInThresholdPercentage":  0,
@@ -1102,23 +1142,15 @@ $EnhancedDR = @"
 
 ####################################################
 
+
 $CorporateEP = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10EndpointProtectionConfiguration",
-    "id":  "d9118bde-350a-4c44-9dc9-bd6b3b30c9be",
-    "lastModifiedDateTime":  "2019-10-01T19:42:45.4568219Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
     "createdDateTime":  "2019-09-29T12:32:01.0000647Z",
     "description":  "Advanced security profile for Windows 10 Business that is appropriate for corporate-owned workstations.",
     "displayName":  "Corporate security - Endpoint protection (Windows 10 Business)",
-    "version":  2,
+    "version":  1,
     "dmaGuardDeviceEnumerationPolicy":  "deviceDefault",
     "userRightsAccessCredentialManagerAsTrustedCaller":  null,
     "userRightsAllowAccessFromNetwork":  null,
@@ -1420,19 +1452,11 @@ $CorporateEP = @"
 
 ####################################################
 
+
 $CorporateNB = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10NetworkBoundaryConfiguration",
-    "id":  "90b905dd-22c3-4053-bcaf-0c535e338817",
-    "lastModifiedDateTime":  "2019-10-03T17:46:20.2166146Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
     "createdDateTime":  "2019-10-03T17:46:20.2166146Z",
     "description":  "Customize this policy to define your network boundary before assigning the Corporate security endpoint protection profile",
     "displayName":  "Corporate security - Network boundary for Application Guard",
@@ -1466,23 +1490,15 @@ $CorporateNB = @"
 
 ####################################################
 
+
 $CorporateDR = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10GeneralConfiguration",
-    "id":  "9dd752bc-51f9-4db4-a4b8-4315c6f0a8d4",
-    "lastModifiedDateTime":  "2019-10-03T18:26:07.2449764Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
     "createdDateTime":  "2019-09-19T21:51:25.1228066Z",
     "description":  "Advanced security profile for Windows 10 Business that is appropriate for corporate-owned workstations.",
     "displayName":  "Corporate security - Device restrictions (Windows 10 Business)",
-    "version":  2,
+    "version":  1,
     "taskManagerBlockEndTask":  false,
     "energySaverOnBatteryThresholdPercentage":  0,
     "energySaverPluggedInThresholdPercentage":  0,
@@ -1799,23 +1815,15 @@ $CorporateDR = @"
 
 ####################################################
 
+
 $CorporateWHfB = @"
 
 {
     "@odata.type":  "#microsoft.graph.windowsIdentityProtectionConfiguration",
-    "id":  "94dbbe4f-b5ef-44cb-91bf-9912429fa3cb",
-    "lastModifiedDateTime":  "2019-10-03T17:40:11.7308445Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
     "createdDateTime":  "2019-10-01T20:19:32.6783068Z",
     "description":  "Enables Windows Hello for Business settings including option to use FIDO2 security keys.",
     "displayName":  "Corporate security - Windows Hello for Business",
-    "version":  2,
+    "version":  1,
     "useSecurityKeyForSignin":  true,
     "enhancedAntiSpoofingForFacialFeaturesEnabled":  true,
     "pinMinimumLength":  6,
@@ -1836,23 +1844,15 @@ $CorporateWHfB = @"
 
 ####################################################
 
+
 $CorporateF2 = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10CustomConfiguration",
-    "id":  "890ed055-6a6c-463e-8b70-189efb91f6fd",
-    "lastModifiedDateTime":  "2019-10-01T20:15:47.0274534Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "createdDateTime":  "2019-08-17T16:41:21.9038297Z",
+    "createdDateTime":  "2019-10-02T16:41:21.9038297Z",
     "description":  "Enables FIDO2 security keys as a sign-in method for Windows 10",
     "displayName":  "Corporate security - FIDO2 security keys for Windows 10 (optional)",
-    "version":  2,
+    "version":  1,
     "omaSettings":  [
                         {
                             "@odata.type":  "#microsoft.graph.omaSettingInteger",
@@ -1873,19 +1873,10 @@ $UpdatePilot = @"
 
 {
     "@odata.type":  "#microsoft.graph.windowsUpdateForBusinessConfiguration",
-    "id":  "9d4d275a-f507-4a9f-aac1-d3c4a16aa82c",
-    "lastModifiedDateTime":  "2019-10-01T23:19:55.5375045Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "createdDateTime":  "2019-07-07T12:57:59.1154162Z",
+    "createdDateTime":  "2019-10-02T12:57:59.1154162Z",
     "description":  "",
     "displayName":  "Pilot ring",
-    "version":  2,
+    "version":  1,
     "deliveryOptimizationMode":  "userDefined",
     "prereleaseFeatures":  "userDefined",
     "automaticUpdateMode":  "autoInstallAtMaintenanceTime",
@@ -1936,19 +1927,10 @@ $UpdateBroad = @"
 
 {
     "@odata.type":  "#microsoft.graph.windowsUpdateForBusinessConfiguration",
-    "id":  "d968b611-a9b7-4adf-8c3b-2d3361be93a9",
-    "lastModifiedDateTime":  "2019-07-07T13:05:47.6039548Z",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "supportsScopeTags":  true,
-    "deviceManagementApplicabilityRuleOsEdition":  null,
-    "deviceManagementApplicabilityRuleOsVersion":  null,
-    "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "createdDateTime":  "2019-07-07T13:05:47.6039548Z",
+    "createdDateTime":  "2019-10-02T13:05:47.6039548Z",
     "description":  "",
     "displayName":  "Broad ring",
-    "version":  2,
+    "version":  1,
     "deliveryOptimizationMode":  "userDefined",
     "prereleaseFeatures":  "userDefined",
     "automaticUpdateMode":  "autoInstallAtMaintenanceTime",
@@ -1995,150 +1977,163 @@ $UpdateBroad = @"
 
 ####################################################
 
-$OfficeApps32 = @"
-{
-    "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/mobileApps/$entity",
-    "@odata.type":  "#microsoft.graph.officeSuiteApp",
-    "id":  "59910b91-cc65-4e2b-8b4f-77f640e41169",
-    "displayName":  "Office 365 Business Desktop apps - 32-bit",
-    "description":  "32-bit version of Office 365 Desktop applications, Monthly update channel",
-    "publisher":  "Microsoft",
-    "createdDateTime":  "2019-10-01T23:31:36.4874826Z",
-    "lastModifiedDateTime":  "2019-10-01T23:34:49.8190383Z",
-    "isFeatured":  false,
-    "privacyInformationUrl":  null,
-    "informationUrl":  null,
-    "owner":  "Microsoft",
-    "developer":  "Microsoft",
-    "notes":  "",
-    "uploadState":  1,
-    "publishingState":  "published",
-    "isAssigned":  false,
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "dependentAppCount":  0,
-    "autoAcceptEula":  true,
-    "productIds":  [
-                       "o365ProPlusRetail"
-                   ],
-    "useSharedComputerActivation":  false,
-    "updateChannel":  "current",
-    "officePlatformArchitecture":  "x86",
-    "localesToInstall":  [
 
-                         ],
-    "installProgressDisplayLevel":  "none",
-    "shouldUninstallOlderVersionsOfOffice":  false,
-    "targetVersion":  "",
-    "updateVersion":  "",
-    "officeConfigurationXml":  null,
-    "largeIcon":  {
-                      "type":  "image/png",
-                      "value":  "iVBORw0KGgoAAAANSUhEUgAAAF0AAAAeCAMAAAEOZNKlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJhUExURf////7z7/i9qfF1S/KCW/i+qv3q5P/9/PrQwfOMae1RG+s8AOxGDfBtQPWhhPvUx/759/zg1vWgg+9fLu5WIvKFX/rSxP728/nCr/FyR+tBBvOMaO1UH+1RHOs+AvSScP3u6f/+/v3s5vzg1+xFDO9kNPOOa/i7pvzj2/vWyes9Af76+Pzh2PrTxf/6+f7y7vOGYexHDv3t5+1SHfi8qPOIZPvb0O1NFuxDCe9hMPSVdPnFs/3q4/vaz/STcu5VIe5YJPWcfv718v/9/e1MFfF4T/F4TvF2TP3o4exECvF0SexIEPONavzn3/vZze1QGvF3Te5dK+5cKvrPwPrQwvKAWe1OGPexmexKEveulfezm/BxRfamiuxLE/apj/zf1e5YJfSXd/OHYv3r5feznPakiPze1P7x7f739f3w6+xJEfnEsvWdf/Wfge1LFPe1nu9iMvnDsfBqPOs/BPOIY/WZevJ/V/zl3fnIt/vTxuxHD+xEC+9mN+5ZJv749vBpO/KBWvBwRP/8+/SUc/etlPjArP/7+vOLZ/F7UvWae/708e1OF/aihvSWdvi8p+tABfSZefvVyPWihfSVde9lNvami+9jM/zi2fKEXvBuQvOKZvalifF5UPJ/WPSPbe9eLfrKuvvd0uxBB/7w7Pzj2vrRw/rOv+1PGfi/q/eymu5bKf3n4PnJuPBrPf3t6PWfgvWegOxCCO9nOO9oOfaskvSYePi5pPi2oPnGtO5eLPevlvKDXfrNvv739Pzd0/708O9gL+9lNfJ9VfrLu/OPbPnDsPBrPus+A/nArfarkQAAAGr5HKgAAADLdFJOU/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AvuakogAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAz5JREFUOE+tVTtu4zAQHQjppmWzwIJbEVCzpTpjbxD3grQHSOXKRXgCAT6EC7UBVAmp3KwBnmvfzNCyZTmxgeTZJsXx43B+HBHRE34ZkXgkerXFTheeiCkRrbB4UXmp4wSWz5raaQEMTM5TZwuiXoaKgV+6FsmkZQcSy0kA71yMTMGHanX+AzMMGLAQCxU1F/ZwjULPugazl82GM0NEKm/U8EqFwEkO3/EAT4grgl0nucwlk9pcpTTJ4VPA4g/Rb3yIRhhp507e9nTQmZ1OS5RO4sS7nIRPEeHXCHdkw9ZEW2yVE5oIS7peD58Avs7CN+PVCmHh21oOqBdjDzIs+FldPJ74TFESUSJEfVzy9U/dhu+AuOT6eBp6gGKyXEx8euO450ZE4CMfstMFT44broWw/itkYErWXRx+fFArt9Ca9os78TFed0LVIUsmIHrwbwaw3BEOnOk94qVpQ6Ka2HjxewJnfyd6jUtGDQLdWlzmYNYLeKbbGOucJsNabCq1Yub0o92rtR+i30V2dapxYVEePXcOjeCKPnYyit7BtKeNlZqHbr+gt7i+AChWA9RsRs03pxTQc67ouWpxyESvjK5Vs3DVSy3IpkxPm5X+wZoBi+MFHWW69/w8FRhc7VBe6HAhMB2b8Q0XqDzTNZtXUMnKMjwKVaCrB/CSUL7WSx/HsdJC86lFGXwnioTeOMPjV+szlFvrZLA5VMVK4y+41l4e1xfx7Z88o4hkilRUH/qKqwNVlgDgpvYCpH3XwAy5eMCRnezIUxffVXoDql2rTHFDO+pjWnTWzAfrYXn6BFECblUpWGrvPZvBipETjS5ydM7tdXpH41ZCEbBNy/+wFZu71QO2t9pgT+iZEf657Q1vpN94PQNDxUHeKR103LV9nPVOtDikcNKO+2naCw7yKBhOe9Hm79pe8C4/CfC2wDjXnqC94kEeBU3WwN7dt/2UScXas7zDl5GpkY+M8WKv2J7fd4Ib2rGTk+jsC2cleEM7jI9veF7B0MBJrsZqfKd/81q9pR2NZfwJK2JzsmIT1Ns8jUH0UusQBpU8d2JzsHiXg1zXGLqxfitUNTDT/nUUeqDBp2HZVr+Ocqi/Ty3Rf4Jn82xxfSNtAAAAAElFTkSuQmCC"
-                  },
-    "excludedApps":  {
-                         "access":  false,
-                         "excel":  false,
-                         "groove":  true,
-                         "infoPath":  true,
-                         "lync":  true,
-                         "oneDrive":  false,
-                         "oneNote":  false,
-                         "outlook":  false,
-                         "powerPoint":  false,
-                         "publisher":  false,
-                         "sharePointDesigner":  true,
-                         "teams":  false,
-                         "visio":  false,
-                         "word":  false
-                     }
+$Office32 = @"
+
+
+
+{
+
+  "@odata.type": "#microsoft.graph.officeSuiteApp",
+
+  "autoAcceptEula": true,
+
+  "description": "Office 365 Desktop apps - 32 bit",
+
+  "developer": "Microsoft",
+
+  "displayName": "Office 365 Desktop apps - 32 bit",
+
+  "excludedApps": {
+
+    "groove": true,
+
+    "infoPath": true,
+
+    "sharePointDesigner": true,
+
+    "lync":  true
+
+  },
+
+  "informationUrl": "",
+
+  "isFeatured": false,
+
+  "largeIcon": {
+
+    "type": "image/png",
+
+    "value": "iVBORw0KGgoAAAANSUhEUgAAAF0AAAAeCAMAAAEOZNKlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJhUExURf////7z7/i9qfF1S/KCW/i+qv3q5P/9/PrQwfOMae1RG+s8AOxGDfBtQPWhhPvUx/759/zg1vWgg+9fLu5WIvKFX/rSxP728/nCr/FyR+tBBvOMaO1UH+1RHOs+AvSScP3u6f/+/v3s5vzg1+xFDO9kNPOOa/i7pvzj2/vWyes9Af76+Pzh2PrTxf/6+f7y7vOGYexHDv3t5+1SHfi8qPOIZPvb0O1NFuxDCe9hMPSVdPnFs/3q4/vaz/STcu5VIe5YJPWcfv718v/9/e1MFfF4T/F4TvF2TP3o4exECvF0SexIEPONavzn3/vZze1QGvF3Te5dK+5cKvrPwPrQwvKAWe1OGPexmexKEveulfezm/BxRfamiuxLE/apj/zf1e5YJfSXd/OHYv3r5feznPakiPze1P7x7f739f3w6+xJEfnEsvWdf/Wfge1LFPe1nu9iMvnDsfBqPOs/BPOIY/WZevJ/V/zl3fnIt/vTxuxHD+xEC+9mN+5ZJv749vBpO/KBWvBwRP/8+/SUc/etlPjArP/7+vOLZ/F7UvWae/708e1OF/aihvSWdvi8p+tABfSZefvVyPWihfSVde9lNvami+9jM/zi2fKEXvBuQvOKZvalifF5UPJ/WPSPbe9eLfrKuvvd0uxBB/7w7Pzj2vrRw/rOv+1PGfi/q/eymu5bKf3n4PnJuPBrPf3t6PWfgvWegOxCCO9nOO9oOfaskvSYePi5pPi2oPnGtO5eLPevlvKDXfrNvv739Pzd0/708O9gL+9lNfJ9VfrLu/OPbPnDsPBrPus+A/nArfarkQAAAGr5HKgAAADLdFJOU/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AvuakogAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAz5JREFUOE+tVTtu4zAQHQjppmWzwIJbEVCzpTpjbxD3grQHSOXKRXgCAT6EC7UBVAmp3KwBnmvfzNCyZTmxgeTZJsXx43B+HBHRE34ZkXgkerXFTheeiCkRrbB4UXmp4wSWz5raaQEMTM5TZwuiXoaKgV+6FsmkZQcSy0kA71yMTMGHanX+AzMMGLAQCxU1F/ZwjULPugazl82GM0NEKm/U8EqFwEkO3/EAT4grgl0nucwlk9pcpTTJ4VPA4g/Rb3yIRhhp507e9nTQmZ1OS5RO4sS7nIRPEeHXCHdkw9ZEW2yVE5oIS7peD58Avs7CN+PVCmHh21oOqBdjDzIs+FldPJ74TFESUSJEfVzy9U/dhu+AuOT6eBp6gGKyXEx8euO450ZE4CMfstMFT44broWw/itkYErWXRx+fFArt9Ca9os78TFed0LVIUsmIHrwbwaw3BEOnOk94qVpQ6Ka2HjxewJnfyd6jUtGDQLdWlzmYNYLeKbbGOucJsNabCq1Yub0o92rtR+i30V2dapxYVEePXcOjeCKPnYyit7BtKeNlZqHbr+gt7i+AChWA9RsRs03pxTQc67ouWpxyESvjK5Vs3DVSy3IpkxPm5X+wZoBi+MFHWW69/w8FRhc7VBe6HAhMB2b8Q0XqDzTNZtXUMnKMjwKVaCrB/CSUL7WSx/HsdJC86lFGXwnioTeOMPjV+szlFvrZLA5VMVK4y+41l4e1xfx7Z88o4hkilRUH/qKqwNVlgDgpvYCpH3XwAy5eMCRnezIUxffVXoDql2rTHFDO+pjWnTWzAfrYXn6BFECblUpWGrvPZvBipETjS5ydM7tdXpH41ZCEbBNy/+wFZu71QO2t9pgT+iZEf657Q1vpN94PQNDxUHeKR103LV9nPVOtDikcNKO+2naCw7yKBhOe9Hm79pe8C4/CfC2wDjXnqC94kEeBU3WwN7dt/2UScXas7zDl5GpkY+M8WKv2J7fd4Ib2rGTk+jsC2cleEM7jI9veF7B0MBJrsZqfKd/81q9pR2NZfwJK2JzsmIT1Ns8jUH0UusQBpU8d2JzsHiXg1zXGLqxfitUNTDT/nUUeqDBp2HZVr+Ocqi/Ty3Rf4Jn82xxfSNtAAAAAElFTkSuQmCC"
+
+  },
+
+  "localesToInstall": [
+
+    "en-us"
+
+  ],
+
+  "notes": "",
+
+  "officePlatformArchitecture": "x86",
+
+  "owner": "Microsoft",
+
+  "privacyInformationUrl": "",
+
+  "productIds": [
+
+    "o365ProPlusRetail"
+
+  ],
+
+  "publisher": "Microsoft",
+
+  "updateChannel": "current",
+
+  "useSharedComputerActivation": false
+
 }
+
 
 
 "@
 
+
 ####################################################
 
-$OfficeApps64 = @"
+
+$Office64 = @"
+
+
 
 {
-    "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/mobileApps/$entity",
-    "@odata.type":  "#microsoft.graph.officeSuiteApp",
-    "id":  "7f3d394f-2f57-4602-9288-91a4c66c5e3f",
-    "displayName":  "Office 365 Business Desktop apps - 64-bit",
-    "description":  "64-bit version of Office 365 desktop apps",
-    "publisher":  "Microsoft",
-    "createdDateTime":  "2019-08-16T18:33:37.8304093Z",
-    "lastModifiedDateTime":  "2019-10-01T23:34:11.1227665Z",
-    "isFeatured":  false,
-    "privacyInformationUrl":  null,
-    "informationUrl":  null,
-    "owner":  "Microsoft",
-    "developer":  "Microsoft",
-    "notes":  "",
-    "uploadState":  1,
-    "publishingState":  "published",
-    "isAssigned":  false,
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "dependentAppCount":  0,
-    "autoAcceptEula":  true,
-    "productIds":  [
-                       "o365ProPlusRetail"
-                   ],
-    "useSharedComputerActivation":  false,
-    "updateChannel":  "current",
-    "officePlatformArchitecture":  "x64",
-    "localesToInstall":  [
 
-                         ],
-    "installProgressDisplayLevel":  "none",
-    "shouldUninstallOlderVersionsOfOffice":  false,
-    "targetVersion":  "",
-    "updateVersion":  "",
-    "officeConfigurationXml":  null,
-    "largeIcon":  {
-                      "type":  "image/png",
-                      "value":  "iVBORw0KGgoAAAANSUhEUgAAAF0AAAAeCAMAAAEOZNKlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJhUExURf////7z7/i9qfF1S/KCW/i+qv3q5P/9/PrQwfOMae1RG+s8AOxGDfBtQPWhhPvUx/759/zg1vWgg+9fLu5WIvKFX/rSxP728/nCr/FyR+tBBvOMaO1UH+1RHOs+AvSScP3u6f/+/v3s5vzg1+xFDO9kNPOOa/i7pvzj2/vWyes9Af76+Pzh2PrTxf/6+f7y7vOGYexHDv3t5+1SHfi8qPOIZPvb0O1NFuxDCe9hMPSVdPnFs/3q4/vaz/STcu5VIe5YJPWcfv718v/9/e1MFfF4T/F4TvF2TP3o4exECvF0SexIEPONavzn3/vZze1QGvF3Te5dK+5cKvrPwPrQwvKAWe1OGPexmexKEveulfezm/BxRfamiuxLE/apj/zf1e5YJfSXd/OHYv3r5feznPakiPze1P7x7f739f3w6+xJEfnEsvWdf/Wfge1LFPe1nu9iMvnDsfBqPOs/BPOIY/WZevJ/V/zl3fnIt/vTxuxHD+xEC+9mN+5ZJv749vBpO/KBWvBwRP/8+/SUc/etlPjArP/7+vOLZ/F7UvWae/708e1OF/aihvSWdvi8p+tABfSZefvVyPWihfSVde9lNvami+9jM/zi2fKEXvBuQvOKZvalifF5UPJ/WPSPbe9eLfrKuvvd0uxBB/7w7Pzj2vrRw/rOv+1PGfi/q/eymu5bKf3n4PnJuPBrPf3t6PWfgvWegOxCCO9nOO9oOfaskvSYePi5pPi2oPnGtO5eLPevlvKDXfrNvv739Pzd0/708O9gL+9lNfJ9VfrLu/OPbPnDsPBrPus+A/nArfarkQAAAGr5HKgAAADLdFJOU/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AvuakogAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAz5JREFUOE+tVTtu4zAQHQjppmWzwIJbEVCzpTpjbxD3grQHSOXKRXgCAT6EC7UBVAmp3KwBnmvfzNCyZTmxgeTZJsXx43B+HBHRE34ZkXgkerXFTheeiCkRrbB4UXmp4wSWz5raaQEMTM5TZwuiXoaKgV+6FsmkZQcSy0kA71yMTMGHanX+AzMMGLAQCxU1F/ZwjULPugazl82GM0NEKm/U8EqFwEkO3/EAT4grgl0nucwlk9pcpTTJ4VPA4g/Rb3yIRhhp507e9nTQmZ1OS5RO4sS7nIRPEeHXCHdkw9ZEW2yVE5oIS7peD58Avs7CN+PVCmHh21oOqBdjDzIs+FldPJ74TFESUSJEfVzy9U/dhu+AuOT6eBp6gGKyXEx8euO450ZE4CMfstMFT44broWw/itkYErWXRx+fFArt9Ca9os78TFed0LVIUsmIHrwbwaw3BEOnOk94qVpQ6Ka2HjxewJnfyd6jUtGDQLdWlzmYNYLeKbbGOucJsNabCq1Yub0o92rtR+i30V2dapxYVEePXcOjeCKPnYyit7BtKeNlZqHbr+gt7i+AChWA9RsRs03pxTQc67ouWpxyESvjK5Vs3DVSy3IpkxPm5X+wZoBi+MFHWW69/w8FRhc7VBe6HAhMB2b8Q0XqDzTNZtXUMnKMjwKVaCrB/CSUL7WSx/HsdJC86lFGXwnioTeOMPjV+szlFvrZLA5VMVK4y+41l4e1xfx7Z88o4hkilRUH/qKqwNVlgDgpvYCpH3XwAy5eMCRnezIUxffVXoDql2rTHFDO+pjWnTWzAfrYXn6BFECblUpWGrvPZvBipETjS5ydM7tdXpH41ZCEbBNy/+wFZu71QO2t9pgT+iZEf657Q1vpN94PQNDxUHeKR103LV9nPVOtDikcNKO+2naCw7yKBhOe9Hm79pe8C4/CfC2wDjXnqC94kEeBU3WwN7dt/2UScXas7zDl5GpkY+M8WKv2J7fd4Ib2rGTk+jsC2cleEM7jI9veF7B0MBJrsZqfKd/81q9pR2NZfwJK2JzsmIT1Ns8jUH0UusQBpU8d2JzsHiXg1zXGLqxfitUNTDT/nUUeqDBp2HZVr+Ocqi/Ty3Rf4Jn82xxfSNtAAAAAElFTkSuQmCC"
-                  },
-    "excludedApps":  {
-                         "access":  false,
-                         "excel":  false,
-                         "groove":  true,
-                         "infoPath":  true,
-                         "lync":  true,
-                         "oneDrive":  false,
-                         "oneNote":  false,
-                         "outlook":  false,
-                         "powerPoint":  false,
-                         "publisher":  false,
-                         "sharePointDesigner":  true,
-                         "teams":  false,
-                         "visio":  false,
-                         "word":  false
-                     }
+  "@odata.type": "#microsoft.graph.officeSuiteApp",
+
+  "autoAcceptEula": true,
+
+  "description": "Office 365 Desktop apps - 64 bit",
+
+  "developer": "Microsoft",
+
+  "displayName": "Office 365 Desktop apps - 64 bit",
+
+  "excludedApps": {
+
+    "groove": true,
+
+    "infoPath": true,
+
+    "lync":  true,
+
+    "sharePointDesigner": true
+
+  },
+
+  "informationUrl": "",
+
+  "isFeatured": false,
+
+  "largeIcon": {
+
+    "type": "image/png",
+
+    "value": "iVBORw0KGgoAAAANSUhEUgAAAF0AAAAeCAMAAAEOZNKlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJhUExURf////7z7/i9qfF1S/KCW/i+qv3q5P/9/PrQwfOMae1RG+s8AOxGDfBtQPWhhPvUx/759/zg1vWgg+9fLu5WIvKFX/rSxP728/nCr/FyR+tBBvOMaO1UH+1RHOs+AvSScP3u6f/+/v3s5vzg1+xFDO9kNPOOa/i7pvzj2/vWyes9Af76+Pzh2PrTxf/6+f7y7vOGYexHDv3t5+1SHfi8qPOIZPvb0O1NFuxDCe9hMPSVdPnFs/3q4/vaz/STcu5VIe5YJPWcfv718v/9/e1MFfF4T/F4TvF2TP3o4exECvF0SexIEPONavzn3/vZze1QGvF3Te5dK+5cKvrPwPrQwvKAWe1OGPexmexKEveulfezm/BxRfamiuxLE/apj/zf1e5YJfSXd/OHYv3r5feznPakiPze1P7x7f739f3w6+xJEfnEsvWdf/Wfge1LFPe1nu9iMvnDsfBqPOs/BPOIY/WZevJ/V/zl3fnIt/vTxuxHD+xEC+9mN+5ZJv749vBpO/KBWvBwRP/8+/SUc/etlPjArP/7+vOLZ/F7UvWae/708e1OF/aihvSWdvi8p+tABfSZefvVyPWihfSVde9lNvami+9jM/zi2fKEXvBuQvOKZvalifF5UPJ/WPSPbe9eLfrKuvvd0uxBB/7w7Pzj2vrRw/rOv+1PGfi/q/eymu5bKf3n4PnJuPBrPf3t6PWfgvWegOxCCO9nOO9oOfaskvSYePi5pPi2oPnGtO5eLPevlvKDXfrNvv739Pzd0/708O9gL+9lNfJ9VfrLu/OPbPnDsPBrPus+A/nArfarkQAAAGr5HKgAAADLdFJOU/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AvuakogAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAz5JREFUOE+tVTtu4zAQHQjppmWzwIJbEVCzpTpjbxD3grQHSOXKRXgCAT6EC7UBVAmp3KwBnmvfzNCyZTmxgeTZJsXx43B+HBHRE34ZkXgkerXFTheeiCkRrbB4UXmp4wSWz5raaQEMTM5TZwuiXoaKgV+6FsmkZQcSy0kA71yMTMGHanX+AzMMGLAQCxU1F/ZwjULPugazl82GM0NEKm/U8EqFwEkO3/EAT4grgl0nucwlk9pcpTTJ4VPA4g/Rb3yIRhhp507e9nTQmZ1OS5RO4sS7nIRPEeHXCHdkw9ZEW2yVE5oIS7peD58Avs7CN+PVCmHh21oOqBdjDzIs+FldPJ74TFESUSJEfVzy9U/dhu+AuOT6eBp6gGKyXEx8euO450ZE4CMfstMFT44broWw/itkYErWXRx+fFArt9Ca9os78TFed0LVIUsmIHrwbwaw3BEOnOk94qVpQ6Ka2HjxewJnfyd6jUtGDQLdWlzmYNYLeKbbGOucJsNabCq1Yub0o92rtR+i30V2dapxYVEePXcOjeCKPnYyit7BtKeNlZqHbr+gt7i+AChWA9RsRs03pxTQc67ouWpxyESvjK5Vs3DVSy3IpkxPm5X+wZoBi+MFHWW69/w8FRhc7VBe6HAhMB2b8Q0XqDzTNZtXUMnKMjwKVaCrB/CSUL7WSx/HsdJC86lFGXwnioTeOMPjV+szlFvrZLA5VMVK4y+41l4e1xfx7Z88o4hkilRUH/qKqwNVlgDgpvYCpH3XwAy5eMCRnezIUxffVXoDql2rTHFDO+pjWnTWzAfrYXn6BFECblUpWGrvPZvBipETjS5ydM7tdXpH41ZCEbBNy/+wFZu71QO2t9pgT+iZEf657Q1vpN94PQNDxUHeKR103LV9nPVOtDikcNKO+2naCw7yKBhOe9Hm79pe8C4/CfC2wDjXnqC94kEeBU3WwN7dt/2UScXas7zDl5GpkY+M8WKv2J7fd4Ib2rGTk+jsC2cleEM7jI9veF7B0MBJrsZqfKd/81q9pR2NZfwJK2JzsmIT1Ns8jUH0UusQBpU8d2JzsHiXg1zXGLqxfitUNTDT/nUUeqDBp2HZVr+Ocqi/Ty3Rf4Jn82xxfSNtAAAAAElFTkSuQmCC"
+
+  },
+
+  "localesToInstall": [
+
+    "en-us"
+
+  ],
+
+  "notes": "",
+
+  "officePlatformArchitecture": "x64",
+
+  "owner": "Microsoft",
+
+  "privacyInformationUrl": "",
+
+  "productIds": [
+
+    "o365ProPlusRetail"
+
+  ],
+
+  "publisher": "Microsoft",
+
+  "updateChannel": "current",
+
+  "useSharedComputerActivation": false
+
 }
+
 
 
 "@
 
-####################################################
 
+####################################################
 $Baseline = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10CompliancePolicy",
-    "roleScopeTagIds":  [
-                            "0"
-                        ],
-    "id":  "de34b385-7341-4604-a0f3-251030b191c9",
-    "createdDateTime":  "2019-10-02T22:06:23.9625434Z",
     "description":  "Require 1809 minimum, encryption, firewall, and Microsoft Defender",
-    "lastModifiedDateTime":  "2019-10-03T20:04:38.2278762Z",
     "displayName":  "Windows 10 Business compliance baseline (1809)",
-    "version":  2,
     "passwordRequired":  false,
     "passwordBlockSimple":  false,
     "passwordRequiredToUnlockFromIdle":  false,
@@ -2168,14 +2163,14 @@ $Baseline = @"
     "deviceThreatProtectionEnabled":  false,
     "deviceThreatProtectionRequiredSecurityLevel":  "unavailable",
     "configurationManagerComplianceRequired":  false,
-    "tpmRequired":  false,
     "validOperatingSystemBuildRanges":  [
 
-                                        ]
+                                        ],
+"scheduledActionsForRule":[{"ruleName":"PasswordRequired","scheduledActionConfigurations":[{"actionType":"block","gracePeriodHours":72,"notificationTemplateId":"","notificationMessageCCList":[]}]}]
 }
 
-"@
 
+"@
 ####################################################
 
 Add-DeviceConfigurationPolicy -Json $EnhancedEP # OK
@@ -2188,10 +2183,20 @@ Add-DeviceConfigurationPolicy -Json $CorporateF2 # OK
 Add-DeviceConfigurationPolicy -Json $UpdatePilot # OK
 Add-DeviceConfigurationPolicy -Json $UpdateBroad # OK
 
-Add-MDMApplication -Json $OfficeApps32 #OK
-Add-MDMApplication -Json $OfficeApps64 #OK
-
 Add-DeviceCompliancePolicybaseline -Json $Baseline #OK
 
 
+##################################################
 
+write-host "Publishing" ($Office32 | ConvertFrom-Json).displayName -ForegroundColor Yellow
+$Create_Application1 = Add-MDMApplication -JSON $Office32
+$Create_Application1
+Write-Host "Application created as $($Create_Application1.displayName)/$($create_Application1.id)" -ForegroundColor Cyan
+
+#################################################
+
+write-host "Publishing" ($Office64 | ConvertFrom-Json).displayName -ForegroundColor Yellow
+$Create_Application2 = Add-MDMApplication -JSON $Office64
+$Create_Application2
+Write-Host "Application created as $($Create_Application2.displayName)/$($create_Application2.id)" -ForegroundColor Cyan
+Write-Host
