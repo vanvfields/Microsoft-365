@@ -693,8 +693,8 @@ $EnhancedEP = @"
     "applicationGuardAllowPrintToNetworkPrinters":  false,
     "applicationGuardAllowVirtualGPU":  false,
     "applicationGuardAllowFileSaveOnHost":  false,
-    "bitLockerAllowStandardUserEncryption":  false,
-    "bitLockerDisableWarningForOtherDiskEncryption":  false,
+    "bitLockerAllowStandardUserEncryption":  true,
+    "bitLockerDisableWarningForOtherDiskEncryption":  true,
     "bitLockerEnableStorageCardEncryptionOnMobile":  false,
     "bitLockerEncryptDevice":  true,
     "bitLockerRecoveryPasswordRotation":  "notConfigured",
@@ -1323,7 +1323,7 @@ $CorporateEP = @"
     "applicationGuardAllowPrintToNetworkPrinters":  false,
     "applicationGuardAllowVirtualGPU":  false,
     "applicationGuardAllowFileSaveOnHost":  false,
-    "bitLockerAllowStandardUserEncryption":  false,
+    "bitLockerAllowStandardUserEncryption":  true,
     "bitLockerDisableWarningForOtherDiskEncryption":  true,
     "bitLockerEnableStorageCardEncryptionOnMobile":  false,
     "bitLockerEncryptDevice":  true,
@@ -1424,7 +1424,7 @@ $CorporateEP = @"
                                                                "recoveryKeyUsage":  "allowed",
                                                                "hideRecoveryOptions":  true,
                                                                "enableRecoveryInformationSaveToStore":  true,
-                                                               "recoveryInformationToStore":  "passwordOnly",
+                                                               "recoveryInformationToStore":  "passwordAndKey",
                                                                "enableBitLockerAfterRecoveryInformationToStore":  true
                                                            }
                                    },
@@ -1435,9 +1435,9 @@ $CorporateEP = @"
                                                               "blockDataRecoveryAgent":  false,
                                                               "recoveryPasswordUsage":  "allowed",
                                                               "recoveryKeyUsage":  "allowed",
-                                                              "hideRecoveryOptions":  false,
-                                                              "enableRecoveryInformationSaveToStore":  false,
-                                                              "recoveryInformationToStore":  "passwordOnly",
+                                                              "hideRecoveryOptions":  true,
+                                                              "enableRecoveryInformationSaveToStore":  true,
+                                                              "recoveryInformationToStore":  "passwordAndKey",
                                                               "enableBitLockerAfterRecoveryInformationToStore":  true
                                                           }
                                   },
