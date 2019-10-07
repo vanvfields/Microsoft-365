@@ -1,10 +1,10 @@
-<H1>Scripts to setup Intune:</H1>
+# Script to setup Intune:
 
-<b><u>Note</u></b>: (mostly) modified from Microsoft: https://github.com/microsoftgraph/powershell-intune-samples/
+Scripts are modified, and based on Microsoft's Intune samples: https://github.com/microsoftgraph/powershell-intune-samples/
 
-Download scripts and JSONs into the same working directory before running Setup-Intune.ps1.
+Simply download and run <b>Setup-Intune.ps1</b>
 
-None of the policies will be assigned when you import the JSON files; simply review, adjust and test settings before assigning them
+None of the policies will be assigned when you import them.
 
 Intune deployment script:
 
