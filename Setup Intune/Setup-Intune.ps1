@@ -163,6 +163,7 @@ $authority = "https://login.microsoftonline.com/$Tenant"
 
 }
 
+
 ####################################################
 
 Function Add-DeviceConfigurationPolicy(){
@@ -718,11 +719,6 @@ NAME: Get-EnterpriseDomain
 
 }
 
-####################################################
-
-$EnterpriseDomain = Get-EnterpriseDomain
-
-$Sharepoint = $EnterpriseDomain.Split(".")[0]
 
 ####################################################
 
@@ -773,6 +769,13 @@ $global:authToken = Get-AuthToken -User $User
 }
 
 #endregion
+
+
+####################################################
+
+$EnterpriseDomain = Get-EnterpriseDomain
+
+$Sharepoint = $EnterpriseDomain.Split(".")[0]
 
 
 ####################################################
@@ -1904,7 +1907,7 @@ $Win10_BitLocker = @"
 
 ####################################################
 
-$Win10_ExploitGuardAudit = @"
+$Win10_DefenderExploitGuardAudit = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10EndpointProtectionConfiguration",
@@ -2123,7 +2126,7 @@ $Win10_ExploitGuardAudit = @"
 
 ####################################################
 
-$Win10_ExploitGuardEnable = @"
+$Win10_DefenderExploitGuardEnable = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10EndpointProtectionConfiguration",
@@ -2632,7 +2635,7 @@ $Win10_Firewall = @"
 
 ####################################################
 
-$Win10_SmartScreen = @"
+$Win10_DefenderSmartScreen = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10EndpointProtectionConfiguration",
@@ -4685,36 +4688,51 @@ $ManagedAppPolicy_WIP_MDM = @"
 ####################################################
 ####################################################
 
-#Add-DeviceConfigurationPolicy -Json $Win10_AppGuardEnable # OK
-#Add-DeviceConfigurationPolicy -Json $Win10_AppGuardNB # OK
+Write-Host "Adding Windows 10 Device configuration policies..." -ForegroundColor Yellow
 
+Add-DeviceConfigurationPolicy -Json $Win10_AppGuardEnable # OK
+Add-DeviceConfigurationPolicy -Json $Win10_AppGuardNB # OK
 Add-DeviceConfigurationPolicy -Json $Win10_DefenderAuditPUA # OK
 Add-DeviceConfigurationPolicy -Json $Win10_DefenderEnablePUA # OK
+Add-DeviceConfigurationPolicy -Json $Win10_DefenderExploitGuardAudit # OK
+Add-DeviceConfigurationPolicy -Json $Win10_DefenderExploitGuardEnable # OK
+Add-DeviceConfigurationPolicy -Json $Win10_DefenderSmartScreen # OK
 Add-DeviceConfigurationPolicy -Json $Win10_BitLocker # OK
-Add-DeviceConfigurationPolicy -Json $Win10_ExploitGuardAudit # OK
-Add-DeviceConfigurationPolicy -Json $Win10_ExploitGuardEnable # OK
 Add-DeviceConfigurationPolicy -Json $Win10_Firewall # OK
-Add-DeviceConfigurationPolicy -Json $Win10_SmartScreen # OK
 Add-DeviceConfigurationPolicy -Json $Win10_UAC # OK
 Add-DeviceConfigurationPolicy -Json $CorporateWHfB # OK
 Add-DeviceConfigurationPolicy -Json $CorporateF2 # OK
+Write-Host 
+
+Write-Host "Adding Windows 10 Device configuration policies..." -ForegroundColor Yellow
 
 Add-DeviceConfigurationPolicy -Json $UpdatePilot # OK
 Add-DeviceConfigurationPolicy -Json $UpdateBroad # OK
+
+Write-Host
+####################################################
+
+Write-Host "Adding baseline compliance policies..." -ForegroundColor Yellow
 
 Add-DeviceCompliancePolicybaseline -Json $BaselineWin10 #OK
 Add-DeviceCompliancePolicybaseline -Json $BaselineiOS #OK
 Add-DeviceCompliancePolicybaseline -Json $BaselineAndroid #OK
 Add-DeviceCompliancePolicybaseline -Json $BaselineMacOS #OK
 
+Write-Host 
+####################################################
+
+Write-Host "Adding MAM policies for mobile devices..." -ForegroundColor Yellow
+
 Add-ManagedAppPolicy -Json $MAM_iOSPIN #OK
 Add-ManagedAppPolicy -Json $MAM_iOSencryptOnly #OK
 Add-ManagedAppPolicy -Json $MAM_AndroidPIN #OK
 Add-ManagedAppPolicy -Json $MAM_AndroidEncryptOnly #OK
 
+Write-Host 
 ####################################################
 
-Write-Host "Adding Windows Information Protection MDM Policy from JSON..." -ForegroundColor Yellow
+Write-Host "Adding Windows Information Protection MDM-based policy..." -ForegroundColor Yellow
 
 Add-MDMWindowsInformationProtectionPolicy -JSON $ManagedAppPolicy_WIP_MDM
 
@@ -4726,7 +4744,7 @@ write-host "Publishing" ($Office32 | ConvertFrom-Json).displayName -ForegroundCo
 $Create_Application1 = Add-MDMApplication -JSON $Office32
 $Create_Application1
 Write-Host "Application created as $($Create_Application1.displayName)/$($create_Application1.id)" -ForegroundColor Cyan
-
+Write-Host 
 #################################################
 
 write-host "Publishing" ($Office64 | ConvertFrom-Json).displayName -ForegroundColor Yellow
