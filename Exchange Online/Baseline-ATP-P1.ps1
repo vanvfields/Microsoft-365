@@ -11,17 +11,17 @@
 ## Fill in all of the following variables:
 ##
 ## $AlertAddress = Required only if you enable this option within the Safe Attachments policy. Who will recieve notifications/redirected emails?
-$AlertAddress = "securityalerts@company.com"
+$AlertAddress = "alert@providerdomain.com"
 ##
 ## $RecipientDomains = Fill in the domain names that will be protected by domain impersonation:
 ## e.g. $RecipientDomains = "tenantname.onmicrosoft.com", "domain1.com", "domain2.com", "domain3.com"
 ##
-$RecipientDomains = "TenantName.onmicrosoft.com", "DomainName.com"
+$RecipientDomains = "tenant.onmicrosoft.com", "firstdomain.com", "seconddomain.com", "n-domain.com"
 ##
 ## $TargetedUsersToProtect = Fill in the users who will be protected by user impersonation:
 ## e.g. $TargetedUsersToProtect = "Display Name 1;user1@domain.com", "Display Name 2;user2@domain.com", "Display Name 3;user3@domain.com"
 ##
-$TargetedUsersToProtect="John Smith;jsmith@DOMAINNAME.com","Sally Smith;ssmith@DOMAINNAME.com"
+$TargetedUsersToProtect="John Doe;JDoe@firstdomain.com", "Jane Smith;JSmith@n-domain.com"
 ##
 ## Note: you may need to set your execution policy for the script to run successfully
 ##########################################################################################################################################################################################
@@ -46,6 +46,7 @@ $SafeLinksPolicyParam=@{
    'AdminDisplayName' = "Safe Links Baseline Policy";
    'DoNotAllowClickThrough' =  $true;
    'DoNotTrackUserClicks' = $false;
+   'DeliverMessageAfterScan' = $true;
    'EnableForInternalSender' = $true;
    'ScanUrls' = $true;
    'TrackClicks' = $true;
