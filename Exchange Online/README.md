@@ -5,7 +5,7 @@
 <p>• Baseline-ATP-P1.ps1: Configures Office 365 Advanced Threat Protection (plan 1)
 <p>• Baseline-ExchangeOnline.ps1: Configures Exchange Online tenant with all of the baseline settings and policies, except ATP
 <p>• Configure-Auditing.ps1: Sets audit log age limit and mailbox actions auditing
-<p>• Configure-AntiMalwareSpam.ps1: Configures the antispam and antimalware baseline policies; use .\Configure-AntiMalwareSpam.ps1 -Domain "yourdomainhere.com" -Alert "youralertaddresshere@yourdomainhere.com"
+<p>• Baseline-SpamAndMalware.ps1: Configures the antispam and antimalware baseline policies; use .\Configure-AntiMalwareSpam.ps1 -Domain "yourdomainhere.com" -Alert "youralertaddresshere@yourdomainhere.com"
 <p>• Block-BasicAuth.ps1: Creates an authentication policy to block basic auth (see the comments in the script for making exceptions)
 <p>• Baseline-MobileDevicePolicy.ps1: Creates a default mobile device policy requring 4 digit PIN and device encryption (not needed if using MDM or MAM via Intune)
 <p>• Setup-DKIM.ps1: This script helps with configuring DKIM; use: .\Setup-DKIM.ps1 -Domain "yourdomainhere.com"
