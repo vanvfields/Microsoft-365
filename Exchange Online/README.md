@@ -3,7 +3,7 @@
 <H2>You can either run the entire recommended baseline (Baseline-ExchangeOnline), or run the scripts individually:</H2>
 
 <p>• Baseline-ATP-P1.ps1: Configures Office 365 Advanced Threat Protection (plan 1)
-<p>• Baseline-ExchangeOnline.ps1: Configures Exchange Online tenant with all of the baseline settings and policies, except ATP
+<p>• Baseline-ExchangeOnline.ps1: Configures Exchange Online tenant with all of the baseline settings and policies
 <p>• Configure-Auditing.ps1: Sets audit log age limit and mailbox actions auditing
 <p>• Baseline-SpamAndMalware.ps1: Configures the antispam and antimalware baseline policies; use .\Configure-AntiMalwareSpam.ps1 -Domain "yourdomainhere.com" -Alert "youralertaddresshere@yourdomainhere.com"
 <p>• Block-BasicAuth.ps1: Creates an authentication policy to block basic auth (see the comments in the script for making exceptions)
