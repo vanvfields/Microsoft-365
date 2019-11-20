@@ -9,7 +9,7 @@ Connect to Exchange Online via PowerShell using MFA:
 https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-exchange-online-powershell/mfa-connect-to-exchange-online-powershell?view=exchange-ps
 
 .NOTES
-    FileName:    Baseline-O365ATPP1.ps1
+    FileName:    Baseline-365ATP.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     11-18-2019
 	Revised:     11-18-2019
