@@ -5347,10 +5347,10 @@ Write-Host
 
 Write-Host "Adding Windows 10 Device configuration profiles..." -ForegroundColor Yellow
 
-#Add-DeviceConfigurationPolicy -Json $Win10_AppGuardEnable # OK
-#Add-DeviceConfigurationPolicy -Json $Win10_AppGuardNB # OK
-#Add-DeviceConfigurationPolicy -Json $Win10_DefenderEnablePUA # OK
-#Add-DeviceConfigurationPolicy -Json $Win10_DefenderExploitGuardEnable # OK
+Add-DeviceConfigurationPolicy -Json $Win10_AppGuardEnable # OK
+Add-DeviceConfigurationPolicy -Json $Win10_AppGuardNB # OK
+Add-DeviceConfigurationPolicy -Json $Win10_DefenderEnablePUA # OK
+Add-DeviceConfigurationPolicy -Json $Win10_DefenderExploitGuardEnable # OK
 
 Add-DeviceConfigurationPolicy -Json $Win10_DefenderAuditPUA # OK
 Add-DeviceConfigurationPolicy -Json $Win10_DefenderExploitGuardAudit # OK
