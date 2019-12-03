@@ -36,7 +36,10 @@ Read-Host -Prompt "Enter the DKIM records, have a coffee and wait for several mi
 Write-Host 
 ## This line will attempt to activate the DKIM service (CNAME records must be already be populated in DNS)
 
-New-DkimSigningConfig -DomainName $DomainName -Enabled $true
+##If DKIM exists but not already enabled, enable it
+if (((get-dkimsigningconfig -identity $domainname -ErrorAction silent).enabled) -eq $False) {set-dkimsigningconfig -identity $domainname -enabled $true}
+##If it doesn't exist - create new config
+if (!(get-dkimsigningconfig -identity $domainname -erroraction silent)) {New-DkimSigningConfig -DomainName $DomainName -Enabled $true}
 Write-Host 
 
 ## End of script
