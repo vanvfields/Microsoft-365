@@ -2,6 +2,10 @@
 #
 .SYNOPSIS
 This script configures a new Office 365 tenant with Basline Exchange Online settings.
+This script does not include Office 365 ATP settings, see Baseline-365ATP.ps1
+Baseline-M365BTenant.ps1 includes everything from this script and the ATP script
+
+See Advanced-TenantConfig.ps1 for other customizations  
 
 Connect to Exchange Online via PowerShell using MFA:
 https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-exchange-online-powershell/mfa-connect-to-exchange-online-powershell?view=exchange-ps
@@ -10,10 +14,11 @@ https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-
     FileName:    Baseline-ExchangeOnline.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     11-18-2019
-	Revised:     11-18-2019
-    Version:     2.0
+	Revised:     03-01-2020
+    Version:     3.0
     
 #>
+###################################################################################################
 ## NOTE: If the script errors out, you may need to set your execution policy.
 ## You may also need to run: Enable-OrganizationCustomization
 ## Please define these variables before running this script: 
@@ -21,8 +26,9 @@ $MessageColor = "Green"
 $AssessmentColor = "Yellow"
 ###################################################################################################
 
-###################################################################################################
-## Enable Unified Audit Log Search:
+#################################################
+## ENABLE UNIFIED AUDIT LOG SEARCH
+#################################################
 $AuditLogConfig = Get-AdminAuditLogConfig
 if ($AuditLogConfig.UnifiedAuditLogIngestionEnabled) {
     Write-Host 
@@ -42,152 +48,59 @@ if ($AuditLogConfig.UnifiedAuditLogIngestionEnabled) {
     }
  }
 
-###################################################################################################
-## Prompt for answer and then modify the audit log age limit on all mailboxes:
-Write-Host 
-$CurrentAge = (get-mailbox -resultsize unlimited).auditlogagelimit
-Write-Host -ForegroundColor $AssessmentColor "Current audit log age limit (age and number of mailboxes):"
-$CurrentAge | group | select name, count | ft
-$Answer = Read-Host "Do you want to set the audit log age limit and enable all auditing actions on all mailboxes? Type Y or N and press Enter to continue"
-if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-        Write-Host 
-        $AuditLogAgeLimit = Read-Host "Enter the new audit log age limit in days; recommended value 365 or greater (or press Enter to continue without making changes)"
-        if ($AuditLogAgeLimit -eq $null -or $AuditLogAgeLimit -eq "" -or $AuditLogAgeLimit -eq 'n' -or $AuditLogAgeLimit -eq 'no'){
-            Write-Host
-            Write-Host -ForegroundColor $AssessmentColor "The audit log age limit and audit actions will not be modified"
-        } else {
-            Get-Mailbox -ResultSize Unlimited | Set-Mailbox -AuditEnabled $true -AuditLogAgeLimit $AuditLogAgeLimit
-            Write-Host 
-            Write-Host -ForegroundColor $MessageColor "The new audit log age limit has been set for all mailboxes"
-            ## Enable all mailbox auditing actions
-            Get-Mailbox -ResultSize Unlimited | Set-Mailbox -AuditAdmin @{Add="Copy","Create","FolderBind","HardDelete","MessageBind","Move","MoveToDeletedItems","SendAs","SendOnBehalf","SoftDelete","Update","UpdateFolderPermissions","UpdateInboxRules","UpdateCalendarDelegation"}
-            Get-Mailbox -ResultSize Unlimited | Set-Mailbox –AuditDelegate @{Add="Create","FolderBind","HardDelete","Move","MoveToDeletedItems","SendAs","SendOnBehalf","SoftDelete","Update","UpdateFolderPermissions","UpdateInboxRules"}
-            Get-Mailbox -ResultSize Unlimited | Set-Mailbox –AuditOwner @{Add="Create","HardDelete","Move","Mailboxlogin","MoveToDeletedItems","SoftDelete","Update","UpdateFolderPermissions","UpdateInboxRules","UpdateCalendarDelegation"}
-            Write-Host 
-            Write-host -ForegroundColor $MessageColor "All auditing actions are now enabled on all mailboxes"
-            } 
+ 
+#################################################
+## CHECK TO ENSURE MODERN AUTH IS ENABLED
+#################################################
+$OrgConfig = Get-OrganizationConfig 
+ if ($OrgConfig.OAuth2ClientProfileEnabled) {
+     Write-Host 
+     Write-Host -ForegroundColor $MessageColor "Modern Authentication for Exchange Online is already enabled"
+ } else {
+     Write-Host
+     Write-Host -ForegroundColor $AssessmentColor "Modern Authentication for Exchange online is not enabled"
+     Write-Host 
+     $Answer = Read-Host "Do you want to enable Modern Authentication for Exchange Online now? Type Y or N and press Enter to continue"
+     if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+         Set-OrganizationConfig -OAuth2ClientProfileEnabled $true
+         Write-Host 
+         Write-Host -ForegroundColor $MessageColor "Modern Authentication is now enabled"
+         } Else {
+         Write-Host
+         Write-Host -ForegroundColor $AssessmentColor "Modern Authentication will not be enabled"
+         }
+ }
 
-} else {
-        Write-Host
-        Write-Host -ForegroundColor $AssessmentColor "The audit log age limit and audit actions will not be modified"
-        }
-
-###################################################################################################
-## This section of the script will set all mailboxes to keep deleted items for the maximum of 30 days:
-Write-Host 
-$CurrentRetention = (Get-Mailbox -ResultSize Unlimited).RetainDeletedItemsFor
-Write-Host -ForegroundColor $AssessmentColor "Current retention limit (in days and number of mailboxes):"
-$CurrentRetention | group | select name, count | ft
-$Answer = Read-Host "Would you like to enforce the maximum allowed value of 30 days retention of deleted items for all mailboxes? Type Y or N and press Enter to continue"
-if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-    Get-Mailbox -ResultSize Unlimited | Set-Mailbox -RetainDeletedItemsFor 30
-    Write-Host 
-    Write-Host -ForegroundColor $MessageColor "Deleted items will be retained for the maximum of 30 days for all mailboxes"
-    } else {
-    Write-Host 
-    Write-Host -ForegroundColor $AssessmentColor "The deleted items retention value has not been modified on any mailboxes"
-    }
-
-###################################################################################################
-## This section of the script will prevent winmail.dat attachments:
-$DefaultRemoteDomain = Get-RemoteDomain Default
-if ($DefaultRemoteDomain.TNEFEnabled) {
-    Write-Host 
-    $Answer = Read-Host "At present, some attachments may appear as winmail.dat and be unreadable in certain mail clients for example Apple mail; would you like to prevent this behavior? Type Y or N and press Enter to continue"
-    if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-        Set-RemoteDomain Default -TNEFEnabled $false 
-        Write-Host 
-        Write-Host -ForegroundColor $MessageColor "Attachments are now prevented from appearing as 'winmail.dat'"
-        } else {
-        Write-Host 
-        Write-Host -ForegroundColor $AssessmentColor "Attachments will not be prevented from appearing as 'winmail.dat'"
-        }
-    } else {
-    Write-Host
-    Write-Host -ForegroundColor $MessageColor "Attachments are already prevented from appearing as 'winmail.dat'"
-}
-
-###################################################################################################
-## This section of the script will enable the "Encrypt" button in Outlook on the Web 
-
-$IRMConfig = Get-IRMConfiguration
-if (!$IRMConfig.SimplifiedClientAccessEnabled) {
-    Write-Host 
-    Write-Host -ForegroundColor $AssessmentColor "The 'Encrypt' option is not available in OWA"
-    Write-Host 
-    $Answer = Read-Host "Enable the 'Encrypt' option in Outlook Web Access now? Type Y or N and press Enter to continue"
-    if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-        Set-IRMConfiguration -SimplifiedClientAccessEnabled $true
-        Write-Host 
-        Write-Host -ForegroundColor $MessageColor "The 'Encrypt' option for Outlook on the web has been enabled"
-        } else {
-        Write-Host 
-        Write-Host -ForegroundColor $AssessmentColor "The 'Encrypt' option for Outlook on the Web will not be enabled"
-        }
-    } else {
-    Write-Host
-    Write-Host -ForegroundColor $MessageColor "The 'Encrypt' option for Outlook on the web is already enabled"
-}
-
-if (!$IRMConfig.DecryptAttachmentForEncryptOnly) {
-    Write-Host 
-    Write-Host -ForegroundColor $AssessmentColor "Attachments are encrypted by default upon download"
-    Write-Host 
-    $Answer = Read-Host "Do you want to enable attachments to be decrypted on download? Type Y or N and press Enter to continue"
-    if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-        Set-IRMConfiguration -DecryptAttachmentForEncryptOnly $true
-        Write-Host 
-        Write-Host -ForegroundColor $MessageColor "Attachments will now be automatically decrypted on download"
-        } else {
-        Write-Host 
-        Write-Host -ForegroundColor $AssessmentColor "Attachments will remain encrypted on download"
-        }
-    } else {
-    Write-Host
-    Write-Host -ForegroundColor $MessageColor "Attachments are automatically decrypted on download"
-}
-
-
-###################################################################################################
-## This section of the script will present the option to disable connecting to outside storage locations like GoogleDrive or consumer OneDrive
-$OwaPolicy = Get-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default
-if ($OwaPolicy.AdditionalStorageProvidersAvailable) {
-    Write-Host 
-    Write-Host -ForegroundColor $AssessmentColor "Connecting outside storage locations like GoogleDrive and consumer OneDrive are currently enabled by the default OWA policy"
-    Write-Host 
-    $Answer = Read-Host "Do you want to disable outside storage locations like GoogleDrive or consumer OneDrive in the default OWA policy? Type Y or N and press Enter to continue"
-    if ($Answer -eq 'y'-or $Answer -eq 'yes') {
-        Get-OwaMailboxPolicy | Set-OwaMailboxPolicy -AdditionalStorageProvidersAvailable $False
-        Write-Host 
-        Write-Host -ForegroundColor $MessageColor "Outside storage locations like GoogleDrive and consumer OneDrive are now disabled"
-    } Else {
-        Write-Host
-        Write-Host -ForegroundColor $AssessmentColor "Outside storage locations like GoogleDrive and consumer OneDrive have not been disabled"
-        }
-} Else {
-Write-Host
-Write-Host -ForegroundColor $MessageColor "Outside storage locations like GoogleDrive and consumer OneDrive are already disabled"
-}
-
-###################################################################################################
-## This section of the script will present the option to disable auto-forwarding to remote domains
-
+     
+#################################################
+## DISABLE AUTOMATIC FORWARDING 
+#################################################
 $RemoteDomainDefault = Get-RemoteDomain Default 
-
 if ($RemoteDomainDefault.AutoForwardEnabled) {
     Write-Host 
     Write-Host -ForegroundColor $AssessmentColor "Auto-forwarding to remote domains is currently allowed."
     Write-Host 
     $Answer = Read-Host "Do you want to block auto-forwarding to remote domains? Type Y or N and press Enter to continue"
     if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+        ## DENY AUTOFORWARD ON THE DEFAULT REMOTE DOMAIN (*) 
         Set-RemoteDomain Default -AutoForwardEnabled $false
+        ## ALSO DENY AUTO-FORWARDING FROM MAILBOX RULES VIA TRANSPORT RULE WITH REJECTION MESSAGE
+        $TransportRuleName = "External Forward Block"
+        $rejectMessageText = "Mail forwarding to external domains is not permitted. If you have questions, please contact support."
+        $ExternalForwardRule = Get-TransportRule | Where-Object {$_.Identity -contains $TransportRuleName}
+        if (!$ExternalForwardRule) {
+        Write-Output "External Forward Block rule not found, creating rule..."
+        New-TransportRule -name $TransportRuleName -Priority 1 -SentToScope NotInOrganization -MessageTypeMatches AutoForward -RejectMessageEnhancedStatusCode 5.7.1 -RejectMessageReasonText $rejectMessageText
+        } else {Write-Output "External forward block rule already exists."} 
         Write-Host 
         Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is now disabled"        
         } else {
         Write-Host
         Write-Host -ForegroundColor $AssessmentColor "Auto-forwarding to remote domains will not be disabled"
         }
-    Write-Host 
+  
+    ## EXPORT LIST OF FORWARDERS TO CSV
+    Write-Host    
     $Answer2 = Read-Host "Do you want to export to CSV a list of mailboxes that might be impacted by disabling auto-forward to remote domains? Type Y or N and press Enter to continue"
     if ($Answer2 -eq 'y' -or $Answer2 -eq 'yes') {
         ## Collect existing mailbox forwarding into CSV files at C:\temp\DomainName-MailboxForwarding.csv and DomainName-InboxRules.csv
@@ -208,9 +121,9 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
  }
  
 
-###################################################################################################
-## This section will reset the default spam filter policy with the recommended baseline settings
-
+#################################################
+## RESET THE DEFAULT ANTISPAM SETTINGS
+#################################################
 Write-Host 
 $Answer = Read-Host "Do you want to reset the default spam filter policy with the recommended baseline settings? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
@@ -223,19 +136,19 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         'enablelanguageblocklist' = $false;
         'enableregionblocklist' = $false;
         'increasescorewithimagelinks' = 'off'
-        'increasescorewithnumericips' = 'on'
-        'increasescorewithredirecttootherport' = 'on'
-        'increasescorewithbizorinfourls' = 'on';
-        'markasspamemptymessages' ='on';
-        'markasspamjavascriptinhtml' = 'on';
-        'markasspamframesinhtml' = 'on';
-        'markasspamobjecttagsinhtml' = 'on';
-        'markasspamembedtagsinhtml' ='on';
-        'markasspamformtagsinhtml' = 'on';
+        'increasescorewithnumericips' = 'off'
+        'increasescorewithredirecttootherport' = 'off'
+        'increasescorewithbizorinfourls' = 'off';
+        'markasspamemptymessages' ='off';
+        'markasspamjavascriptinhtml' = 'off';
+        'markasspamframesinhtml' = 'off';
+        'markasspamobjecttagsinhtml' = 'off';
+        'markasspamembedtagsinhtml' ='off';
+        'markasspamformtagsinhtml' = 'off';
         'markasspamwebbugsinhtml' = 'off';
-        'markasspamsensitivewordlist' = 'on';
-        'markasspamspfrecordhardfail' = 'on';
-        'markasspamfromaddressauthfail' = 'on';
+        'markasspamsensitivewordlist' = 'off';
+        'markasspamspfrecordhardfail' = 'off';
+        'markasspamfromaddressauthfail' = 'off';
         'markasspamndrbackscatter' = 'off';
         'phishspamaction' = 'quarantine';
         'spamaction' = 'MoveToJMF';
@@ -263,9 +176,10 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     Write-Host -ForegroundColor $AssessmentColor "The default anti-spam policy has not been modified"
     }
 
-###################################################################################################
-## This section will reset the default malware filter policy with the recommended baseline settings
 
+#################################################
+## RESET DEFAULT ANTIMALWARE SETTINGS
+#################################################
 Write-Host 
 $Answer = Read-Host "Do you want to reset the default malware filter policy with the recommended baseline settings? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
@@ -301,16 +215,19 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     }
 
 
-###################################################################################################
-## This section will reset the default outbound spam filter policy with the recommended baseline settings
-
+#################################################
+## RESET OUTBOUND SPAM FILTER
+#################################################
 Write-Host 
 $Answer = Read-Host "Do you want to reset the outbound spam filter policy with the recommended baseline settings? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         if ($AlertAddress -eq $null -or $AlertAddress -eq "") {
         $AlertAddress = Read-Host "Enter the email address where you would like to recieve alerts about outbound spam"
         $OutboundPolicyParam = @{
-                "identity" = 'Default';
+                "Identity" = 'Default';
+                'RecipientLimitExternalPerHour' = 500;
+                'RecipientLimitInternalPerHour' = 1000;
+                'ActionWhenThresholdReached' = BlockUserForToday;
                 'notifyoutboundspam' = $true;
                 'NotifyOutboundSpamRecipients' = $AlertAddress
             }
@@ -332,97 +249,9 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     Write-Host -ForegroundColor $AssessmentColor "The outbound spam filter policy has not been modified"
 }
 
-###################################################################################################
-## This section of the script enables Modern authentication if it is not already, and disables basic auth
-
-## Check whether modern authentication is enabled for Exchange Online, and if not, enable it:
-$OrgConfig = Get-OrganizationConfig 
- if ($OrgConfig.OAuth2ClientProfileEnabled) {
-     Write-Host 
-     Write-Host -ForegroundColor $MessageColor "Modern Authentication for Exchange Online is already enabled"
- } else {
-     Write-Host
-     Write-Host -ForegroundColor $AssessmentColor "Modern Authentication for Exchange online is not enabled"
-     Write-Host 
-     $Answer = Read-Host "Do you want to enable Modern Authentication for Exchange Online now? Type Y or N and press Enter to continue"
-     if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-         Set-OrganizationConfig -OAuth2ClientProfileEnabled $true
-         Write-Host 
-         Write-Host -ForegroundColor $MessageColor "Modern Authentication is now enabled"
-         } Else {
-         Write-Host
-         Write-Host -ForegroundColor $AssessmentColor "Modern Authentication will not be enabled"
-         }
- }
-
-
-## Create an authentication policy to block basic authentication
-if ($OrgConfig.DefaultAuthenticationPolicy -eq $null -or $OrgConfig.DefaultAuthenticationPolicy -eq "") {
-        Write-Host 
-        Write-Host -ForegroundColor $MessageColor "There is no default authentication policy in place; you do not have to set an authentication policy if you block legacy authentication using Conditional access or Security defaults instead"
-        $AuthAnswer = Read-Host "Would you like to block basic authentication using an authentication policy? Type Y or N and press Enter to continue"
-        if ($AuthAnswer -eq "y" -or $AuthAnswer -eq "yes") {
-                $PolicyName = "Block Basic Auth"
-                $CheckPolicy = Get-AuthenticationPolicy | Where-Object {$_.Name -contains $PolicyName}
-                if (!$CheckPolicy) {
-                    New-AuthenticationPolicy -Name $PolicyName
-                    Write-Host
-                    Write-Host -ForegroundColor $MessageColor "Block Basic Auth policy has been created"
-                    } else {
-                    Write-Host
-                    Write-Host  -ForegroundColor $MessageColor "Block Basic Auth policy already exists"
-                    }
-                Set-OrganizationConfig -DefaultAuthenticationPolicy $PolicyName
-                Write-Host
-                Write-Host -ForegroundColor $MessageColor "Block Basic Auth has been set as the default authentication policy for the organization; to create exceptions to this policy, please see the comments included at the end of this script."
-                Write-Host
-        } else {
-                Write-Host
-                Write-Host -ForegroundColor $AssessmentColor "Block Basic Auth will not be set as the default authentication policy."
-                Write-Host
-                }
-    } else {
-    Write-Host
-    Write-Host -ForegroundColor $AssessmentColor "There is already a default authentication policy in place. No changes will be made. To change the authentication policy for individual users, please see the comments at the end of this script. Your default authentication policy is:"
-    Write-Host
-    $OrgConfig.DefaultAuthenticationPolicy
-    Write-Host 
-    }
-
-
-
-## OPTIONAL: 
-## Create and assign the 'Block Basic Auth' policy explicitly to all users:
-## New-AuthenticationPolicy "Block Basic Auth"
-## Get-User -ResultSize unlimited | Set-User -AuthenticationPolicy "Block Basic Auth"
-
-## OPTIONAL: 
-## Create additional authentication policies for allowing exceptions for basic authentication (e.g. for service accounts)
-
-## EXAMPLE:
-## New-AuthenticationPolicy "Allow Basic Auth for <ServiceName>"
-
-## Then use Set-AuthenticationPolicy to allow basic auth for one or more of these protocols:
-## AllowBasicAuthActiveSync           
-## AllowBasicAuthAutodiscover        
-## AllowBasicAuthImap                 
-## AllowBasicAuthMapi                 
-## AllowBasicAuthOfflineAddressBook   
-## AllowBasicAuthOutlookService       
-## AllowBasicAuthPop                  
-## AllowBasicAuthReportingWebServices 
-## AllowBasicAuthRest                 
-## AllowBasicAuthRpc                  
-## AllowBasicAuthSmtp                 
-## AllowBasicAuthWebServices          
-## AllowBasicAuthPowershell           
-
-## Example below enables basic auth for IMAP: 
-## Set-AuthenticationPolicy "Allow Basic Auth for IMAP"  -AllowBasicAuthImap
-
-## To assign the exception policy to an account use:
-## $ExceptionUser = username@domain.com
-## Set-User -Identity $ExceptionUser -AuthenticationPolicy "Allow Basic Auth Exceptions"
 
 ###################################################################################################
-## This concludes the script
+## THIS CONCLUDES THE SCRIPT
+
+
+

@@ -5,7 +5,7 @@ This script configures a new Microsoft 365 Business tenant including:
 - Baseline Exchange Online settings and EOP policies
 - Baseline Office 365 ATP policies
 
-See Advanced-M365BTenant.ps1 for other customizations to Exchange Online 
+See Advanced-TenantConfig.ps1 for other customizations  
 
 Connect to Exchange Online via PowerShell using MFA:
 https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-exchange-online-powershell/mfa-connect-to-exchange-online-powershell?view=exchange-ps
@@ -136,19 +136,19 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         'enablelanguageblocklist' = $false;
         'enableregionblocklist' = $false;
         'increasescorewithimagelinks' = 'off'
-        'increasescorewithnumericips' = 'on'
-        'increasescorewithredirecttootherport' = 'on'
-        'increasescorewithbizorinfourls' = 'on';
-        'markasspamemptymessages' ='on';
-        'markasspamjavascriptinhtml' = 'on';
-        'markasspamframesinhtml' = 'on';
-        'markasspamobjecttagsinhtml' = 'on';
-        'markasspamembedtagsinhtml' ='on';
-        'markasspamformtagsinhtml' = 'on';
+        'increasescorewithnumericips' = 'off'
+        'increasescorewithredirecttootherport' = 'off'
+        'increasescorewithbizorinfourls' = 'off';
+        'markasspamemptymessages' ='off';
+        'markasspamjavascriptinhtml' = 'off';
+        'markasspamframesinhtml' = 'off';
+        'markasspamobjecttagsinhtml' = 'off';
+        'markasspamembedtagsinhtml' ='off';
+        'markasspamformtagsinhtml' = 'off';
         'markasspamwebbugsinhtml' = 'off';
-        'markasspamsensitivewordlist' = 'on';
-        'markasspamspfrecordhardfail' = 'on';
-        'markasspamfromaddressauthfail' = 'on';
+        'markasspamsensitivewordlist' = 'off';
+        'markasspamspfrecordhardfail' = 'off';
+        'markasspamfromaddressauthfail' = 'off';
         'markasspamndrbackscatter' = 'off';
         'phishspamaction' = 'quarantine';
         'spamaction' = 'MoveToJMF';
@@ -224,7 +224,10 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         if ($AlertAddress -eq $null -or $AlertAddress -eq "") {
         $AlertAddress = Read-Host "Enter the email address where you would like to recieve alerts about outbound spam"
         $OutboundPolicyParam = @{
-                "identity" = 'Default';
+                "Identity" = 'Default';
+                'RecipientLimitExternalPerHour' = 500;
+                'RecipientLimitInternalPerHour' = 1000;
+                'ActionWhenThresholdReached' = BlockUserForToday;
                 'notifyoutboundspam' = $true;
                 'NotifyOutboundSpamRecipients' = $AlertAddress
             }
