@@ -34,7 +34,16 @@ write-host -foregroundcolor green "Configuring the Default ATP policy for Office
 
 ## Configures the default ATP policy for Office 365
 ## https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-threat-protection/set-atppolicyforo365?view=exchange-ps
-Set-AtpPolicyForO365 -EnableATPForSPOTeamsODB $true -EnableSafeLinksForO365Clients $true -EnableSafeDocs $false -AllowClickThrough $false -TrackClicks $true
+$AtpPolicyForO365Param=@{
+   'EnableATPForSPOTeamsODB' =  $true;
+   'EnableSafeLinksForClients' = $true;
+   #'EnableSafeLinksForO365Clients' = $true;
+   'EnableSafeDocs' = $false
+   'TrackClicks' = $true;
+   'AllowClickThrough' = $false
+}
+
+Set-AtpPolicyForO365 @AtpPolicyForO365Param
 
 write-host -foregroundcolor green "Default ATP policy for Office 365 has been set."
 
@@ -114,7 +123,6 @@ $PhishPolicyParam=@{
    ##'AdminDisplayName' = "AntiPhish Baseline Policy";
    'AuthenticationFailAction' =  'Quarantine';
    'EnableAntispoofEnforcement' = $true;
-   'EnableAuthenticationSafetyTip' = $true;
    'Enabled' = $true;
    'EnableMailboxIntelligence' = $true;
    'EnableMailboxIntelligenceProtection' = $true;
