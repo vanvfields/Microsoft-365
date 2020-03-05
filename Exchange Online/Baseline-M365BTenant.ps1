@@ -73,6 +73,78 @@ $OrgConfig = Get-OrganizationConfig
 
      
 #################################################
+## BLOCK BASIC AUTH
+#################################################
+if ($OrgConfig.DefaultAuthenticationPolicy -eq $null -or $OrgConfig.DefaultAuthenticationPolicy -eq "") {
+        Write-Host 
+        Write-Host -ForegroundColor $MessageColor "There is no default authentication policy in place"
+        Write-Host -ForegroundColor $MessageColor "NOTE: You don't need one if you are using Security Defaults or Conditional Access"
+        $AuthAnswer = Read-Host "Would you like to block legacy authentication using an authentication policy? Type Y or N and press Enter to continue"
+        if ($AuthAnswer -eq "y" -or $AuthAnswer -eq "yes") {
+                $PolicyName = "Block Basic Auth"
+                $CheckPolicy = Get-AuthenticationPolicy | Where-Object {$_.Name -contains $PolicyName}
+                if (!$CheckPolicy) {
+                    New-AuthenticationPolicy -Name $PolicyName
+                    Write-Host
+                    Write-Host -ForegroundColor $MessageColor "Block Basic Auth policy has been created"
+                    } else {
+                    Write-Host
+                    Write-Host  -ForegroundColor $MessageColor "Block Basic Auth policy already exists"
+                    }
+                Set-OrganizationConfig -DefaultAuthenticationPolicy $PolicyName
+                Write-Host
+                Write-Host -ForegroundColor $MessageColor "Block Basic Auth has been set as the default authentication policy for the organization; to create exceptions to this policy, please see the comments included at the end of this script."
+                Write-Host
+        } else {
+                Write-Host
+                Write-Host -ForegroundColor $AssessmentColor "Block Basic Auth will not be set as the default authentication policy."
+                Write-Host
+                }
+    } else {
+    Write-Host
+    Write-Host -ForegroundColor $AssessmentColor "There is already a default policy in place. No changes will be made. Your default authentication policy is:"
+    Write-Host
+    $OrgConfig.DefaultAuthenticationPolicy
+    Write-Host 
+    }
+
+
+
+## OPTIONAL: 
+## Create and assign the 'Block Basic Auth' policy explicitly to all users:
+## New-AuthenticationPolicy "Block Basic Auth"
+## Get-User -ResultSize unlimited | Set-User -AuthenticationPolicy "Block Basic Auth"
+
+## OPTIONAL: 
+## Create additional authentication policies for allowing exceptions for basic authentication (e.g. for service accounts)
+
+## EXAMPLE:
+## New-AuthenticationPolicy "Allow Basic Auth for <ServiceName>"
+
+## Then use Set-AuthenticationPolicy to allow basic auth for one or more of these protocols:
+## AllowBasicAuthActiveSync           
+## AllowBasicAuthAutodiscover        
+## AllowBasicAuthImap                 
+## AllowBasicAuthMapi                 
+## AllowBasicAuthOfflineAddressBook   
+## AllowBasicAuthOutlookService       
+## AllowBasicAuthPop                  
+## AllowBasicAuthReportingWebServices 
+## AllowBasicAuthRest                 
+## AllowBasicAuthRpc                  
+## AllowBasicAuthSmtp                 
+## AllowBasicAuthWebServices          
+## AllowBasicAuthPowershell           
+
+## Example below enables basic auth for IMAP: 
+## Set-AuthenticationPolicy "Allow Basic Auth for IMAP"  -AllowBasicAuthImap
+
+## To assign the exception policy to an account use:
+## $ExceptionUser = username@domain.com
+## Set-User -Identity $ExceptionUser -AuthenticationPolicy "Allow Basic Auth Exceptions"
+
+
+#################################################
 ## DISABLE AUTOMATIC FORWARDING 
 #################################################
 $RemoteDomainDefault = Get-RemoteDomain Default 
