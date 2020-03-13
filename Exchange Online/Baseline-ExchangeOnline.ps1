@@ -37,16 +37,19 @@ if ($AuditLogConfig.UnifiedAuditLogIngestionEnabled) {
     Write-Host 
     Write-Host -ForegroundColor $AssessmentColor "Unified Audit Log is not enabled"
     Write-Host 
-    $Answer = Read-Host "Do you want to enable the Unified Audit Log now? Type Y or N and press Enter to continue"
+    $Answer = Read-Host "Do you want to enable mailbox auditing to the Unified Audit Log now? Type Y or N and press Enter to continue"
     if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
+        Get-Mailbox -ResultSize Unlimited | Set-Mailbox -AuditEnabled $true
         Write-Host 
-        Write-Host -ForegroundColor $MessageColor "Unified Audit Log Search is now enabled" 
+        Write-Host -ForegroundColor $MessageColor "Unified Audit Log Search is now enabled with mailbox auditing enabled" 
     } else {
         Write-Host 
         Write-Host -ForegroundColor $AssessmentColor "Unified Audit Log will not be enabled"
     }
  }
+
+
 
  
 #################################################
