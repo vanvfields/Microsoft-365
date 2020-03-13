@@ -10,8 +10,8 @@ https://github.com/microsoftgraph/powershell-intune-samples
     FileName:    Setup-Intune.ps1
     Author:      Alex Fields 
 	Based on:    Per Larsen / Frank Simorjay
-    Created:     10-06-2019
-	Revised:     12-15-2019
+    Created:     October 2019
+	Revised:     March 2020
     Version:     3.0 
     
 #>
@@ -899,10 +899,483 @@ $Sharepoint = $EnterpriseDomain.Split(".")[0]
 ####################################################
 #Jason Components
 ####################################################
+
+
+
+####################################################
 #App Protection policies
 ####################################################
 
-$MAM_AndroidPIN = @"
+$MAM_AndroidBase = @"
+
+{
+    "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/androidManagedAppProtections(apps())/$entity",
+    "displayName":  "Android MAM Baseline with PIN",
+    "description":  "Enforces data encryption with 4-digit app passcode",
+    "periodOfflineBeforeAccessCheck":  "PT12H",
+    "periodOnlineBeforeAccessCheck":  "PT0S",
+    "allowedInboundDataTransferSources":  "allApps",
+    "allowedOutboundDataTransferDestinations":  "allApps",
+    "organizationalCredentialsRequired":  false,
+    "allowedOutboundClipboardSharingLevel":  "allApps",
+    "dataBackupBlocked":  false,
+    "deviceComplianceRequired":  true,
+    "managedBrowserToOpenLinksRequired":  false,
+    "saveAsBlocked":  false,
+    "periodOfflineBeforeWipeIsEnforced":  "P60D",
+    "pinRequired":  true,
+    "maximumPinRetries":  10,
+    "simplePinBlocked":  false,
+    "minimumPinLength":  4,
+    "pinCharacterSet":  "numeric",
+    "periodBeforePinReset":  "PT0S",
+    "allowedDataStorageLocations":  [
+
+                                    ],
+    "contactSyncBlocked":  false,
+    "printBlocked":  false,
+    "fingerprintBlocked":  false,
+    "disableAppPinIfDevicePinIsSet":  false,
+    "minimumRequiredOsVersion":  null,
+    "minimumWarningOsVersion":  null,
+    "minimumRequiredAppVersion":  null,
+    "minimumWarningAppVersion":  null,
+    "minimumWipeOsVersion":  null,
+    "minimumWipeAppVersion":  null,
+    "appActionIfDeviceComplianceRequired":  "block",
+    "appActionIfMaximumPinRetriesExceeded":  "block",
+    "pinRequiredInsteadOfBiometricTimeout":  "PT30M",
+    "allowedOutboundClipboardSharingExceptionLength":  0,
+    "notificationRestriction":  "allow",
+    "previousPinBlockCount":  0,
+    "managedBrowser":  "notConfigured",
+    "maximumAllowedDeviceThreatLevel":  "notConfigured",
+    "mobileThreatDefenseRemediationAction":  "block",
+    "blockDataIngestionIntoOrganizationDocuments":  false,
+    "allowedDataIngestionLocations":  [
+                                          "oneDriveForBusiness",
+                                          "sharePoint",
+                                          "camera"
+                                      ],
+    "appActionIfUnableToAuthenticateUser":  null,
+    "isAssigned":  false,
+    "targetedAppManagementLevels":  "unspecified",
+    "screenCaptureBlocked":  false,
+    "disableAppEncryptionIfDeviceEncryptionIsEnabled":  false,
+    "encryptAppData":  true,
+    "deployedAppCount":  19,
+    "minimumRequiredPatchVersion":  "0000-00-00",
+    "minimumWarningPatchVersion":  "0000-00-00",
+    "minimumWipePatchVersion":  "0000-00-00",
+    "allowedAndroidDeviceManufacturers":  null,
+    "appActionIfAndroidDeviceManufacturerNotAllowed":  "block",
+    "requiredAndroidSafetyNetDeviceAttestationType":  "none",
+    "appActionIfAndroidSafetyNetDeviceAttestationFailed":  "block",
+    "requiredAndroidSafetyNetAppsVerificationType":  "none",
+    "appActionIfAndroidSafetyNetAppsVerificationFailed":  "block",
+    "customBrowserPackageId":  "",
+    "customBrowserDisplayName":  "",
+    "minimumRequiredCompanyPortalVersion":  null,
+    "minimumWarningCompanyPortalVersion":  null,
+    "minimumWipeCompanyPortalVersion":  null,
+    "keyboardsRestricted":  false,
+    "allowedAndroidDeviceModels":  [
+
+                                   ],
+    "appActionIfAndroidDeviceModelNotAllowed":  "block",
+    "exemptedAppPackages":  [
+
+                            ],
+    "approvedKeyboards":  [
+
+                          ],
+    "apps@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/androidManagedAppProtections(\u0027T_e27af3a0-a273-4bd9-b51b-bd4953e80ad6\u0027)/apps",
+    "apps":  [
+                 {
+                     "id":  "com.microsoft.emmx.android",
+                     "version":  "-725393251",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.emmx"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.flow.android",
+                     "version":  "-496779816",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.flow"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.msapps.android",
+                     "version":  "986978680",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.msapps"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.excel.android",
+                     "version":  "-1789826587",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.excel"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.officehub.android",
+                     "version":  "-1091809935",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.officehub"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.officehubhl.android",
+                     "version":  "-1175805259",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.officehubhl"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.officehubrow.android",
+                     "version":  "-1861979965",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.officehubrow"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.onenote.android",
+                     "version":  "186482170",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.onenote"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.outlook.android",
+                     "version":  "1146701235",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.outlook"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.powerpoint.android",
+                     "version":  "1411665537",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.powerpoint"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.word.android",
+                     "version":  "2122351424",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.office.word"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.planner.android",
+                     "version":  "-1658524342",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.planner"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.powerbim.android",
+                     "version":  "1564653697",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.powerbim"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.sharepoint.android",
+                     "version":  "84773357",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.sharepoint"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.skydrive.android",
+                     "version":  "1887770705",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.skydrive"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.stream.android",
+                     "version":  "648128536",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.stream"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.teams.android",
+                     "version":  "1900143244",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.teams"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.todos.android",
+                     "version":  "1697858135",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.microsoft.todos"
+                                             }
+                 },
+                 {
+                     "id":  "com.yammer.v1.android",
+                     "version":  "-1248070370",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.androidMobileAppIdentifier",
+                                                 "packageId":  "com.yammer.v1"
+                                             }
+                 }
+             ],
+    "@odata.type":  "#microsoft.graph.androidManagedAppProtection"
+
+}
+
+
+"@
+
+####################################################
+
+$MAM_iOSBase = @"
+
+{
+
+    "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/iosManagedAppProtections(apps())/$entity",
+    "displayName":  "iOS MAM Baseline with PIN",
+    "description":  "Enforces data encryption with 4-digit app passcode",
+    "periodOfflineBeforeAccessCheck":  "PT12H",
+    "periodOnlineBeforeAccessCheck":  "PT0S",
+    "allowedInboundDataTransferSources":  "allApps",
+    "allowedOutboundDataTransferDestinations":  "allApps",
+    "organizationalCredentialsRequired":  false,
+    "allowedOutboundClipboardSharingLevel":  "allApps",
+    "dataBackupBlocked":  false,
+    "deviceComplianceRequired":  true,
+    "managedBrowserToOpenLinksRequired":  false,
+    "saveAsBlocked":  false,
+    "periodOfflineBeforeWipeIsEnforced":  "P60D",
+    "pinRequired":  true,
+    "maximumPinRetries":  10,
+    "simplePinBlocked":  false,
+    "minimumPinLength":  4,
+    "pinCharacterSet":  "numeric",
+    "periodBeforePinReset":  "PT0S",
+    "allowedDataStorageLocations":  [
+
+                                    ],
+    "contactSyncBlocked":  false,
+    "printBlocked":  false,
+    "fingerprintBlocked":  false,
+    "disableAppPinIfDevicePinIsSet":  false,
+    "minimumRequiredOsVersion":  null,
+    "minimumWarningOsVersion":  null,
+    "minimumRequiredAppVersion":  null,
+    "minimumWarningAppVersion":  null,
+    "minimumWipeOsVersion":  null,
+    "minimumWipeAppVersion":  null,
+    "appActionIfDeviceComplianceRequired":  "block",
+    "appActionIfMaximumPinRetriesExceeded":  "block",
+    "pinRequiredInsteadOfBiometricTimeout":  "PT30M",
+    "allowedOutboundClipboardSharingExceptionLength":  0,
+    "notificationRestriction":  "allow",
+    "previousPinBlockCount":  0,
+    "managedBrowser":  "notConfigured",
+    "maximumAllowedDeviceThreatLevel":  "notConfigured",
+    "mobileThreatDefenseRemediationAction":  "block",
+    "blockDataIngestionIntoOrganizationDocuments":  false,
+    "allowedDataIngestionLocations":  [
+                                          "oneDriveForBusiness",
+                                          "sharePoint",
+                                          "camera"
+                                      ],
+    "appActionIfUnableToAuthenticateUser":  null,
+    "isAssigned":  false,
+    "targetedAppManagementLevels":  "unspecified",
+    "appDataEncryptionType":  "whenDeviceLocked",
+    "minimumRequiredSdkVersion":  null,
+    "deployedAppCount":  17,
+    "faceIdBlocked":  false,
+    "minimumWipeSdkVersion":  null,
+    "allowedIosDeviceModels":  null,
+    "appActionIfIosDeviceModelNotAllowed":  "block",
+    "thirdPartyKeyboardsBlocked":  false,
+    "filterOpenInToOnlyManagedApps":  false,
+    "disableProtectionOfManagedOutboundOpenInData":  false,
+    "protectInboundDataFromUnknownSources":  false,
+    "customBrowserProtocol":  "",
+    "exemptedAppProtocols":  [
+                                 {
+                                     "name":  "Default",
+                                     "value":  "tel;telprompt;skype;app-settings;calshow;itms;itmss;itms-apps;itms-appss;itms-services;"
+                                 }
+                             ],
+    "apps@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/iosManagedAppProtections(\u0027T_c6a62df0-9e88-4c86-8103-6a70cad6eaef\u0027)/apps",
+    "apps":  [
+                 {
+                     "id":  "com.microsoft.msapps.ios",
+                     "version":  "408162834",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.msapps"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.msedge.ios",
+                     "version":  "-2135752869",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.msedge"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.excel.ios",
+                     "version":  "-1255026913",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.office.excel"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.outlook.ios",
+                     "version":  "-518090279",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.office.outlook"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.powerpoint.ios",
+                     "version":  "-740777841",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.office.powerpoint"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.office.word.ios",
+                     "version":  "922692278",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.office.word"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.officemobile.ios",
+                     "version":  "-803819540",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.officemobile"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.onenote.ios",
+                     "version":  "107156768",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.onenote"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.plannermobile.ios",
+                     "version":  "-175532278",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.plannermobile"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.powerbimobile.ios",
+                     "version":  "-91595494",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.powerbimobile"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.procsimo.ios",
+                     "version":  "-1388599138",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.procsimo"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.sharepoint.ios",
+                     "version":  "-585639021",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.sharepoint"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.skydrive.ios",
+                     "version":  "-108719121",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.skydrive"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.skype.teams.ios",
+                     "version":  "-1040529574",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.skype.teams"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.stream.ios",
+                     "version":  "126860698",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.stream"
+                                             }
+                 },
+                 {
+                     "id":  "com.microsoft.to-do.ios",
+                     "version":  "-292160221",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "com.microsoft.to-do"
+                                             }
+                 },
+                 {
+                     "id":  "wefwef.ios",
+                     "version":  "207428455",
+                     "mobileAppIdentifier":  {
+                                                 "@odata.type":  "#microsoft.graph.iosMobileAppIdentifier",
+                                                 "bundleId":  "wefwef"
+                                             }
+                 }
+             ],
+    "@odata.type":  "#microsoft.graph.iosManagedAppProtection"
+
+
+}
+
+
+"@
+
+####################################################
+
+$MAM_AndroidStrict = @"
 
 {
     "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/androidManagedAppProtections(apps())/$entity",
@@ -1330,7 +1803,7 @@ $MAM_AndroidPIN = @"
 
 ####################################################
 
-$MAM_iOSPIN = @"
+$MAM_iOSStrict = @"
 
 {
     "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/iosManagedAppProtections(apps())/$entity",
@@ -1748,7 +2221,7 @@ $APP_WIP_MDM = @"
 
   "description": "This policy protects app data on MDM-enrolled Windows 10 devices",
 
-  "displayName": "Windows 10 - Managed devices app data protection",
+  "displayName": "Windows 10 Managed Devices Baseline",
 
   "enforcementLevel": "encryptAndAuditOnly",
 
@@ -2199,7 +2672,7 @@ $APP_WIP_MDM = @"
 $APP_WIP_MAM = @"
 {
   "description": "This policy protects app data on non-enrolled Windows 10 devices",
-  "displayName": "Windows 10 - Unmanaged devices app data protection",
+  "displayName": "Windows 10 Unmanaged Devices Baseline",
   "enforcementLevel": "encryptAndAuditOnly",
   "enterpriseDomain": "$EnterpriseDomain",
   "enterpriseProtectedDomainNames": [],
@@ -2433,6 +2906,10 @@ $APP_WIP_MAM = @"
 }
 "@
 
+
+
+
+
 ####################################################
 #Compliance policies
 ####################################################
@@ -2664,6 +3141,10 @@ $BaselineMacOS = @"
 
 
 "@
+
+
+
+
 
 ####################################################
 #Device configuration profiles
@@ -3197,12 +3678,12 @@ $AndroidOwnerDR = @"
 
 ####################################################
 
-$Win10_AppGuardNB = @"
+$Win10_Boundary = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10NetworkBoundaryConfiguration",
     "description":  "Customize this policy to define your network boundary before assigning the Corporate security endpoint protection profile",
-    "displayName":  "Windows 10 - Application Guard - Network boundary",
+    "displayName":  "Windows 10 - Network boundary",
     "windowsNetworkIsolationPolicy":  {
                                           "enterpriseNetworkDomainNames":  [
 
@@ -3240,7 +3721,7 @@ $Win10BASICDR = @"
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
     "description":  "Basic security profile for Windows 10 Business edition that is also BYOD friendly.",
-    "displayName":  "Windows 10 - Standard Device restrictions",
+    "displayName":  "Windows 10 - Standard Device Security",
     "taskManagerBlockEndTask":  false,
     "energySaverOnBatteryThresholdPercentage":  0,
     "energySaverPluggedInThresholdPercentage":  0,
@@ -3560,7 +4041,7 @@ $Win10BASICEP = @"
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
     "description":  "Basic security profile for Windows 10 Business edition that is also BYOD friendly.",
-    "displayName":  "Windows 10 - Standard Endpoint protection",
+    "displayName":  "Windows 10 - Standard Endpoint Protection",
     "dmaGuardDeviceEnumerationPolicy":  "deviceDefault",
     "xboxServicesEnableXboxGameSaveTask":  false,
     "xboxServicesAccessoryManagementServiceStartupMode":  "manual",
@@ -4052,8 +4533,8 @@ $Win10DR = @"
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description":  "Enhanced security profile for Windows 10 Business edition that is also BYOD friendly.",
-    "displayName":  "Windows 10 - Device restrictions",
+    "description":  "Enhanced security profile for Windows 10 Business edition that is approriate for corporate environments.",
+    "displayName":  "Windows 10 - Enhanced Device Security",
     "taskManagerBlockEndTask":  false,
     "energySaverOnBatteryThresholdPercentage":  0,
     "energySaverPluggedInThresholdPercentage":  0,
@@ -4370,8 +4851,8 @@ $Win10EP = @"
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description":  "Enhanced security profile for Windows 10 Business edition that is also BYOD friendly.",
-    "displayName":  "Windows 10 - Endpoint protection",
+    "description":  "Enhanced security profile for Windows 10 Business edition that is appropriate for corporate environments.",
+    "displayName":  "Windows 10 - Enhanced Endpoint Protection",
     "dmaGuardDeviceEnumerationPolicy":  "deviceDefault",
     "xboxServicesEnableXboxGameSaveTask":  false,
     "xboxServicesAccessoryManagementServiceStartupMode":  "manual",
@@ -4856,7 +5337,7 @@ $Win10EP = @"
 
 ####################################################
 
-$CorporateWHfB = @"
+$Win10_WHfB = @"
 
 {
     "@odata.type":  "#microsoft.graph.windowsIdentityProtectionConfiguration",
@@ -4882,7 +5363,7 @@ $CorporateWHfB = @"
 
 ####################################################
 
-$CorporateF2 = @"
+$Win10_F2 = @"
 
 {
     "@odata.type":  "#microsoft.graph.windows10CustomConfiguration",
@@ -5005,6 +5486,9 @@ $UpdateBroad = @"
 
 
 "@
+
+
+
 
 ####################################################
 #Apps
@@ -5165,8 +5649,8 @@ $Office64 = @"
 
 Write-Host "Adding MAM policies for mobile devices..." -ForegroundColor Yellow
 
-#Add-ManagedAppPolicy -JSON $MAM_AndroidPIN #OK
-#Add-ManagedAppPolicy -JSON $MAM_iOSPIN #OK
+Add-ManagedAppPolicy -JSON $MAM_AndroidBase #OK
+Add-ManagedAppPolicy -JSON $MAM_iOSBase #OK
 
 Write-Host 
 
@@ -5212,11 +5696,13 @@ Write-Host "Adding Windows 10 & MacOS Device configuration profiles..." -Foregro
 
 Add-DeviceConfigurationPolicy -JSON $MacOSDR
 Add-DeviceConfigurationPolicy -JSON $MacOSEP
+Add-DeviceConfigurationPolicy -Json $Win10BASICDR
+Add-DeviceConfigurationPolicy -Json $Win10BASICEP
 Add-DeviceConfigurationPolicy -Json $Win10DR
 Add-DeviceConfigurationPolicy -Json $Win10EP
-Add-DeviceConfigurationPolicy -Json $Win10_AppGuardNB # OK
-Add-DeviceConfigurationPolicy -Json $CorporateWHfB # OK
-Add-DeviceConfigurationPolicy -Json $CorporateF2 # OK
+Add-DeviceConfigurationPolicy -Json $Win10_Boundary 
+Add-DeviceConfigurationPolicy -Json $Win10_F2
+Add-DeviceConfigurationPolicy -Json $Win10_WHfB
 
 Write-Host 
 
