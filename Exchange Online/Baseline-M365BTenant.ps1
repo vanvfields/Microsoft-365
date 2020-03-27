@@ -341,7 +341,6 @@ write-host -foregroundcolor green "Configuring the Default ATP policy for Office
 $AtpPolicyForO365Param=@{
    'EnableATPForSPOTeamsODB' =  $true;
    'EnableSafeLinksForClients' = $true;
-   'EnableSafeLinksForO365Clients' = $true;
    'EnableSafeDocs' = $false
    'TrackClicks' = $true;
    'AllowClickThrough' = $false
