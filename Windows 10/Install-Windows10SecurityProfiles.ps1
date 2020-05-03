@@ -3635,7 +3635,11 @@ $Office64 = @"
 #Import JSON to create policies
 ####################################################
 
+Write-Host "Adding Compliance policy..." -ForegroundColor Yellow
 
+Add-DeviceCompliancePolicybaseline -Json $BaselineWin10 #OK
+
+Write-Host 
 ####################################################
 
 Write-Host "Adding Windows Information Protection policies..." -ForegroundColor Yellow
