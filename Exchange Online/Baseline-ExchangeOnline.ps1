@@ -298,7 +298,8 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
                 "Identity" = 'Default';
                 'RecipientLimitExternalPerHour' = 500;
                 'RecipientLimitInternalPerHour' = 1000;
-                'ActionWhenThresholdReached' = BlockUserForToday;
+                'RecipientLimitPerDay' = 1000;
+                'ActionWhenThresholdReached' = BlockUser;
                 'notifyoutboundspam' = $true;
                 'NotifyOutboundSpamRecipients' = $AlertAddress
             }

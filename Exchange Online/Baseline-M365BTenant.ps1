@@ -300,7 +300,8 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
                 "Identity" = 'Default';
                 'RecipientLimitExternalPerHour' = 500;
                 'RecipientLimitInternalPerHour' = 1000;
-                'ActionWhenThresholdReached' = BlockUserForToday;
+                'RecipientLimitPerDay' = 1000;
+                'ActionWhenThresholdReached' = BlockUser;
                 'notifyoutboundspam' = $true;
                 'NotifyOutboundSpamRecipients' = $AlertAddress
             }
@@ -340,7 +341,7 @@ write-host -foregroundcolor green "Configuring the Default ATP policy for Office
 ## https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-threat-protection/set-atppolicyforo365?view=exchange-ps
 $AtpPolicyForO365Param=@{
    'EnableATPForSPOTeamsODB' =  $true;
-   'EnableSafeLinksForClients' = $true;
+   #'EnableSafeLinksForClients' = $true;
    'EnableSafeLinksForO365Clients' = $true;
    'EnableSafeDocs' = $false
    'TrackClicks' = $true;
@@ -439,7 +440,7 @@ $PhishPolicyParam=@{
    'EnableTargetedUserProtection' = $false;
    ##'TargetedUsersToProtect' = $TargetedUsersToProtect;
    'EnableUnusualCharactersSafetyTips' = $true;
-   'PhishThresholdLevel' = 3;
+   'PhishThresholdLevel' = 2;
    'TargetedDomainProtectionAction' =  'Quarantine';
    'TargetedUserProtectionAction' =  'Quarantine'
 }
