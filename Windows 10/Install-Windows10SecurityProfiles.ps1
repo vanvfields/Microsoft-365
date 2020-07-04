@@ -7,7 +7,7 @@ https://github.com/microsoftgraph/powershell-intune-samples
 
 
 .NOTES
-    FileName:    Setup-Intune.ps1
+    FileName:    Install-Windows10SecurityProfiles.ps1
     Author:      Alex Fields 
 	Based on:    Per Larsen / Frank Simorjay
     Created:     October 2019
@@ -3650,7 +3650,7 @@ $ChrEdge = @"
 Add-MDMWindowsInformationProtectionPolicy -JSON $APP_WIP_MDM #OK
 Add-WindowsInformationProtectionPolicy -JSON $APP_WIP_MAM #OK
 
-#Write-Host
+Write-Host
 ####################################################
 
 Write-Host "Adding Compliance policy for Windows..." -ForegroundColor Yellow
@@ -3676,7 +3676,7 @@ Write-Host
 Add-DeviceConfigurationPolicy -Json $UpdatePilot # OK
 Add-DeviceConfigurationPolicy -Json $UpdateBroad # OK
 
-#Write-Host
+Write-Host
 ####################################################
 
 write-host "Publishing" ($Office32 | ConvertFrom-Json).displayName -ForegroundColor Yellow
@@ -3686,7 +3686,6 @@ Write-Host
 write-host "Publishing" ($Office64 | ConvertFrom-Json).displayName -ForegroundColor Yellow
 Add-MDMApplication -JSON $Office64
 Write-Host
-
 
 write-host "Publishing" ($ChrEdge | ConvertFrom-Json).displayName -ForegroundColor Yellow
 Add-MDMApplication -JSON $ChrEdge
