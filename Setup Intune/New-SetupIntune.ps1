@@ -11,8 +11,8 @@ https://github.com/microsoftgraph/powershell-intune-samples
     Author:      Alex Fields 
 	Based on:    Per Larsen / Frank Simorjay
     Created:     October 2019
-	Revised:     March 2020
-    Version:     3.0 
+	Revised:     July 2020
+    Version:     4.0 
     
 #>
 ###################################################################################################
@@ -2221,7 +2221,7 @@ $APP_WIP_MDM = @"
 
   "description": "This policy protects app data on MDM-enrolled Windows 10 devices",
 
-  "displayName": "Windows 10 Managed Devices Baseline",
+  "displayName": "Windows 10 Managed Devices App Protection Baseline",
 
   "enforcementLevel": "encryptAndAuditOnly",
 
@@ -2672,7 +2672,7 @@ $APP_WIP_MDM = @"
 $APP_WIP_MAM = @"
 {
   "description": "This policy protects app data on non-enrolled Windows 10 devices",
-  "displayName": "Windows 10 Unmanaged Devices Baseline",
+  "displayName": "Windows 10 Unmanaged Devices App Protection Baseline",
   "enforcementLevel": "encryptAndAuditOnly",
   "enterpriseDomain": "$EnterpriseDomain",
   "enterpriseProtectedDomainNames": [],
@@ -2906,6 +2906,7 @@ $APP_WIP_MAM = @"
 }
 "@
 
+####################################################
 
 
 
@@ -3142,6 +3143,7 @@ $BaselineMacOS = @"
 
 "@
 
+####################################################
 
 
 
@@ -3720,7 +3722,7 @@ $Win10BASICDR = @"
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description":  "Basic security profile for Windows 10 Business edition that is also BYOD friendly.",
+    "description":  "Basic security profile for Windows 10 that is also BYOD friendly.",
     "displayName":  "Windows 10 - Standard Device Security",
     "taskManagerBlockEndTask":  false,
     "energySaverOnBatteryThresholdPercentage":  0,
@@ -4040,7 +4042,7 @@ $Win10BASICEP = @"
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description":  "Basic security profile for Windows 10 Business edition that is also BYOD friendly.",
+    "description":  "Basic security profile for Windows 10 that is also BYOD friendly.",
     "displayName":  "Windows 10 - Standard Endpoint Protection",
     "dmaGuardDeviceEnumerationPolicy":  "deviceDefault",
     "xboxServicesEnableXboxGameSaveTask":  false,
@@ -4533,11 +4535,11 @@ $Win10DR = @"
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description":  "Enhanced security profile for Windows 10 Business edition that is approriate for corporate environments.",
-    "displayName":  "Windows 10 - Enhanced Device Security",
+    "description":  "Enhanced security profile for Windows 10 that is approriate for corporate environments.",
+    "displayName":  "Windows 10 - Enhanced Security Device Restrictions",
     "taskManagerBlockEndTask":  false,
-    "energySaverOnBatteryThresholdPercentage":  0,
-    "energySaverPluggedInThresholdPercentage":  0,
+    "energySaverOnBatteryThresholdPercentage":  null,
+    "energySaverPluggedInThresholdPercentage":  null,
     "powerLidCloseActionOnBattery":  "notConfigured",
     "powerLidCloseActionPluggedIn":  "notConfigured",
     "powerButtonActionOnBattery":  "notConfigured",
@@ -4546,7 +4548,6 @@ $Win10DR = @"
     "powerSleepButtonActionPluggedIn":  "notConfigured",
     "powerHybridSleepOnBattery":  "enabled",
     "powerHybridSleepPluggedIn":  "enabled",
-    "windows10AppsForceUpdateSchedule":  null,
     "enableAutomaticRedeployment":  true,
     "microsoftAccountSignInAssistantSettings":  "notConfigured",
     "authenticationAllowSecondaryDevice":  true,
@@ -4576,14 +4577,15 @@ $Win10DR = @"
     "printerBlockAddition":  false,
     "searchBlockDiacritics":  false,
     "searchDisableAutoLanguageDetection":  false,
-    "searchDisableIndexingEncryptedItems":  false,
+    "searchDisableIndexingEncryptedItems":  true,
     "searchEnableRemoteQueries":  false,
     "searchDisableUseLocation":  false,
     "searchDisableLocation":  false,
     "searchDisableIndexerBackoff":  false,
-    "searchDisableIndexingRemovableDrive":  false,
+    "searchDisableIndexingRemovableDrive":  true,
     "searchEnableAutomaticIndexSizeManangement":  false,
     "searchBlockWebResults":  false,
+    "findMyFiles":  "notConfigured",
     "securityBlockAzureADJoinedDevicesAutoEncryption":  false,
     "diagnosticsDataSubmissionMode":  "none",
     "oneDriveDisableFileSync":  false,
@@ -4611,13 +4613,13 @@ $Win10DR = @"
     "edgeBlockExtensions":  false,
     "edgeBlockInPrivateBrowsing":  false,
     "edgeBlockJavaScript":  false,
-    "edgeBlockPasswordManager":  false,
+    "edgeBlockPasswordManager":  true,
     "edgeBlockAddressBarDropdown":  false,
     "edgeBlockCompatibilityList":  false,
     "edgeClearBrowsingDataOnExit":  false,
     "edgeAllowStartPagesModification":  false,
-    "edgeDisableFirstRunPage":  false,
-    "edgeBlockLiveTileDataCollection":  false,
+    "edgeDisableFirstRunPage":  true,
+    "edgeBlockLiveTileDataCollection":  true,
     "edgeSyncFavoritesWithInternetExplorer":  false,
     "edgeFavoritesListLocation":  null,
     "edgeBlockEditFavorites":  false,
@@ -4637,65 +4639,65 @@ $Win10DR = @"
     "edgeBlockTabPreloading":  false,
     "edgeBlockPrelaunch":  false,
     "edgeShowMessageWhenOpeningInternetExplorerSites":  "notConfigured",
-    "edgePreventCertificateErrorOverride":  false,
+    "edgePreventCertificateErrorOverride":  true,
     "edgeKioskModeRestriction":  "notConfigured",
     "edgeKioskResetAfterIdleTimeInMinutes":  null,
     "cellularBlockDataWhenRoaming":  false,
     "cellularBlockVpn":  false,
     "cellularBlockVpnWhenRoaming":  false,
     "cellularData":  "allowed",
-    "defenderBlockEndUserAccess":  false,
-    "defenderDaysBeforeDeletingQuarantinedMalware":  5,
-    "defenderSystemScanSchedule":  "userDefined",
-    "defenderFilesAndFoldersToExclude":  [
-
-                                         ],
-    "defenderFileExtensionsToExclude":  [
-
-                                        ],
-    "defenderScanMaxCpu":  50,
-    "defenderMonitorFileActivity":  "monitorIncomingFilesOnly",
-    "defenderPotentiallyUnwantedAppAction":  "block",
-    "defenderPotentiallyUnwantedAppActionSetting":  "enable",
-    "defenderProcessesToExclude":  [
-
-                                   ],
-    "defenderPromptForSampleSubmission":  "promptBeforeSendingPersonalData",
-    "defenderRequireBehaviorMonitoring":  true,
-    "defenderRequireCloudProtection":  true,
-    "defenderRequireNetworkInspectionSystem":  true,
     "defenderRequireRealTimeMonitoring":  true,
-    "defenderScanArchiveFiles":  true,
+    "defenderRequireBehaviorMonitoring":  true,
+    "defenderRequireNetworkInspectionSystem":  true,
     "defenderScanDownloads":  true,
     "defenderScheduleScanEnableLowCpuPriority":  false,
     "defenderDisableCatchupQuickScan":  false,
     "defenderDisableCatchupFullScan":  false,
-    "defenderScanNetworkFiles":  true,
-    "defenderScanIncomingMail":  true,
-    "defenderScanMappedNetworkDrivesDuringFullScan":  false,
-    "defenderScanRemovableDrivesDuringFullScan":  true,
     "defenderScanScriptsLoadedInInternetExplorer":  true,
+    "defenderBlockEndUserAccess":  false,
     "defenderSignatureUpdateIntervalInHours":  2,
-    "defenderScanType":  "userDefined",
-    "defenderScheduledScanTime":  null,
-    "defenderScheduledQuickScanTime":  null,
+    "defenderMonitorFileActivity":  "monitorAllFiles",
+    "defenderDaysBeforeDeletingQuarantinedMalware":  5,
+    "defenderScanMaxCpu":  50,
+    "defenderScanArchiveFiles":  true,
+    "defenderScanIncomingMail":  true,
+    "defenderScanRemovableDrivesDuringFullScan":  true,
+    "defenderScanMappedNetworkDrivesDuringFullScan":  false,
+    "defenderScanNetworkFiles":  true,
+    "defenderRequireCloudProtection":  true,
     "defenderCloudBlockLevel":  "notConfigured",
     "defenderCloudExtendedTimeout":  null,
     "defenderCloudExtendedTimeoutInSeconds":  null,
-    "defenderBlockOnAccessProtection":  false,
+    "defenderPromptForSampleSubmission":  "promptBeforeSendingPersonalData",
+    "defenderScheduledQuickScanTime":  null,
+    "defenderScanType":  "userDefined",
+    "defenderSystemScanSchedule":  "userDefined",
+    "defenderScheduledScanTime":  "10:00:00.0000000",
+    "defenderPotentiallyUnwantedAppAction":  "block",
+    "defenderPotentiallyUnwantedAppActionSetting":  "userDefined",
     "defenderSubmitSamplesConsentType":  "sendSafeSamplesAutomatically",
+    "defenderBlockOnAccessProtection":  false,
+    "defenderFileExtensionsToExclude":  [
+
+                                        ],
+    "defenderFilesAndFoldersToExclude":  [
+
+                                         ],
+    "defenderProcessesToExclude":  [
+
+                                   ],
     "lockScreenAllowTimeoutConfiguration":  false,
     "lockScreenBlockActionCenterNotifications":  false,
-    "lockScreenBlockCortana":  false,
-    "lockScreenBlockToastNotifications":  false,
+    "lockScreenBlockCortana":  true,
+    "lockScreenBlockToastNotifications":  true,
     "lockScreenTimeoutInSeconds":  null,
-    "lockScreenActivateAppsWithVoice":  "notConfigured",
+    "lockScreenActivateAppsWithVoice":  "disabled",
     "passwordBlockSimple":  true,
-    "passwordExpirationDays":  null,
-    "passwordMinimumLength":  16,
-    "passwordMinutesOfInactivityBeforeScreenTimeout":  5,
+    "passwordExpirationDays":  60,
+    "passwordMinimumLength":  8,
+    "passwordMinutesOfInactivityBeforeScreenTimeout":  15,
     "passwordMinimumCharacterSetCount":  3,
-    "passwordPreviousPasswordBlockCount":  null,
+    "passwordPreviousPasswordBlockCount":  24,
     "passwordRequired":  true,
     "passwordRequireWhenResumeFromIdleState":  false,
     "passwordRequiredType":  "alphanumeric",
@@ -4707,6 +4709,7 @@ $Win10DR = @"
     "privacyBlockInputPersonalization":  false,
     "privacyBlockPublishUserActivities":  false,
     "privacyBlockActivityFeed":  false,
+    "activateAppsWithVoice":  "notConfigured",
     "startBlockUnpinningAppsFromTaskbar":  false,
     "startMenuAppListVisibility":  "userDefined",
     "startMenuHideChangeAccountSettings":  false,
@@ -4747,11 +4750,11 @@ $Win10DR = @"
     "settingsBlockUpdateSecurityPage":  false,
     "settingsBlockAppsPage":  false,
     "settingsBlockGamingPage":  false,
-    "windowsSpotlightBlockConsumerSpecificFeatures":  false,
+    "windowsSpotlightBlockConsumerSpecificFeatures":  true,
     "windowsSpotlightBlocked":  false,
     "windowsSpotlightBlockOnActionCenter":  false,
     "windowsSpotlightBlockTailoredExperiences":  false,
-    "windowsSpotlightBlockThirdPartyNotifications":  false,
+    "windowsSpotlightBlockThirdPartyNotifications":  true,
     "windowsSpotlightBlockWelcomeExperience":  false,
     "windowsSpotlightBlockWindowsTips":  false,
     "windowsSpotlightConfigureOnLockScreen":  "notConfigured",
@@ -4759,18 +4762,18 @@ $Win10DR = @"
     "networkProxyDisableAutoDetect":  false,
     "networkProxyAutomaticConfigurationUrl":  null,
     "networkProxyServer":  null,
-    "accountsBlockAddingNonMicrosoftAccountEmail":  false,
+    "accountsBlockAddingNonMicrosoftAccountEmail":  true,
     "antiTheftModeBlocked":  false,
     "bluetoothBlocked":  false,
     "cameraBlocked":  false,
     "connectedDevicesServiceBlocked":  false,
     "certificatesBlockManualRootCertificateInstallation":  false,
     "copyPasteBlocked":  false,
-    "cortanaBlocked":  false,
+    "cortanaBlocked":  true,
     "deviceManagementBlockFactoryResetOnMobile":  false,
     "deviceManagementBlockManualUnenroll":  true,
     "safeSearchFilter":  "userDefined",
-    "edgeBlockPopups":  false,
+    "edgeBlockPopups":  true,
     "edgeBlockSearchSuggestions":  false,
     "edgeBlockSearchEngineCustomization":  false,
     "edgeBlockSendingIntranetTrafficToInternetExplorer":  false,
@@ -4778,7 +4781,6 @@ $Win10DR = @"
     "edgeRequireSmartScreen":  true,
     "edgeEnterpriseModeSiteListLocation":  null,
     "edgeFirstRunUrl":  null,
-    "edgeSearchEngine":  null,
     "edgeHomepageUrls":  [
 
                          ],
@@ -4795,7 +4797,7 @@ $Win10DR = @"
     "settingsBlockChangeLanguage":  false,
     "settingsBlockChangePowerSleep":  false,
     "locationServicesBlocked":  false,
-    "microsoftAccountBlocked":  false,
+    "microsoftAccountBlocked":  true,
     "microsoftAccountBlockSettingsSync":  false,
     "nfcBlocked":  false,
     "resetProtectionModeBlocked":  false,
@@ -4804,7 +4806,7 @@ $Win10DR = @"
     "storageRequireMobileDeviceEncryption":  false,
     "usbBlocked":  false,
     "voiceRecordingBlocked":  false,
-    "wiFiBlockAutomaticConnectHotspots":  false,
+    "wiFiBlockAutomaticConnectHotspots":  true,
     "wiFiBlocked":  false,
     "wiFiBlockManualConfiguration":  false,
     "wiFiScanInterval":  null,
@@ -4820,25 +4822,35 @@ $Win10DR = @"
     "windowsStoreEnablePrivateStoreOnly":  false,
     "storageRestrictAppDataToSystemVolume":  false,
     "storageRestrictAppInstallToSystemVolume":  false,
-    "gameDvrBlocked":  false,
+    "gameDvrBlocked":  true,
     "experienceBlockDeviceDiscovery":  false,
     "experienceBlockErrorDialogWhenNoSIM":  false,
     "experienceBlockTaskSwitcher":  false,
     "logonBlockFastUserSwitching":  false,
     "tenantLockdownRequireNetworkDuringOutOfBoxExperience":  false,
-    "appManagementMSIAllowUserControlOverInstall":  false,
-    "appManagementMSIAlwaysInstallWithElevatedPrivileges":  false,
+    "appManagementMSIAllowUserControlOverInstall":  true,
+    "appManagementMSIAlwaysInstallWithElevatedPrivileges":  true,
     "dataProtectionBlockDirectMemoryAccess":  true,
     "appManagementPackageFamilyNamesToLaunchAfterLogOn":  [
 
                                                           ],
     "uninstallBuiltInApps":  false,
+    "configureTimeZone":  null,
+    "windows10AppsForceUpdateSchedule":  {
+                                             "startDateTime":  "0001-01-01T00:00:00Z",
+                                             "recurrence":  "none",
+                                             "runImmediatelyIfAfterStartDateTime":  false
+                                         },
     "defenderDetectedMalwareActions":  {
                                            "lowSeverity":  "clean",
                                            "moderateSeverity":  "quarantine",
                                            "highSeverity":  "remove",
                                            "severeSeverity":  "block"
-                                       }
+                                       },
+    "edgeSearchEngine":  {
+                             "@odata.type":  "#microsoft.graph.edgeSearchEngine",
+                             "edgeSearchEngineType":  "default"
+                         }
 }
 
 "@
@@ -4851,8 +4863,8 @@ $Win10EP = @"
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description":  "Enhanced security profile for Windows 10 Business edition that is appropriate for corporate environments.",
-    "displayName":  "Windows 10 - Enhanced Endpoint Protection",
+    "description":  "Advanced security profile for Windows 10 that is appropriate for corporate-owned workstations.",
+    "displayName":  "Windows 10 - Enhanced Security Endpoint Protection baseline",
     "dmaGuardDeviceEnumerationPolicy":  "deviceDefault",
     "xboxServicesEnableXboxGameSaveTask":  false,
     "xboxServicesAccessoryManagementServiceStartupMode":  "manual",
@@ -4869,8 +4881,8 @@ $Win10EP = @"
     "localSecurityOptionsBlockUsersInstallingPrinterDrivers":  false,
     "localSecurityOptionsBlockRemoteOpticalDriveAccess":  false,
     "localSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser":  "notConfigured",
-    "localSecurityOptionsMachineInactivityLimit":  5,
-    "localSecurityOptionsMachineInactivityLimitInMinutes":  5,
+    "localSecurityOptionsMachineInactivityLimit":  15,
+    "localSecurityOptionsMachineInactivityLimitInMinutes":  15,
     "localSecurityOptionsDoNotRequireCtrlAltDel":  false,
     "localSecurityOptionsHideLastSignedInUser":  false,
     "localSecurityOptionsHideUsernameAtSignIn":  false,
@@ -4883,7 +4895,7 @@ $Win10EP = @"
     "localSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers":  "ntlmV2And128BitEncryption",
     "lanManagerAuthenticationLevel":  "lmNtlmV2AndNotLmOrNtm",
     "lanManagerWorkstationDisableInsecureGuestLogons":  true,
-    "localSecurityOptionsClearVirtualMemoryPageFile":  false,
+    "localSecurityOptionsClearVirtualMemoryPageFile":  true,
     "localSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn":  false,
     "localSecurityOptionsAllowUIAccessApplicationElevation":  true,
     "localSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations":  true,
@@ -4898,9 +4910,9 @@ $Win10EP = @"
     "localSecurityOptionsInformationShownOnLockScreen":  "notConfigured",
     "localSecurityOptionsInformationDisplayedOnLockScreen":  "notConfigured",
     "localSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees":  true,
-    "localSecurityOptionsClientDigitallySignCommunicationsAlways":  false,
-    "localSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers":  false,
-    "localSecurityOptionsDisableServerDigitallySignCommunicationsAlways":  false,
+    "localSecurityOptionsClientDigitallySignCommunicationsAlways":  true,
+    "localSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers":  true,
+    "localSecurityOptionsDisableServerDigitallySignCommunicationsAlways":  true,
     "localSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees":  true,
     "localSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares":  true,
     "localSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts":  true,
@@ -4964,7 +4976,7 @@ $Win10EP = @"
     "defenderEmailContentExecutionType":  "block",
     "defenderEmailContentExecution":  "enable",
     "defenderAdvancedRansomewareProtectionType":  "enable",
-    "defenderGuardMyFoldersType":  "enable",
+    "defenderGuardMyFoldersType":  "auditMode",
     "defenderGuardedFoldersAllowedAppPaths":  [
 
                                               ],
@@ -4975,7 +4987,7 @@ $Win10EP = @"
     "defenderExploitProtectionXml":  null,
     "defenderExploitProtectionXmlFileName":  null,
     "defenderSecurityCenterBlockExploitProtectionOverride":  false,
-    "appLockerApplicationControl":  "notConfigured",
+    "appLockerApplicationControl":  "enforceComponentsStoreAppsAndSmartlocker",
     "deviceGuardLocalSystemAuthorityCredentialGuardSettings":  "notConfigured",
     "deviceGuardEnableVirtualizationBasedSecurity":  false,
     "deviceGuardEnableSecureBootWithDMA":  false,
@@ -5001,27 +5013,38 @@ $Win10EP = @"
     "bitLockerEnableStorageCardEncryptionOnMobile":  false,
     "bitLockerEncryptDevice":  true,
     "bitLockerRecoveryPasswordRotation":  "notConfigured",
-    "defenderDisableScanArchiveFiles":  false,
-    "defenderDisableBehaviorMonitoring":  false,
-    "defenderDisableCloudProtection":  false,
-    "defenderEnableScanIncomingMail":  false,
-    "defenderEnableScanMappedNetworkDrivesDuringFullScan":  false,
-    "defenderDisableScanRemovableDrivesDuringFullScan":  false,
-    "defenderDisableScanDownloads":  false,
-    "defenderDisableIntrusionPreventionSystem":  false,
-    "defenderDisableOnAccessProtection":  false,
-    "defenderDisableRealTimeMonitoring":  false,
-    "defenderDisableScanNetworkFiles":  false,
-    "defenderDisableScanScriptsLoadedInInternetExplorer":  false,
-    "defenderBlockEndUserAccess":  false,
+    "defenderDisableScanArchiveFiles":  null,
+    "defenderAllowScanArchiveFiles":  null,
+    "defenderDisableBehaviorMonitoring":  null,
+    "defenderAllowBehaviorMonitoring":  null,
+    "defenderDisableCloudProtection":  null,
+    "defenderAllowCloudProtection":  null,
+    "defenderEnableScanIncomingMail":  null,
+    "defenderEnableScanMappedNetworkDrivesDuringFullScan":  null,
+    "defenderDisableScanRemovableDrivesDuringFullScan":  null,
+    "defenderAllowScanRemovableDrivesDuringFullScan":  null,
+    "defenderDisableScanDownloads":  null,
+    "defenderAllowScanDownloads":  null,
+    "defenderDisableIntrusionPreventionSystem":  null,
+    "defenderAllowIntrusionPreventionSystem":  null,
+    "defenderDisableOnAccessProtection":  null,
+    "defenderAllowOnAccessProtection":  null,
+    "defenderDisableRealTimeMonitoring":  null,
+    "defenderAllowRealTimeMonitoring":  null,
+    "defenderDisableScanNetworkFiles":  null,
+    "defenderAllowScanNetworkFiles":  null,
+    "defenderDisableScanScriptsLoadedInInternetExplorer":  null,
+    "defenderAllowScanScriptsLoadedInInternetExplorer":  null,
+    "defenderBlockEndUserAccess":  null,
+    "defenderAllowEndUserAccess":  null,
     "defenderScanMaxCpuPercentage":  null,
-    "defenderCheckForSignaturesBeforeRunningScan":  false,
-    "defenderCloudBlockLevel":  "notConfigured",
+    "defenderCheckForSignaturesBeforeRunningScan":  null,
+    "defenderCloudBlockLevel":  null,
     "defenderCloudExtendedTimeoutInSeconds":  null,
     "defenderDaysBeforeDeletingQuarantinedMalware":  null,
-    "defenderDisableCatchupFullScan":  false,
-    "defenderDisableCatchupQuickScan":  false,
-    "defenderEnableLowCpuPriority":  false,
+    "defenderDisableCatchupFullScan":  null,
+    "defenderDisableCatchupQuickScan":  null,
+    "defenderEnableLowCpuPriority":  null,
     "defenderFileExtensionsToExclude":  [
 
                                         ],
@@ -5031,13 +5054,14 @@ $Win10EP = @"
     "defenderProcessesToExclude":  [
 
                                    ],
-    "defenderPotentiallyUnwantedAppAction":  "userDefined",
-    "defenderScanDirection":  "monitorAllFiles",
-    "defenderScanType":  "userDefined",
+    "defenderPotentiallyUnwantedAppAction":  null,
+    "defenderScanDirection":  null,
+    "defenderScanType":  null,
     "defenderScheduledQuickScanTime":  null,
-    "defenderScheduledScanDay":  "userDefined",
+    "defenderScheduledScanDay":  null,
     "defenderScheduledScanTime":  null,
-    "defenderSubmitSamplesConsentType":  "sendSafeSamplesAutomatically",
+    "defenderSignatureUpdateIntervalInHours":  null,
+    "defenderSubmitSamplesConsentType":  null,
     "defenderDetectedMalwareActions":  null,
     "firewallRules":  [
 
@@ -5292,19 +5316,19 @@ $Win10EP = @"
                                    "policyRulesFromGroupPolicyNotMerged":  false
                                },
     "bitLockerSystemDrivePolicy":  {
-                                       "encryptionMethod":  null,
+                                       "encryptionMethod":  "xtsAes256",
                                        "startupAuthenticationRequired":  true,
-                                       "startupAuthenticationBlockWithoutTpmChip":  false,
-                                       "startupAuthenticationTpmUsage":  "allowed",
-                                       "startupAuthenticationTpmPinUsage":  "allowed",
-                                       "startupAuthenticationTpmKeyUsage":  "allowed",
-                                       "startupAuthenticationTpmPinAndKeyUsage":  "allowed",
+                                       "startupAuthenticationBlockWithoutTpmChip":  true,
+                                       "startupAuthenticationTpmUsage":  "required",
+                                       "startupAuthenticationTpmPinUsage":  "blocked",
+                                       "startupAuthenticationTpmKeyUsage":  "blocked",
+                                       "startupAuthenticationTpmPinAndKeyUsage":  "blocked",
                                        "minimumPinLength":  null,
                                        "prebootRecoveryEnableMessageAndUrl":  false,
                                        "prebootRecoveryMessage":  null,
                                        "prebootRecoveryUrl":  null,
                                        "recoveryOptions":  {
-                                                               "blockDataRecoveryAgent":  false,
+                                                               "blockDataRecoveryAgent":  true,
                                                                "recoveryPasswordUsage":  "allowed",
                                                                "recoveryKeyUsage":  "allowed",
                                                                "hideRecoveryOptions":  true,
@@ -5314,10 +5338,10 @@ $Win10EP = @"
                                                            }
                                    },
     "bitLockerFixedDrivePolicy":  {
-                                      "encryptionMethod":  null,
+                                      "encryptionMethod":  "xtsAes256",
                                       "requireEncryptionForWriteAccess":  true,
                                       "recoveryOptions":  {
-                                                              "blockDataRecoveryAgent":  false,
+                                                              "blockDataRecoveryAgent":  true,
                                                               "recoveryPasswordUsage":  "allowed",
                                                               "recoveryKeyUsage":  "allowed",
                                                               "hideRecoveryOptions":  true,
@@ -5327,7 +5351,7 @@ $Win10EP = @"
                                                           }
                                   },
     "bitLockerRemovableDrivePolicy":  {
-                                          "encryptionMethod":  null,
+                                          "encryptionMethod":  "aesCbc256",
                                           "requireEncryptionForWriteAccess":  true,
                                           "blockCrossOrganizationWriteAccess":  false
                                       }
@@ -5487,6 +5511,7 @@ $UpdateBroad = @"
 
 "@
 
+####################################################
 
 
 
@@ -5504,11 +5529,11 @@ $Office32 = @"
 
   "autoAcceptEula": true,
 
-  "description": "Office 365 Desktop apps - 32 bit",
+  "description": "Microsoft 365 Desktop apps - 32 bit",
 
   "developer": "Microsoft",
 
-  "displayName": "Office 365 Desktop apps - 32 bit",
+  "displayName": "Microsoft 365 Desktop apps - 32 bit",
 
   "excludedApps": {
 
@@ -5578,11 +5603,11 @@ $Office64 = @"
 
   "autoAcceptEula": true,
 
-  "description": "Office 365 Desktop apps - 64 bit",
+  "description": "Microsoft 365 Desktop apps - 64 bit",
 
   "developer": "Microsoft",
 
-  "displayName": "Office 365 Desktop apps - 64 bit",
+  "displayName": "Microsoft 365 Desktop apps - 64 bit",
 
   "excludedApps": {
 
@@ -5642,6 +5667,28 @@ $Office64 = @"
 
 ####################################################
 
+$ChrEdge = @"
+
+{
+    "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/mobileApps/$entity",
+    "@odata.type":  "#microsoft.graph.windowsMicrosoftEdgeApp",
+    "displayName":  "Microsoft Edge for Windows 10",
+    "description":  "Microsoft Edge is the browser for business with modern and legacy web compatibility, new privacy features such as Tracking prevention, and built-in productivity tools such as enterprise-grade PDF support and access to Office and corporate search right from a new tab.",
+    "publisher":  "Microsoft",
+    "isFeatured":  false,
+    "privacyInformationUrl":  "https://privacy.microsoft.com/en-US/privacystatement",
+    "informationUrl":  "https://www.microsoft.com/en-us/windows/microsoft-edge",
+    "developer":  "Microsoft",
+    "isAssigned":  false,
+    "dependentAppCount":  0,
+    "channel":  "stable",
+    "displayLanguageLocale":  null
+}
+
+"@
+
+####################################################
+
 
 ####################################################
 #Import JSON to create policies
@@ -5656,7 +5703,7 @@ Write-Host
 
 ####################################################
 
-Write-Host "Adding MDM policies for mobile devices..." -ForegroundColor Yellow
+Write-Host "Adding MDM Compliance policies for mobile devices..." -ForegroundColor Yellow
 
 Add-DeviceCompliancePolicybaseline -JSON $BaselineAndroidLegacy #OK
 Add-DeviceCompliancePolicybaseline -JSON $BaselineAndroidOwner #OK
@@ -5666,22 +5713,22 @@ Add-DeviceCompliancePolicybaseline -JSON $BaselineiOS #OK
 Write-Host 
 ####################################################
 
-Write-Host "Adding Configuration profiles for mobile devices..." -ForegroundColor Yellow
+#Write-Host "Adding Configuration profiles for mobile devices..." -ForegroundColor Yellow
 
 Add-DeviceConfigurationPolicy -JSON $iOSDR
 Add-DeviceConfigurationPolicy -JSON $AndroidLegacyDR
 Add-DeviceConfigurationPolicy -JSON $AndroidWorkDR
 Add-DeviceConfigurationPolicy -JSON $AndroidOwnerDR
 
-Write-Host
+#Write-Host
 ####################################################
 
-Write-Host "Adding Windows Information Protection policies..." -ForegroundColor Yellow
+#Write-Host "Adding Windows Information Protection policies..." -ForegroundColor Yellow
 
 Add-MDMWindowsInformationProtectionPolicy -JSON $APP_WIP_MDM #OK
 Add-WindowsInformationProtectionPolicy -JSON $APP_WIP_MAM #OK
 
-Write-Host
+#Write-Host
 ####################################################
 
 Write-Host "Adding Compliance policies for Windows and MacOS..." -ForegroundColor Yellow
@@ -5692,35 +5739,38 @@ Add-DeviceCompliancePolicybaseline -Json $BaselineMacOS #OK
 Write-Host 
 ####################################################
 
-Write-Host "Adding Windows 10 & MacOS Device configuration profiles..." -ForegroundColor Yellow
+Write-Host "Adding Device configuration profiles..." -ForegroundColor Yellow
 
 Add-DeviceConfigurationPolicy -JSON $MacOSDR
 Add-DeviceConfigurationPolicy -JSON $MacOSEP
-Add-DeviceConfigurationPolicy -Json $Win10BASICDR
-Add-DeviceConfigurationPolicy -Json $Win10BASICEP
+#Add-DeviceConfigurationPolicy -Json $Win10BASICDR
+#Add-DeviceConfigurationPolicy -Json $Win10BASICEP
+#Add-DeviceConfigurationPolicy -Json $Win10_Boundary 
 Add-DeviceConfigurationPolicy -Json $Win10DR
 Add-DeviceConfigurationPolicy -Json $Win10EP
-Add-DeviceConfigurationPolicy -Json $Win10_Boundary 
 Add-DeviceConfigurationPolicy -Json $Win10_F2
 Add-DeviceConfigurationPolicy -Json $Win10_WHfB
 
 Write-Host 
 
-Write-Host "Adding Windows 10 Software Update Rings..." -ForegroundColor Yellow
+#Write-Host "Adding Windows 10 Software Update Rings..." -ForegroundColor Yellow
 
 Add-DeviceConfigurationPolicy -Json $UpdatePilot # OK
 Add-DeviceConfigurationPolicy -Json $UpdateBroad # OK
-
 Write-Host
+
 ####################################################
 
 write-host "Publishing" ($Office32 | ConvertFrom-Json).displayName -ForegroundColor Yellow
 Add-MDMApplication -JSON $Office32
-
 Write-Host 
 
 write-host "Publishing" ($Office64 | ConvertFrom-Json).displayName -ForegroundColor Yellow
 Add-MDMApplication -JSON $Office64
+Write-Host
+
+write-host "Publishing" ($ChrEdge | ConvertFrom-Json).displayName -ForegroundColor Yellow
+Add-MDMApplication -JSON $ChrEdge
 Write-Host
 
 ####################################################
