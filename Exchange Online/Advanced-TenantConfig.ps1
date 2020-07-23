@@ -23,6 +23,26 @@ $AssessmentColor = "Yellow"
 ###################################################################################################
 
 
+#################################################
+## CHECK IF TENANT IS COMPRESSED
+#################################################
+$orgConfig = Get-OrganizationConfig
+if ($orgConfig.IsDehydrated -eq $false) {
+    Write-Host
+    Write-Host -ForegroundColor $MessageColor "Tenant is not in compressed state. Continuing..."
+} else {
+    Write-Host
+    Write-Host -ForegroundColor $AssessmentColor "Tenant is in a compressed state"
+    Write-Host 
+    $Answer = Read-Host "Tenant is in a compressed state. Would you like to enable all tenant features? Type Y or N and press Enter to continue"
+    if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+        Enable-OrganizationCustomization
+    } else {
+        Write-Host 
+        Write-Host -ForegroundColor $AssessmentColor "Tenant will remain in a compressed state"
+    }
+}
+
 
 #################################################
 ## ENABLE UNIFIED AUDIT LOG SEARCH
