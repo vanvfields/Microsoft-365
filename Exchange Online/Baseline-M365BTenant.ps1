@@ -184,7 +184,7 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
         $ExternalForwardRule = Get-TransportRule | Where-Object {$_.Identity -contains $TransportRuleName}
         if (!$ExternalForwardRule) {
         Write-Output "External Forward Block rule not found, creating rule..."
-        New-TransportRule -name $TransportRuleName -Priority 1 -SentToScope NotInOrganization -MessageTypeMatches AutoForward -RejectMessageEnhancedStatusCode 5.7.1 -RejectMessageReasonText $rejectMessageText
+        New-TransportRule -name $TransportRuleName -Priority 0 -SentToScope NotInOrganization -MessageTypeMatches AutoForward -RejectMessageEnhancedStatusCode 5.7.1 -RejectMessageReasonText $rejectMessageText
         } else {Write-Output "External forward block rule already exists."} 
         Write-Host 
         Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is now disabled"        
