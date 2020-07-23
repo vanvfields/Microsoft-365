@@ -27,6 +27,27 @@ $AssessmentColor = "Yellow"
 ###################################################################################################
 
 #################################################
+## CHECK IF TENANT IS COMPRESSED
+#################################################
+$orgConfig = Get-OrganizationConfig
+if ($orgConfig.IsDehydrated -eq $false) {
+    Write-Host
+    Write-Host -ForegroundColor $MessageColor "Tenant is not in compressed state. Continuing..."
+} else {
+    Write-Host
+    Write-Host -ForegroundColor $AssessmentColor "Tenant is in a compressed state"
+    Write-Host 
+    $Answer = Read-Host "Tenant is in a compressed state. Would you like to enable all tenant features? Type Y or N and press Enter to continue"
+    if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+        Enable-OrganizationCustomization
+    } else {
+        Write-Host 
+        Write-Host -ForegroundColor $AssessmentColor "Tenant will remain in a compressed state"
+    }
+}
+
+
+#################################################
 ## ENABLE UNIFIED AUDIT LOG SEARCH
 #################################################
 $AuditLogConfig = Get-AdminAuditLogConfig
@@ -161,7 +182,7 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
         $ExternalForwardRule = Get-TransportRule | Where-Object {$_.Identity -contains $TransportRuleName}
         if (!$ExternalForwardRule) {
         Write-Output "External Forward Block rule not found, creating rule..."
-        New-TransportRule -name $TransportRuleName -Priority 1 -SentToScope NotInOrganization -MessageTypeMatches AutoForward -RejectMessageEnhancedStatusCode 5.7.1 -RejectMessageReasonText $rejectMessageText
+        New-TransportRule -name $TransportRuleName -Priority 0 -SentToScope NotInOrganization -MessageTypeMatches AutoForward -RejectMessageEnhancedStatusCode 5.7.1 -RejectMessageReasonText $rejectMessageText
         } else {Write-Output "External forward block rule already exists."} 
         Write-Host 
         Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is now disabled"        
