@@ -13,9 +13,9 @@ https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-
 .NOTES
     FileName:    Baseline-ExchangeOnline.ps1
     Author:      Alex Fields, ITProMentor.com
-    Created:     11-18-2019
-	Revised:     03-01-2020
-    Version:     3.0
+    Created:     November 2019
+	Revised:     August 2020
+    Version:     3.1
     
 #>
 ###################################################################################################
@@ -25,27 +25,6 @@ https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-
 $MessageColor = "Green"
 $AssessmentColor = "Yellow"
 ###################################################################################################
-
-#################################################
-## CHECK IF TENANT IS COMPRESSED
-#################################################
-$orgConfig = Get-OrganizationConfig
-if ($orgConfig.IsDehydrated -eq $false) {
-    Write-Host
-    Write-Host -ForegroundColor $MessageColor "Tenant is not in compressed state. Continuing..."
-} else {
-    Write-Host
-    Write-Host -ForegroundColor $AssessmentColor "Tenant is in a compressed state"
-    Write-Host 
-    $Answer = Read-Host "Tenant is in a compressed state. Would you like to enable all tenant features? Type Y or N and press Enter to continue"
-    if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-        Enable-OrganizationCustomization
-    } else {
-        Write-Host 
-        Write-Host -ForegroundColor $AssessmentColor "Tenant will remain in a compressed state"
-    }
-}
-
 
 #################################################
 ## ENABLE UNIFIED AUDIT LOG SEARCH
@@ -176,14 +155,17 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
     if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         ## DENY AUTOFORWARD ON THE DEFAULT REMOTE DOMAIN (*) 
         Set-RemoteDomain Default -AutoForwardEnabled $false
+
+   <# This section is optional     
         ## ALSO DENY AUTO-FORWARDING FROM MAILBOX RULES VIA TRANSPORT RULE WITH REJECTION MESSAGE
         $TransportRuleName = "External Forward Block"
         $rejectMessageText = "Mail forwarding to external domains is not permitted. If you have questions, please contact support."
         $ExternalForwardRule = Get-TransportRule | Where-Object {$_.Identity -contains $TransportRuleName}
         if (!$ExternalForwardRule) {
         Write-Output "External Forward Block rule not found, creating rule..."
-        New-TransportRule -name $TransportRuleName -Priority 0 -SentToScope NotInOrganization -MessageTypeMatches AutoForward -RejectMessageEnhancedStatusCode 5.7.1 -RejectMessageReasonText $rejectMessageText
+        New-TransportRule -name $TransportRuleName -Priority 1 -SentToScope NotInOrganization -MessageTypeMatches AutoForward -RejectMessageEnhancedStatusCode 5.7.1 -RejectMessageReasonText $rejectMessageText
         } else {Write-Output "External forward block rule already exists."} 
+    #>
         Write-Host 
         Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is now disabled"        
         } else {
@@ -191,6 +173,7 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
         Write-Host -ForegroundColor $AssessmentColor "Auto-forwarding to remote domains will not be disabled"
         }
   
+  <# This section is optional 
     ## EXPORT LIST OF FORWARDERS TO CSV
     Write-Host    
     $Answer2 = Read-Host "Do you want to export to CSV a list of mailboxes that might be impacted by disabling auto-forward to remote domains? Type Y or N and press Enter to continue"
@@ -206,11 +189,33 @@ if ($RemoteDomainDefault.AutoForwardEnabled) {
         } else {
         Write-Host 
         Write-Host  -ForegroundColor $MessageColor "Run the script again if you wish to export auto-forwarding mailboxes and inbox rules"
-        }
+        } 
+  #>
+
 } else {
     Write-Host 
     Write-Host -ForegroundColor $MessageColor "Auto-forwarding to remote domains is already disabled"
  }
+
+
+#################################################
+## SET RETAIN DELETED ITEMS TO 30 DAYS
+## ANY SUBSCRIPTION
+#################################################
+Write-Host 
+$CurrentRetention = (Get-Mailbox -ResultSize Unlimited).RetainDeletedItemsFor
+Write-Host -ForegroundColor $AssessmentColor "Current retention limit (in days and number of mailboxes):"
+$CurrentRetention | group | select name, count | ft
+$Answer = Read-Host "Would you like to enforce the maximum allowed value of 30 days retention of deleted items for all mailboxes? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+    Get-Mailbox -ResultSize Unlimited | Set-Mailbox -RetainDeletedItemsFor 30
+    Get-MailboxPlan | Set-MailboxPlan -RetainDeletedItemsFor 30
+    Write-Host 
+    Write-Host -ForegroundColor $MessageColor "Deleted items will be retained for the maximum of 30 days for all mailboxes"
+    } else {
+    Write-Host 
+    Write-Host -ForegroundColor $AssessmentColor "The deleted items retention value has not been modified on any mailboxes"
+    }
  
 
 #################################################
@@ -220,34 +225,34 @@ Write-Host
 $Answer = Read-Host "Do you want to reset the default spam filter policy with the recommended baseline settings? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     $HostedContentPolicyParam = @{
-        'bulkspamaction' =  'MoveToJMF';
-        'bulkthreshold' =  '6';
-        'highconfidencespamaction' =  'quarantine';
-        'inlinesafetytipsenabled' = $true;
-        'markasspambulkmail' = 'on';
-        'enablelanguageblocklist' = $false;
-        'enableregionblocklist' = $false;
-        'increasescorewithimagelinks' = 'off'
-        'increasescorewithnumericips' = 'off'
-        'increasescorewithredirecttootherport' = 'off'
-        'increasescorewithbizorinfourls' = 'off';
-        'markasspamemptymessages' ='off';
-        'markasspamjavascriptinhtml' = 'off';
-        'markasspamframesinhtml' = 'off';
-        'markasspamobjecttagsinhtml' = 'off';
-        'markasspamembedtagsinhtml' ='off';
-        'markasspamformtagsinhtml' = 'off';
-        'markasspamwebbugsinhtml' = 'off';
-        'markasspamsensitivewordlist' = 'off';
-        'markasspamspfrecordhardfail' = 'off';
-        'markasspamfromaddressauthfail' = 'off';
-        'markasspamndrbackscatter' = 'off';
-        'phishspamaction' = 'quarantine';
-        'spamaction' = 'MoveToJMF';
-        'zapenabled' = $true;
+        'SpamAction' = 'MoveToJMF';
+        'HighConfidenceSpamAction' =  'quarantine';
+        'PhishSpamAction' = 'quarantine';
+        'HighConfidencePhishAction' =  'quarantine';
+        'BulkSpamAction' =  'MoveToJMF';
+        'BulkThreshold' =  '6';
+        'QuarantineRetentionPeriod' = 30;
+        'InlineSafetyTipsEnabled' = $true;
         'EnableEndUserSpamNotifications' = $true;
         'EndUserSpamNotificationFrequency' = 1;
-        'QuarantineRetentionPeriod' = 30
+        'SpamZapEnabled'= $true;
+        'PhishZapEnabled' = $true;
+        'MarkAsSpamBulkMail' = 'On';
+        'IncreaseScoreWithImageLinks' = 'off'
+        'IncreaseScoreWithNumericIps' = 'off'
+        'IncreaseScoreWithRedirectToOtherPort' = 'off'
+        'IncreaseScoreWithBizOrInfoUrls' = 'off';
+        'MarkAsSpamEmptyMessages' ='off';
+        'MarkAsSpamJavaScriptInHtml' = 'off';
+        'MarkAsSpamFramesInHtml' = 'off';
+        'MarkAsSpamObjectTagsInHtml' = 'off';
+        'MarkAsSpamEmbedTagsInHtml' ='off';
+        'MarkAsSpamFormTagsInHtml' = 'off';
+        'MarkAsSpamWebBugsInHtml' = 'off';
+        'MarkAsSpamSensitiveWordList' = 'off';
+        'MarkAsSpamSpfRecordHardFail' = 'off';
+        'MarkAsSpamFromAddressAuthFail' = 'off';
+        'MarkAsSpamNdrBackscatter' = 'off'
     }
     Set-HostedContentFilterPolicy Default @HostedContentPolicyParam -MakeDefault
     Write-Host
@@ -270,22 +275,66 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
 
 #################################################
+## RESET OUTBOUND SPAM FILTER
+#################################################
+Write-Host 
+$Answer = Read-Host "Do you want to reset the outbound spam filter policy with the recommended baseline settings? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+        if ($AlertAddress -eq $null -or $AlertAddress -eq "") {
+        $AlertAddress = Read-Host "Enter the email address where you would like to recieve alerts about outbound spam"
+        $OutboundPolicyParam = @{
+                "Identity" = 'Default';
+                'RecipientLimitExternalPerHour' = 500;
+                'RecipientLimitInternalPerHour' = 1000;
+                'RecipientLimitPerDay' = 1000;
+                'ActionWhenThresholdReached' = 'BlockUser';
+                'NotifyOutboundSpam' = $true;
+                'NotifyOutboundSpamRecipients' = $AlertAddress
+            }
+            Set-HostedOutboundSpamFilterPolicy @OutboundPolicyParam
+            Write-Host
+            Write-Host -ForegroundColor $MessageColor "The default outbound spam filter has been reset according to best practices"
+        } else {
+            $OutboundPolicyParam = @{
+                "Identity" = 'Default';
+                'RecipientLimitExternalPerHour' = 500;
+                'RecipientLimitInternalPerHour' = 1000;
+                'RecipientLimitPerDay' = 1000;
+                'ActionWhenThresholdReached' = 'BlockUser';
+                'NotifyOutboundSpam' = $true;
+                'NotifyOutboundSpamRecipients' = $AlertAddress
+            }
+            Set-HostedOutboundSpamFilterPolicy @OutboundPolicyParam
+            Write-Host
+            Write-Host -ForegroundColor $MessageColor "The default outbound spam filter has been reset according to best practices"
+            }
+} else {
+    Write-Host
+    Write-Host -ForegroundColor $AssessmentColor "The outbound spam filter policy has not been modified"
+}
+
+
+#################################################
 ## RESET DEFAULT ANTIMALWARE SETTINGS
 #################################################
 Write-Host 
+
+## Note: you can optionally EnableInternalSenderAdminNotifications by modifying the script block below.
+
 $Answer = Read-Host "Do you want to reset the default malware filter policy with the recommended baseline settings? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     Write-Host 
-    $AlertAddress= Read-Host "Enter the email address where you would like to recieve alerts about malware and outbound spam"
+    ## $AlertAddress= Read-Host "Enter the email address where you would like to recieve alerts about malware"
     ## Modify the default malware filter policy
     $MalwarePolicyParam = @{
         'Action' =  'DeleteMessage';
         'EnableFileFilter' =  $true;
-        'EnableInternalSenderAdminNotifications' = $true;
-        'InternalSenderAdminAddress' =  $AlertAddress;
+        'ZapEnabled' = $true;
+        #'EnableInternalSenderAdminNotifications' = $true;
+        #'InternalSenderAdminAddress' =  $AlertAddress;
         'EnableInternalSenderNotifications' =  $false;
-        'EnableExternalSenderNotifications' = $false;
-        'Zap' = $true
+        'EnableExternalSenderNotifications' = $false
+        
     }
     Set-MalwareFilterPolicy Default @MalwarePolicyParam -MakeDefault
     Write-Host 
@@ -307,40 +356,6 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
     }
 
 
-#################################################
-## RESET OUTBOUND SPAM FILTER
-#################################################
-Write-Host 
-$Answer = Read-Host "Do you want to reset the outbound spam filter policy with the recommended baseline settings? Type Y or N and press Enter to continue"
-if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-        if ($AlertAddress -eq $null -or $AlertAddress -eq "") {
-        $AlertAddress = Read-Host "Enter the email address where you would like to recieve alerts about outbound spam"
-        $OutboundPolicyParam = @{
-                "Identity" = 'Default';
-                'RecipientLimitExternalPerHour' = 500;
-                'RecipientLimitInternalPerHour' = 1000;
-                'RecipientLimitPerDay' = 1000;
-                'ActionWhenThresholdReached' = BlockUser;
-                'notifyoutboundspam' = $true;
-                'NotifyOutboundSpamRecipients' = $AlertAddress
-            }
-            Set-HostedOutboundSpamFilterPolicy @OutboundPolicyParam
-            Write-Host
-            Write-Host -ForegroundColor $MessageColor "The default outbound spam filter has been reset according to best practices"
-        } else {
-            $OutboundPolicyParam = @{
-                "identity" = 'Default';
-                'notifyoutboundspam' = $true;
-                'NotifyOutboundSpamRecipients' = $AlertAddress
-            }
-            Set-HostedOutboundSpamFilterPolicy @OutboundPolicyParam
-            Write-Host
-            Write-Host -ForegroundColor $MessageColor "The default outbound spam filter has been reset according to best practices"
-            }
-} else {
-    Write-Host
-    Write-Host -ForegroundColor $AssessmentColor "The outbound spam filter policy has not been modified"
-}
 
 
 ###################################################################################################
