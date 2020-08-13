@@ -10,4 +10,5 @@
 <p>• Disable-Forwarding.ps1: This script will disable auto-forwarding and also output csv of existing forwarders to C:\temp
 
 <p>Be sure to read the comments and review each script. You are responsible for your own implementation, use at your own risk.
+<p>Please note that certain settings in the baseline scripts will be out of alignment with the ORCA powershell module. This is by design. You are free to modify.
 <p>These scripts follow the guide published at: https://www.itpromentor.com/email-security-checklist/
