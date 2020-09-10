@@ -8,8 +8,8 @@ None of the policies will be assigned when you import them.
 
 Intune deployment script:
 
-	• Setup-Intune.ps1 = Imports all the baseline policies from JSON (but does not assign them) NOTE: this is now legacy
-	• New-SetupIntune.ps1 = Latest version of my master script to import configuration profiles
+	• Setup-Intune.ps1 = Imports all the baseline policies from JSON (but does not assign them) 
+	• OLD_Setup-Intune.ps1 = PRevious version of my master script to import configuration profiles
 
 MAM scripts:
 
