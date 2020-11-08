@@ -11,8 +11,8 @@ https://github.com/microsoftgraph/powershell-intune-samples
     Author:      Alex Fields 
 	Based on:    Per Larsen / Frank Simorjay
     Created:     October 2019
-	Revised:     July 2020
-    Version:     4.0 
+	Revised:     November 2020
+    Version:     4.1 
     
 #>
 ###################################################################################################
@@ -1614,12 +1614,12 @@ $BaselineWin10 = @"
     "@odata.type":  "#microsoft.graph.windows10CompliancePolicy",
     "description":  "Minimum OS: 1903",
     "displayName":  "Windows 10 Baseline",
-    "passwordRequired":  true,
-    "passwordBlockSimple":  true,
+    "passwordRequired":  false,
+    "passwordBlockSimple":  false,
     "passwordRequiredToUnlockFromIdle":  false,
-    "passwordMinutesOfInactivityBeforeLock":  15,
+    "passwordMinutesOfInactivityBeforeLock":  null,
     "passwordExpirationDays":  null,
-    "passwordMinimumLength":  8,
+    "passwordMinimumLength":  null,
     "passwordMinimumCharacterSetCount":  null,
     "passwordRequiredType":  "deviceDefault",
     "passwordPreviousPasswordBlockCount":  null,
@@ -1634,10 +1634,10 @@ $BaselineWin10 = @"
     "codeIntegrityEnabled":  false,
     "storageRequireEncryption":  true,
     "activeFirewallRequired":  true,
-    "defenderEnabled":  false,
+    "defenderEnabled":  true,
     "defenderVersion":  null,
     "signatureOutOfDate":  false,
-    "rtpEnabled":  false,
+    "rtpEnabled":  true,
     "antivirusRequired":  true,
     "antiSpywareRequired":  true,
     "deviceThreatProtectionEnabled":  false,
@@ -1661,7 +1661,6 @@ $BaselineWin10 = @"
 
 ####################################################
 #Device configuration profiles
-####################################################
 ####################################################
 
 $Win10BASICDR = @"
@@ -3645,39 +3644,31 @@ $ChrEdge = @"
 #Import JSON to create policies
 ####################################################
 
-#Write-Host "Adding Windows Information Protection policies..." -ForegroundColor Yellow
 
-Add-MDMWindowsInformationProtectionPolicy -JSON $APP_WIP_MDM #OK
-Add-WindowsInformationProtectionPolicy -JSON $APP_WIP_MAM #OK
-
-Write-Host
 ####################################################
+
+$Answer = Read-Host "Do you want to import the Standard Security profile (Recommended)? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
 Write-Host "Adding Compliance policy for Windows..." -ForegroundColor Yellow
 
 Add-DeviceCompliancePolicybaseline -Json $BaselineWin10 #OK
-
 Write-Host 
-####################################################
 
 Write-Host "Adding Device configuration profiles..." -ForegroundColor Yellow
-
-#Add-DeviceConfigurationPolicy -Json $Win10BASICDR
-#Add-DeviceConfigurationPolicy -Json $Win10BASICEP
-Add-DeviceConfigurationPolicy -Json $Win10DR
-Add-DeviceConfigurationPolicy -Json $Win10EP
 Add-DeviceConfigurationPolicy -Json $Win10_F2
 Add-DeviceConfigurationPolicy -Json $Win10_WHfB
-
-Write-Host 
-
-#Write-Host "Adding Windows 10 Software Update Rings..." -ForegroundColor Yellow
-
-Add-DeviceConfigurationPolicy -Json $UpdatePilot # OK
-Add-DeviceConfigurationPolicy -Json $UpdateBroad # OK
-
+#Add-DeviceConfigurationPolicy -Json $Win10BASICDR
+#Add-DeviceConfigurationPolicy -Json $Win10BASICEP
 Write-Host
-####################################################
+
+Write-Host "Adding Windows 10 Software Update Rings..." -ForegroundColor Yellow
+
+Add-DeviceConfigurationPolicy -Json $UpdatePilot 
+Add-DeviceConfigurationPolicy -Json $UpdateBroad 
+Write-Host
+
+Write-Host "Adding Windows 10 app packages..." -ForegroundColor Yellow
 
 write-host "Publishing" ($Office32 | ConvertFrom-Json).displayName -ForegroundColor Yellow
 Add-MDMApplication -JSON $Office32
@@ -3691,6 +3682,48 @@ write-host "Publishing" ($ChrEdge | ConvertFrom-Json).displayName -ForegroundCol
 Add-MDMApplication -JSON $ChrEdge
 Write-Host
 
+} else 
+
+{Write-Host "The Standard Security Profile will not be imported" -ForegroundColor Red
+Write-Host
+}
+
+
+$Answer = Read-Host "Do you want to import WIP policies for Windows 10 (Optional)? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+
+Write-Host "Adding Windows Information Protection policies..." -ForegroundColor Yellow
+
+Add-MDMWindowsInformationProtectionPolicy -JSON $APP_WIP_MDM 
+Add-WindowsInformationProtectionPolicy -JSON $APP_WIP_MAM 
+
+Write-Host
+} else 
+
+{ Write-Host "Windows Information Protection policies will not be imported" -ForegroundColor Red
+Write-Host 
+}
+
+
 ####################################################
+
+
+$Answer = Read-Host "Do you want to import the Enhanced Security profile (Recommended)? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+
+Write-Host "Adding Device configuration profiles..." -ForegroundColor Yellow
+Add-DeviceConfigurationPolicy -Json $Win10DR
+Add-DeviceConfigurationPolicy -Json $Win10EP
+Write-Host 
+} else
+
+{Write-Host "The Enhanced Security Profile will not be imported" -ForegroundColor Red
+Write-Host
+}
+
+####################################################
+
+
+
 
 
