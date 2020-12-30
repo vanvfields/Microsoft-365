@@ -27,7 +27,7 @@
     FileName:    Baseline-ConditionalAccessPolicies.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     September 2020
-	Updated:     October 2020
+    Updated:     October 2020
 
 #>
 ###################################################################################################
@@ -39,11 +39,11 @@ $ExcludeCAGroupName = "Exclude From CA"
 $ExcludeCAGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -eq $ExcludeCAGroupName
 
 if ($ExcludeCAGroup -eq $null -or $ExcludeCAGroup -eq "") {
-	New-AzureADGroup -DisplayName $ExcludeCAGroupName -SecurityEnabled $true -MailEnabled $false -MailNickName ExcludeFromCA
-	$ExcludeCAGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -eq $ExcludeCAGroupName
+    New-AzureADGroup -DisplayName $ExcludeCAGroupName -SecurityEnabled $true -MailEnabled $false -MailNickName ExcludeFromCA
+    $ExcludeCAGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -eq $ExcludeCAGroupName
 }
 else {
-	Write-Host "Exclude from CA group already exists"
+    Write-Host "Exclude from CA group already exists"
 }
 
 
