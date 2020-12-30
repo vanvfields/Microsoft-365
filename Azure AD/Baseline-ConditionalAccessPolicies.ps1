@@ -35,11 +35,11 @@
 
 ## Check for the existence of the "Exclude from CA" security group, and create the group if it does not exist
 
-$ExcludeCAGroup = Get-AzureADGroup | Where-Object DisplayName -EQ "Exclude From CA"
+$ExcludeCAGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -EQ "Exclude From CA"
 
 if ($ExcludeCAGroup -eq $null -or $ExcludeCAGroup -eq "") {
 New-AzureADGroup -DisplayName "Exclude From CA" -SecurityEnabled $true -MailEnabled $false -MailNickName ExludeFromCA
-$ExcludeCAGroup = Get-AzureADGroup | Where-Object DisplayName -EQ "Exclude From CA"
+$ExcludeCAGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -EQ "Exclude From CA"
 
 }
 else {write-host "Exclude from CA group already exists"}
