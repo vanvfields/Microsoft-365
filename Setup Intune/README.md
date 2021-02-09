@@ -6,9 +6,10 @@ Simply download and run <b>Setup-Intune.ps1</b>
 
 None of the policies will be assigned when you import them.
 
-Intune deployment script:
+Intune deployment scripts:
 
-	• Setup-Intune.ps1 = Imports all the baseline policies from JSON (but does not assign them) 
+	• Install-BYODMobileDeviceProfiles.ps1 = Imports (but does not assign) baseline BYOD policies for iOS, Android, and MacOS including App protection (MAM) and Compliance (MDM)
+	• Setup-Intune.ps1 = Imports all baseline policies from JSON (but does not assign them) 
 	• OLD_Setup-Intune.ps1 = Previous version of my master script to import configuration profiles
 
 MAM scripts:
