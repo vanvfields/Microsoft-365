@@ -27,7 +27,7 @@
     FileName:    Baseline-ConditionalAccessPolicies.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     September 2020
-	Updated:     February 2021
+    Updated:     February 2021
 
 #>
 ###################################################################################################
