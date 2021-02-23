@@ -1,4 +1,4 @@
-﻿<##################################################################################################
+<##################################################################################################
 #
 .SYNOPSIS
     This script will create the following recommended Baseline Conditional Access policies in your tenant:
@@ -7,7 +7,7 @@
     3. [All cloud apps] GRANT: Require MFA for All users
     4. [All cloud apps] BLOCK: Unsupported device platforms
     5. [Office 365] GRANT: Require approved app for mobile access (MAM)
-    6. [Office 365] GRANT: Require compliant device for supported platforms
+    6. [Office 365] GRANT: Require compliant device for supported platforms (MDM)
     7. [Office 365] SESSION: Prevent downloads from unmanaged devices and browsers
 
 
@@ -27,7 +27,7 @@
     FileName:    Baseline-ConditionalAccessPolicies.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     September 2020
-    Updated:     October 2020
+	Updated:     February 2021
 
 #>
 ###################################################################################################
@@ -35,16 +35,17 @@
 
 ## Check for the existence of the "Exclude from CA" security group, and create the group if it does not exist
 
-$ExcludeCAGroupName = "Exclude From CA"
+$ExcludeCAGroupName = "sg-Exclude From CA"
 $ExcludeCAGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -eq $ExcludeCAGroupName
 
 if ($ExcludeCAGroup -eq $null -or $ExcludeCAGroup -eq "") {
-    New-AzureADGroup -DisplayName $ExcludeCAGroupName -SecurityEnabled $true -MailEnabled $false -MailNickName ExcludeFromCA
+    New-AzureADGroup -DisplayName $ExcludeCAGroupName -SecurityEnabled $true -MailEnabled $false -MailNickName sg-ExcludeFromCA
     $ExcludeCAGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -eq $ExcludeCAGroupName
 }
 else {
     Write-Host "Exclude from CA group already exists"
 }
+
 
 
 ########################################################
@@ -173,7 +174,7 @@ New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require c
 ##    1. End-users must enroll their devices with Intune before enabling this policy
 ##    2. Azure AD joined or Hybrid Joined devices will be managed without taking additional action
 ##    3. Users with personal devices should use the Company Portal app to enroll
-##    4. This policy blocks access from Mobile and desktop client apps (e.g. Outlook, OneDrive, etc.)
+##    4. This policy blocks unmanaged device access from Mobile and desktop client apps (e.g. Outlook, OneDrive, etc.)
 ##    5. Optionally, you may remove Android and IOS from the IncludePlatforms condition (some choose to enforce MAM only)
 ##    6. Optionally, you may add 'Browser' to the ClientAppTypes condition in lieu of the next policy (SESSION policy)
 
@@ -191,16 +192,16 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('DomainJoinedDevice', 'CompliantDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require compliant device for supported platforms" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require compliant device for supported platforms (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
 ## This policy prevents web downloads from unmanaged devices and unmanaged web browsers 
 ## Policy NOTES:
 ##     1. You must take additional action in Exchange Online and SharePoint Online to complete the set up for this policy to take effect
-##     2. See my Conditional Access Best Practices guide for more details 
+##     2. See my Conditional Access Best Practices guide for more details on those additional steps 
 ##     3. Unmanaged browsers (e.g. Firefox) will also be impacted by this policy, even on managed devices
-##     4. End users should be advised to Edge (Chromium version) with Office 365
+##     4. End users should be advised to use Edge (Chromium version) with Office 365
 
 $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
 $conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
