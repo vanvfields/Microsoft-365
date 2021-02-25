@@ -12,9 +12,9 @@ https://github.com/microsoftgraph/powershell-intune-samples
 .NOTES
     FileName:    Install-BYODMobileDeviceProfiles.ps1
     Author:      Alex Fields 
-    Based on:    Per Larsen / Frank Simorjay
+	Based on:    Per Larsen / Frank Simorjay
     Created:     February 2021
-    Revised:     February 2021
+	Revised:     February 2021
     Version:     1.0 
     
 #>
@@ -497,7 +497,7 @@ $MAM_AndroidBase = @"
 {
     "@odata.context":  "https://graph.microsoft.com/beta/$metadata#deviceAppManagement/androidManagedAppProtections(apps())/$entity",
     "displayName":  "[ITPM Baseline] Android MAM",
-    "description":  "This policy will encrypt app data and require a PIN on unmanaged devices. However, it does not restrict copy/paste/export to unmanaged applications.",
+    "description":  "This policy will encrypt app data and require a PIN on unmanaged devices. However, it does not restrict copy/paste/save to unmanaged applications.",
     "periodOfflineBeforeAccessCheck":  "PT12H",
     "periodOnlineBeforeAccessCheck":  "PT5M",
     "allowedInboundDataTransferSources":  "allApps",
@@ -526,14 +526,14 @@ $MAM_AndroidBase = @"
     "maximumRequiredOsVersion":  null,
     "maximumWarningOsVersion":  null,
     "maximumWipeOsVersion":  null,
-    "minimumRequiredOsVersion":  null,
+    "minimumRequiredOsVersion":  "8.0",
     "minimumWarningOsVersion":  null,
     "minimumRequiredAppVersion":  null,
     "minimumWarningAppVersion":  null,
     "minimumWipeOsVersion":  null,
     "minimumWipeAppVersion":  null,
     "appActionIfDeviceComplianceRequired":  "block",
-    "appActionIfMaximumPinRetriesExceeded":  "wipe",
+    "appActionIfMaximumPinRetriesExceeded":  "block",
     "pinRequiredInsteadOfBiometricTimeout":  "PT30M",
     "allowedOutboundClipboardSharingExceptionLength":  0,
     "notificationRestriction":  "allow",
@@ -547,7 +547,7 @@ $MAM_AndroidBase = @"
                                           "sharePoint",
                                           "camera"
                                       ],
-    "appActionIfUnableToAuthenticateUser":  "block",
+    "appActionIfUnableToAuthenticateUser":  "wipe",
     "dialerRestrictionLevel":  "allApps",
     "isAssigned":  true,
     "targetedAppManagementLevels":  "unspecified",
@@ -762,6 +762,7 @@ $MAM_AndroidBase = @"
     "@odata.type":  "#microsoft.graph.androidManagedAppProtection"
 }
 
+
 "@
 
 ####################################################
@@ -770,7 +771,7 @@ $MAM_iosBase = @"
 {
     "@odata.context":  "https://graph.microsoft.com/beta/$metadata#deviceAppManagement/iosManagedAppProtections(apps())/$entity",
     "displayName":  "[ITPM Baseline] iOS MAM",
-    "description":  "This policy will encrypt app data and require a PIN on unmanaged devices. However, it does not restrict copy/paste/export to unmanaged applications.",
+    "description":  "This policy will encrypt app data and require a PIN on unmanaged devices. However, it does not restrict copy/paste/save to unmanaged applications.",
     "periodOfflineBeforeAccessCheck":  "PT12H",
     "periodOnlineBeforeAccessCheck":  "PT5M",
     "allowedInboundDataTransferSources":  "allApps",
@@ -799,7 +800,7 @@ $MAM_iosBase = @"
     "maximumRequiredOsVersion":  null,
     "maximumWarningOsVersion":  null,
     "maximumWipeOsVersion":  null,
-    "minimumRequiredOsVersion":  null,
+    "minimumRequiredOsVersion":  "13.1",
     "minimumWarningOsVersion":  null,
     "minimumRequiredAppVersion":  null,
     "minimumWarningAppVersion":  null,
@@ -820,7 +821,7 @@ $MAM_iosBase = @"
                                           "sharePoint",
                                           "camera"
                                       ],
-    "appActionIfUnableToAuthenticateUser":  null,
+    "appActionIfUnableToAuthenticateUser":  "wipe",
     "dialerRestrictionLevel":  "allApps",
     "isAssigned":  true,
     "targetedAppManagementLevels":  "unspecified",
@@ -995,7 +996,7 @@ $MAM_AndroidStrict = @"
     "allowedOutboundClipboardSharingLevel":  "managedAppsWithPasteIn",
     "dataBackupBlocked":  true,
     "deviceComplianceRequired":  true,
-    "managedBrowserToOpenLinksRequired":  false,
+    "managedBrowserToOpenLinksRequired":  true,
     "saveAsBlocked":  true,
     "periodOfflineBeforeWipeIsEnforced":  "P60D",
     "pinRequired":  true,
@@ -1015,19 +1016,19 @@ $MAM_AndroidStrict = @"
     "maximumRequiredOsVersion":  null,
     "maximumWarningOsVersion":  null,
     "maximumWipeOsVersion":  null,
-    "minimumRequiredOsVersion":  null,
+    "minimumRequiredOsVersion":  "8.0",
     "minimumWarningOsVersion":  null,
     "minimumRequiredAppVersion":  null,
     "minimumWarningAppVersion":  null,
     "minimumWipeOsVersion":  null,
     "minimumWipeAppVersion":  null,
     "appActionIfDeviceComplianceRequired":  "block",
-    "appActionIfMaximumPinRetriesExceeded":  "wipe",
+    "appActionIfMaximumPinRetriesExceeded":  "block",
     "pinRequiredInsteadOfBiometricTimeout":  "PT30M",
     "allowedOutboundClipboardSharingExceptionLength":  0,
     "notificationRestriction":  "allow",
     "previousPinBlockCount":  0,
-    "managedBrowser":  "notConfigured",
+    "managedBrowser":  "microsoftEdge",
     "maximumAllowedDeviceThreatLevel":  "notConfigured",
     "mobileThreatDefenseRemediationAction":  "block",
     "blockDataIngestionIntoOrganizationDocuments":  false,
@@ -1036,7 +1037,7 @@ $MAM_AndroidStrict = @"
                                           "sharePoint",
                                           "camera"
                                       ],
-    "appActionIfUnableToAuthenticateUser":  "block",
+    "appActionIfUnableToAuthenticateUser":  "wipe",
     "dialerRestrictionLevel":  "allApps",
     "isAssigned":  true,
     "targetedAppManagementLevels":  "unspecified",
@@ -1268,7 +1269,7 @@ $MAM_iosStrict = @"
     "allowedOutboundClipboardSharingLevel":  "managedAppsWithPasteIn",
     "dataBackupBlocked":  true,
     "deviceComplianceRequired":  true,
-    "managedBrowserToOpenLinksRequired":  false,
+    "managedBrowserToOpenLinksRequired":  true,
     "saveAsBlocked":  true,
     "periodOfflineBeforeWipeIsEnforced":  "P60D",
     "pinRequired":  true,
@@ -1288,7 +1289,7 @@ $MAM_iosStrict = @"
     "maximumRequiredOsVersion":  null,
     "maximumWarningOsVersion":  null,
     "maximumWipeOsVersion":  null,
-    "minimumRequiredOsVersion":  null,
+    "minimumRequiredOsVersion":  "13.1",
     "minimumWarningOsVersion":  null,
     "minimumRequiredAppVersion":  null,
     "minimumWarningAppVersion":  null,
@@ -1300,7 +1301,7 @@ $MAM_iosStrict = @"
     "allowedOutboundClipboardSharingExceptionLength":  0,
     "notificationRestriction":  "allow",
     "previousPinBlockCount":  0,
-    "managedBrowser":  "notConfigured",
+    "managedBrowser":  "microsoftEdge",
     "maximumAllowedDeviceThreatLevel":  "notConfigured",
     "mobileThreatDefenseRemediationAction":  "block",
     "blockDataIngestionIntoOrganizationDocuments":  false,
@@ -1309,7 +1310,7 @@ $MAM_iosStrict = @"
                                           "sharePoint",
                                           "camera"
                                       ],
-    "appActionIfUnableToAuthenticateUser":  null,
+    "appActionIfUnableToAuthenticateUser":  "wipe",
     "dialerRestrictionLevel":  "allApps",
     "isAssigned":  true,
     "targetedAppManagementLevels":  "unspecified",
@@ -1668,29 +1669,46 @@ $BaselineMacOS = @"
 #Import JSON to create policies
 ####################################################
 
-$Answer = Read-Host "Do you want to import the baseline MAM policies for iOS and Android (Recommended)? Type Y or N and press Enter to continue"
+$Answer = Read-Host "Do you want to import the Baseline MAM policies for iOS and Android (Recommended)? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
-Write-Host "Adding baseline MAM policies for mobile devices..." -ForegroundColor Yellow
+Write-Host "Adding baseline MAM policies for mobile devices..." -ForegroundColor Green
 
 Add-ManagedAppPolicy -JSON $MAM_AndroidBase #OK
 Add-ManagedAppPolicy -JSON $MAM_iosBase #OK
-#Add-ManagedAppPolicy -JSON $MAM_AndroidStrict #OK
-#Add-ManagedAppPolicy -JSON $MAM_iosStrict #OK
+
+Write-Host 
+} else 
+
+{ Write-Host "Baseline MAM policies will not be imported" -ForegroundColor Yellow
+Write-Host
+}
+
+
+$Answer = Read-Host "Do you want to import the Strict MAM policies for iOS and Android (block unmanaged app sharing)? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+
+Write-Host "Adding baseline MAM policies for mobile devices..." -ForegroundColor Green
+
+Add-ManagedAppPolicy -JSON $MAM_AndroidStrict #OK
+Add-ManagedAppPolicy -JSON $MAM_iosStrict #OK
 
 
 Write-Host 
 } else 
 
-{ Write-Host "Baseline MAM policies will not be imported" -ForegroundColor Red
+
+
+{ Write-Host "Strict MAM policies will not be imported" -ForegroundColor Yellow
 Write-Host
 }
+
 
 ####################################################
 
 $Answer = Read-Host "Do you want to import the baseline MDM policies for iOS and Android? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
-Write-Host "Adding MDM compliance policies for mobile devices..." -ForegroundColor Yellow
+Write-Host "Adding MDM compliance policies for mobile devices..." -ForegroundColor Green
 
 #Add-DeviceCompliancePolicybaseline -JSON $BaselineAndroidCompany 
 Add-DeviceCompliancePolicybaseline -JSON $BLOCKAndroidLegacy
@@ -1700,17 +1718,19 @@ Add-DeviceCompliancePolicybaseline -JSON $BaselineMacOS
 
 Write-Host } else 
 
-{Write-Host "MDM policies for iOS and Android will not be imported" -ForegroundColor Red
+{Write-Host "MDM policies for iOS and Android will not be imported" -ForegroundColor Yellow
 Write-Host
 }
 ####################################################
 
 $Answer = Read-Host "Do you want to import the baseline MDM policy for MacOS? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+Write-Host "Adding MDM compliance policies for MacOS..." -ForegroundColor Green
+
 Add-DeviceCompliancePolicybaseline -Json $BaselineMacOS 
 Write-Host 
 
-} else {Write-Host "MDM policies for MacOS will not be imported" -ForegroundColor Red
+} else {Write-Host "MDM policies for MacOS will not be imported" -ForegroundColor Yellow
 Write-Host
 }
 ####################################################
