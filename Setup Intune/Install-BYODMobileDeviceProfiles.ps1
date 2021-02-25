@@ -12,9 +12,9 @@ https://github.com/microsoftgraph/powershell-intune-samples
 .NOTES
     FileName:    Install-BYODMobileDeviceProfiles.ps1
     Author:      Alex Fields 
-	Based on:    Per Larsen / Frank Simorjay
+    Based on:    Per Larsen / Frank Simorjay
     Created:     February 2021
-	Revised:     February 2021
+    Revised:     February 2021
     Version:     1.0 
     
 #>
