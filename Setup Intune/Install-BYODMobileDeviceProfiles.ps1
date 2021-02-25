@@ -1714,7 +1714,6 @@ Write-Host "Adding MDM compliance policies for mobile devices..." -ForegroundCol
 Add-DeviceCompliancePolicybaseline -JSON $BLOCKAndroidLegacy
 Add-DeviceCompliancePolicybaseline -JSON $BaselineAndroidBYOD 
 Add-DeviceCompliancePolicybaseline -JSON $BaselineiOS 
-Add-DeviceCompliancePolicybaseline -JSON $BaselineMacOS
 
 Write-Host } else 
 
