@@ -8,7 +8,7 @@ https://gum.co/FvuOd.
 Please read about and test the impacts of each policy before assigning to users/devices.
 
 .SOURCE
-https://github.com/vanvfields/Microsoft-365/Intune
+https://github.com/vanvfields/Microsoft-365/
 
 All scripts offered without warranty of any kind.
 
@@ -18,7 +18,7 @@ https://github.com/microsoftgraph/powershell-intune-samples
 .NOTES
     FileName:    Install-Windows10SecurityProfiles.ps1
     Author:      Alex Fields (ITProMentor.com)
-    Created:     March 2021
+    Created:     October 2019
 	Revised:     March 2021
     
 #>
@@ -1089,6 +1089,11 @@ $ESP_resource = "deviceManagement/templates?`$filter=(isof(%27microsoft.graph.se
 }
 
 ####################################################
+
+
+###################################################################################################
+## Get your authentication token
+###################################################################################################
 
 #region Authentication
 
@@ -6151,10 +6156,6 @@ Write-Host
 Write-Host "Adding Disable sign-in animation profile..." -ForegroundColor Yellow
 Add-DeviceConfigurationPolicy -JSON $Config_Win10DisableAnimation
 Write-Host
-
-###################################################################################################
-## Import the ADMX Configuration profiles from JSON
-###################################################################################################
 
 ## Create the ADMX Configuration profile
 Write-Host "Adding OneDrive client config profile..." -ForegroundColor Yellow
