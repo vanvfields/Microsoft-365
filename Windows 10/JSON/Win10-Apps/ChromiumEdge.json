@@ -1,0 +1,16 @@
+{
+    "@odata.context":  "https://graph.microsoft.com/Beta/$metadata#deviceAppManagement/mobileApps/$entity",
+    "@odata.type":  "#microsoft.graph.windowsMicrosoftEdgeApp",
+    "displayName":  "[ITPM Baseline] Chromium Edge for Windows 10",
+    "description":  "Microsoft Edge is the browser for business with modern and legacy web compatibility, new privacy features such as Tracking prevention, and built-in productivity tools such as enterprise-grade PDF support and access to Office and corporate search right from a new tab.",
+    "publisher":  "Microsoft",
+    "isFeatured":  false,
+    "privacyInformationUrl":  "https://privacy.microsoft.com/en-US/privacystatement",
+    "informationUrl":  "https://www.microsoft.com/en-us/windows/microsoft-edge",
+    "developer":  "Microsoft",
+    "isAssigned":  false,
+    "dependentAppCount":  0,
+    "channel":  "stable",
+    "displayLanguageLocale":  null
+}
+

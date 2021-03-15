@@ -1,0 +1,29 @@
+{
+    "displayName":  "[ITPM Enterprise] Enable SmartLocker",
+    "description":  "Assign this policy to Company-owned Windows 10 devices. You must have proper licensing to use this profile: Microsoft 365 Business Premium, E3, or E5. Use either the Audit policy or the Enable policy, but not both at the same time. ",
+    "TemplateDisplayName":  "Application control",
+    "TemplateId":  "63be6324-e3c9-4c97-948a-e7f4b96f0f20",
+    "settingsDelta":  [
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "a7210811-f78c-42de-89a4-e1e67182ba54",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_appLockerApplicationControl",
+                              "valueJson":  "\"enforceComponentsStoreAppsAndSmartlocker\"",
+                              "value":  "enforceComponentsStoreAppsAndSmartlocker"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "f6217e90-ddce-449c-8035-6b3ebd2fe71a",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenBlockOverrideForFiles",
+                              "valueJson":  "true",
+                              "value":  true
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "c839aa8a-eed0-4d9a-93a1-3d39d556fcc2",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_smartScreenEnableInShell",
+                              "valueJson":  "true",
+                              "value":  true
+                          }
+                      ]
+}

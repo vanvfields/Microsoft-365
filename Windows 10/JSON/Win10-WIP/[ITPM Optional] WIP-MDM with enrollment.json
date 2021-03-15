@@ -1,0 +1,77 @@
+
+{
+    "displayName":  "[ITPM Baseline] Windows MDM/with enrollment)",
+    "description":  "Use this policy to protect corporate data on MDM enrolled devices. Do not assign this policy until you have added your approved apps and network locations.",
+    "enforcementLevel":  "noProtection",
+    "enterpriseDomain":  "$EnterpriseDomain",
+    "protectionUnderLockConfigRequired":  false,
+    "dataRecoveryCertificate":  null,
+    "revokeOnUnenrollDisabled":  false,
+    "rightsManagementServicesTemplateId":  null,
+    "azureRightsManagementServicesAllowed":  false,
+    "iconsVisible":  true,
+    "enterpriseIPRangesAreAuthoritative":  false,
+    "enterpriseProxyServersAreAuthoritative":  false,
+    "indexingEncryptedStoresOrItemsBlocked":  false,
+    "isAssigned":  false,
+    "enterpriseProtectedDomainNames":  [
+
+                                       ],
+    "protectedApps":  [
+
+                      ],
+    "exemptApps":  [
+
+                   ],
+    "enterpriseNetworkDomainNames":  [
+
+                                     ],
+    "enterpriseProxiedDomains":  [
+                                     {
+                                         "displayName":  "OneDrive and SharePoint",
+                                         "proxiedDomains":  [
+                                                                {
+                                                                    "ipAddressOrFQDN":  "$Sharepoint.sharepoint.com",
+                                                                    "proxy":  ""
+                                                                },
+                                                                {
+                                                                    "ipAddressOrFQDN":  "$Sharepoint-my.sharepoint.com",
+                                                                    "proxy":  ""
+                                                                },
+                                                                {
+                                                                    "ipAddressOrFQDN":  "/*AppCompat*/",
+                                                                    "proxy":  ""
+                                                                }
+                                                            ]
+                                     }
+                                 ],
+    "enterpriseIPRanges":  [
+
+                           ],
+    "enterpriseProxyServers":  [
+
+                               ],
+    "enterpriseInternalProxyServers":  [
+
+                                       ],
+    "neutralDomainResources":  [
+
+                               ],
+    "smbAutoEncryptedFileExtensions":  [
+
+                                       ],
+    "protectedAppLockerFiles":  [
+
+                                ],
+    "exemptAppLockerFiles":  [
+
+                             ],
+    "assignments":  [
+
+                    ],
+    "@odata.type":  "#microsoft.graph.mdmWindowsInformationProtectionPolicy"
+}
+
+
+
+

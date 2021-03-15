@@ -1,0 +1,84 @@
+{
+    "displayName":  "[ITPM Baseline] Windows MAM/without enrollment",
+    "description":  "Use this policy only if you plan to allow unmanaged Windows 10 devices to connect to your corporate data using Microsoft 365 desktop applications. Do not assign this policy until you have added your approved apps and network locations.",
+    "enforcementLevel":  "noProtection",
+    "enterpriseDomain":  "$EnterpriseDomain",
+    "protectionUnderLockConfigRequired":  false,
+    "dataRecoveryCertificate":  null,
+    "revokeOnUnenrollDisabled":  false,
+    "rightsManagementServicesTemplateId":  null,
+    "azureRightsManagementServicesAllowed":  false,
+    "iconsVisible":  true,
+    "enterpriseIPRangesAreAuthoritative":  false,
+    "enterpriseProxyServersAreAuthoritative":  false,
+    "indexingEncryptedStoresOrItemsBlocked":  false,
+    "isAssigned":  false,
+    "revokeOnMdmHandoffDisabled":  true,
+    "mdmEnrollmentUrl":  "https://enrollment.manage.microsoft.com/enrollmentserver/discovery.svc",
+    "windowsHelloForBusinessBlocked":  false,
+    "pinMinimumLength":  6,
+    "pinUppercaseLetters":  "notAllow",
+    "pinLowercaseLetters":  "notAllow",
+    "pinSpecialCharacters":  "notAllow",
+    "pinExpirationDays":  0,
+    "numberOfPastPinsRemembered":  0,
+    "passwordMaximumAttemptCount":  0,
+    "minutesOfInactivityBeforeDeviceLock":  0,
+    "daysWithoutContactBeforeUnenroll":  90,
+    "enterpriseProtectedDomainNames":  [
+
+                                       ],
+    "protectedApps":  [
+
+                      ],
+    "exemptApps":  [
+
+                   ],
+    "enterpriseNetworkDomainNames":  [
+
+                                     ],
+    "enterpriseProxiedDomains":  [
+                                     {
+                                         "displayName":  "OneDrive and SharePoint",
+                                         "proxiedDomains":  [
+                                                                {
+                                                                    "ipAddressOrFQDN":  "$Sharepoint.sharepoint.com",
+                                                                    "proxy":  null
+                                                                },
+                                                                {
+                                                                    "ipAddressOrFQDN":  "$Sharepoint-my.sharepoint.com",
+                                                                    "proxy":  null
+                                                                },
+                                                                {
+                                                                    "ipAddressOrFQDN":  "/*AppCompat*/",
+                                                                    "proxy":  null
+                                                                }
+                                                            ]
+                                     }
+                                 ],
+    "enterpriseIPRanges":  [
+
+                           ],
+    "enterpriseProxyServers":  [
+
+                               ],
+    "enterpriseInternalProxyServers":  [
+
+                                       ],
+    "neutralDomainResources":  [
+
+                               ],
+    "smbAutoEncryptedFileExtensions":  [
+
+                                       ],
+    "protectedAppLockerFiles":  [
+
+                                ],
+    "exemptAppLockerFiles":  [
+
+                             ],
+    "assignments":  [
+
+                    ],
+    "@odata.type":  "#microsoft.graph.windowsInformationProtectionPolicy"
+}

@@ -1,0 +1,138 @@
+{
+    "displayName":  "[ITPM Corporate] Audit ASR Rules",
+    "description":  "Assign this policy to Company-owned Windows 10 devices. You must have proper licensing to use this profile: Microsoft 365 Business Premium, E3, or E5. Use either the Audit policy or the Enable policy, but not both at the same time. ",
+    "TemplateDisplayName":  "Attack surface reduction rules",
+    "TemplateId":  "0e237410-1367-4844-bd7f-15fb0f08943b",
+    "settingsDelta":  [
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "d419d780-275a-4e06-8185-e1b4c406ba3c",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderBlockPersistenceThroughWmiType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "eb9e4c92-602f-41d7-8091-59ab6d9ae892",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderPreventCredentialStealingType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "dc5e6c65-2fdd-4ebb-aef2-514488bdda4e",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdobeReaderLaunchChildProcess",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "439c8d6c-c5de-4d5e-8fe1-21853f33577d",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsOtherProcessInjectionType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "3f689fee-a494-4510-bbbc-b3e3242cef36",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsExecutableContentCreationOrLaunchType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "886ec98d-e588-44fb-ac52-84a71c66e513",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeAppsLaunchChildProcessType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "e4a0388a-fb19-4327-90ae-f06e2de2f1cb",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeMacroCodeAllowWin32ImportsType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "138fa97d-00c5-4fa0-a35c-09a0dad3ab71",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderOfficeCommunicationAppsLaunchChildProcess",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "962a6db7-d878-4635-aa83-c498805bf5f8",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderScriptObfuscatedMacroCodeType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "df666c57-a8a8-46c2-bb70-9567e6ef807c",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderScriptDownloadedPayloadExecutionType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "f00be9e1-f455-4528-a656-297b455b06d9",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderProcessCreationType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "0e1d70ef-0be0-48b2-bede-644d08914d2d",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderUntrustedUSBProcessType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "f0a0167f-c2ab-4e13-9ecb-0a4dcbd320c2",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderUntrustedExecutableType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "6efadb92-9442-4d76-933f-4e3cb8fb3b34",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderEmailContentExecutionType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "25c80268-a9ce-49af-9619-cf94d214821f",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdvancedRansomewareProtectionType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "e4f29265-c737-42ca-b37c-1d86dd097d68",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderGuardMyFoldersType",
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementCollectionSettingInstance",
+                              "id":  "eabd14a0-207f-4b26-a6b3-feb305a95e27",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdditionalGuardedFolders",
+                              "valueJson":  "null"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementCollectionSettingInstance",
+                              "id":  "4313fa19-fae9-41a2-843e-d0d017c344c9",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderGuardedFoldersAllowedAppPaths",
+                              "valueJson":  "null"
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementCollectionSettingInstance",
+                              "id":  "2187bb24-8bb5-4157-b176-75437c1e7709",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAttackSurfaceReductionExcludedPaths",
+                              "valueJson":  "null"
+                          }
+                      ]
+}

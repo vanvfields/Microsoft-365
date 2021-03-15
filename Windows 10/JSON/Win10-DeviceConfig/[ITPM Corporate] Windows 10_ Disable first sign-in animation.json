@@ -1,0 +1,19 @@
+{
+    "@odata.type":  "#microsoft.graph.windows10CustomConfiguration",
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "description":  "Assign this profile to Company owned Windows 10 devices. Prevents the sign-in animation sequence for users signing into the device for the first time.",
+    "displayName":  "[ITPM Corporate] Windows 10: Disable first sign-in animation",
+    "omaSettings":  [
+                        {
+                            "@odata.type":  "#microsoft.graph.omaSettingInteger",
+                            "displayName":  "EnableFirstLogonAnimation",
+                            "description":  "Disable first sign-in animation",
+                            "omaUri":  "./Device/Vendor/MSFT/Policy/Config/WindowsLogon/EnableFirstLogonAnimation",
+                            "isEncrypted":  false,
+                            "value":  0,
+                            "isReadOnly":  false
+                        }
+                    ]
+}

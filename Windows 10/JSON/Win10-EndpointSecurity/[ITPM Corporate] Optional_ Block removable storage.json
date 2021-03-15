@@ -1,0 +1,133 @@
+{
+    "displayName":  "[ITPM Corporate] Optional: Block removable storage",
+    "description":  "Assign this policy to Company-owned Windows 10 devices. This policy will block removable storage devices.",
+    "TemplateDisplayName":  "Device control",
+    "TemplateId":  "4648b50e-d3ef-4ba0-848e-b0ef561b3aa5",
+    "settingsDelta":  [
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
+                              "id":  "d6b80913-f6d6-4ed5-8e10-4d39350d3162",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_allowHardwareDeviceInstallationByDeviceIdentifiers",
+                              "valueJson":  "null",
+                              "implementationId":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
+                              "id":  "8aaf2cf8-991d-44b2-bb65-df3188da0aff",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_hardwareDeviceInstallationByDeviceIdentifiers",
+                              "valueJson":  "null",
+                              "implementationId":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
+                              "id":  "952670b6-88ed-4e67-9e74-65c1c24a7549",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_allowHardwareDeviceInstallationBySetupClasses",
+                              "valueJson":  "null",
+                              "implementationId":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
+                              "id":  "c49f9c88-d94c-4425-b58e-36e95e1131a7",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_hardwareDeviceInstallationBySetupClasses",
+                              "valueJson":  "null",
+                              "implementationId":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
+                              "id":  "ee6d8ed7-942a-4ba3-a204-51078064371d",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_allowHardwareDeviceInstallationByDeviceInstanceIdentifiers",
+                              "valueJson":  "null",
+                              "implementationId":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
+                              "id":  "6aa7a8f8-c62d-4225-8727-ab30498ca609",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_preventHardwareDeviceInstallationByDeviceInstanceIdentifiers",
+                              "valueJson":  "null",
+                              "implementationId":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "f8f41cd7-43a4-4b67-a8a8-aa9a302c1a36",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_defenderScanRemovableDrivesDuringFullScan",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "384ca184-09d7-4f4d-a848-2464545f8339",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_dataProtectionBlockDirectMemoryAccess",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
+                              "id":  "676c1472-b18e-4f57-ba60-461735f5611a",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_dmaGuardDeviceEnumerationPolicy",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "55fcf7fc-b959-442c-9e20-101635129443",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_storageBlockRemovableStorage",
+                              "valueJson":  "true",
+                              "value":  true
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "8ebd96c0-6d7b-400c-a0f1-ae4d82b2ede0",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_usbBlocked",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "877a254e-a5b4-4d86-b4a3-ee9cdc07c6dc",
+                              "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_storageBlockRemovableStorageWrite",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "9c2d0165-5029-4e52-8acd-d32378bcd72a",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_bluetoothBlocked",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "d051bb57-2f4a-4aa1-b7db-417c3ec0adcd",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_bluetoothBlockDiscoverableMode",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "aa8ca4c8-ff45-4f66-bc07-d24db4957989",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_bluetoothBlockPrePairing",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "ea2f58a7-88f4-462d-81ce-9fa53f2bd3f2",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_bluetoothBlockAdvertising",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementBooleanSettingInstance",
+                              "id":  "3950efa9-b504-4fb9-9f3a-04890af6abd6",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_bluetoothBlockPromptedProximalConnections",
+                              "valueJson":  "null",
+                              "value":  null
+                          },
+                          {
+                              "@odata.type":  "#microsoft.graph.deviceManagementCollectionSettingInstance",
+                              "id":  "6b1c8efd-e000-4355-bcb0-c7a00bcb9ae2",
+                              "definitionId":  "deviceConfiguration--windows10GeneralConfiguration_bluetoothAllowedServices",
+                              "valueJson":  "null"
+                          }
+                      ]
+}
