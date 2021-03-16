@@ -6094,7 +6094,7 @@ Write-Host
 
 ####################################################
 
-## OPTIONAL: Software update rings
+## Import Software update rings
 Write-Host "Software update rings control the update schedule on Company owned devices."
 Write-Host
 $Answer = Read-Host "Do you want to import the Software update rings? Type Y or N and press Enter to continue"
@@ -6142,12 +6142,12 @@ Write-Host
 
 ####################################################
 
-Write-Host "Endpoint Security profiles control security features and device restrictions for Company owned devices."
+Write-Host "Configuration profiles control certain experiences for Company owned devices."
 Write-Host
-$Answer = Read-Host "Do you want to import the Corporate security profiles? Type Y or N and press Enter to continue"
+$Answer = Read-Host "Do you want to import the Corporate Configuration profiles? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
-## RECOMMENDED: Import Corproate Device configuration profiles
+## Import Corproate Device configuration profiles
 Write-Host "Adding Corporate Device configuration profiles..." -ForegroundColor Cyan
 Write-Host
 Write-Host "Adding Allow Autopilot reset profile..." -ForegroundColor Yellow
@@ -6176,15 +6176,18 @@ $JSON_Convert | ForEach-Object { $_
 
 Write-Host "Policy: " $Policy_Name "created" -ForegroundColor Yellow
 Write-Host 
-## RECOMMENDED: Import Endpoint Security Baseline profiles
-Write-Host "Adding Corporate Endpoint Security policies..." -ForegroundColor Cyan
+} else
+{
 Write-Host
-Write-Host "Adding Windows 10 Baseline policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_WinBase.id -JSON $SB_WinBase #OK
+Write-Host "Corporate Configuration profiles will not be imported" -ForegroundColor Red
+Write-Host 
+}
+
+
+Write-Host "Endpoint Security profiles include BitLocker, Microsoft Defender, Attack Surface Reduction and more."
 Write-Host
-Write-Host "Adding Edge Chromium Baseline policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_EdgeBase.id -JSON $SB_EdgeBase #OK
-Write-Host
+$Answer = Read-Host "Do you want to import the Corporate Endpoint security profiles? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
 ## RECOMMENDED: Import Endpoint Security policies
 Write-Host "Adding Microsoft Defender Antivirus policy..." -ForegroundColor Yellow
@@ -6215,10 +6218,30 @@ Write-Host "Adding Account Protection Windows Hello policy..." -ForegroundColor 
 Add-EndpointSecurityPolicy -TemplateId $Template_AccountProtection.id -JSON $ES_WindowsHello
 Write-Host
 } else
-
 {
 Write-Host
 Write-Host "Corporate security profiles will not be imported" -ForegroundColor Red
+Write-Host 
+}
+
+
+Write-Host "Microsoft publishes recommended Security baselines for Windows and Edge."
+Write-Host
+$Answer = Read-Host "Do you want to import the Microsoft Security baseline profiles? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+## RECOMMENDED: Import Endpoint Security Baseline profiles
+Write-Host "Adding Corporate Endpoint Security policies..." -ForegroundColor Cyan
+Write-Host
+Write-Host "Adding Windows 10 Baseline policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $Template_WinBase.id -JSON $SB_WinBase #OK
+Write-Host
+Write-Host "Adding Edge Chromium Baseline policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $Template_EdgeBase.id -JSON $SB_EdgeBase #OK
+Write-Host
+} else
+{
+Write-Host
+Write-Host "Microsoft Security baselines will not be imported" -ForegroundColor Red
 Write-Host 
 }
 
