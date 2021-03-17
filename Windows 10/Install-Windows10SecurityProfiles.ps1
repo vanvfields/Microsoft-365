@@ -19,7 +19,7 @@ https://github.com/microsoftgraph/powershell-intune-samples
     FileName:    Install-Windows10SecurityProfiles.ps1
     Author:      Alex Fields (ITProMentor.com)
     Created:     October 2019
-	Revised:     March 2021
+    Revised:     March 2021
     
 #>
 ###################################################################################################
