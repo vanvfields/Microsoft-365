@@ -16,7 +16,7 @@ https://github.com/microsoftgraph/powershell-intune-samples
     FileName:    Install-EndpointSecurity.ps1
     Author:      Alex Fields (ITProMentor.com)
     Created:     March 2021
-	Revised:     March 2021
+    Revised:     March 2021
     
 #>
 ###################################################################################################
