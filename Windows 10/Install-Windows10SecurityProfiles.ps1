@@ -1159,17 +1159,17 @@ $Sharepoint = $EnterpriseDomain.Split(".")[0]
 ###################################################################################################
 ## Get Current Template IDs for use with the Endpoint Security Profiles
 ###################################################################################################
-$Templates = Get-EndpointSecurityTemplate
-$Template_WinBase = $Templates | ? {$_.templateType -eq "securityBaseline"}
-$Template_EdgeBase = $Templates | ? {$_.templateType -eq "microsoftEdgeSecurityBaseline"}
-$Template_Antivirus = $Templates | ? { $_.displayname -eq "Microsoft Defender Antivirus"}
-$Template_SecurityCenter = $Templates | ? { $_.displayname -eq "Windows Security experience"}
-$Template_BitLocker = $Templates | ? { $_.displayname -eq "BitLocker"}
-$Template_Firewall = $Templates | ? { $_.displayname -eq "Microsoft Defender Firewall"}
-$Template_ASR = $Templates | ? { $_.displayname -eq "Attack surface reduction rules"}
-$Template_AppControl = $Templates | ? { $_.displayname -eq "Application Control"}
-$Template_DeviceControl = $Templates | ? { $_.displayname -eq "Device Control"}
-$Template_AccountProtection = $Templates | ? { $_.displayname -eq "Account protection (preview)"}
+## $Templates = Get-EndpointSecurityTemplate ## Gets the most current templates
+
+$Template_WinBase = "c04a010a-e7c5-44b1-a814-88df6f053f16"
+$Template_EdgeBase = "a8d6fa0e-1e66-455b-bb51-8ce0dde1559e"
+$Template_Antivirus = "b595dad1-920f-440e-ba12-22da622d5d92"
+$Template_SecurityCenter = "da332b88-bd29-4def-a442-e0993ed08e24"
+$Template_BitLocker = "2b595bcc-ef65-42ce-a0e3-67389ae50b8e"
+$Template_Firewall = "c53e5a9f-2eec-4175-98a1-2b3d38084b91"
+$Template_ASR = "0e237410-1367-4844-bd7f-15fb0f08943b"
+$Template_DeviceControl = "4648b50e-d3ef-4ba0-848e-b0ef561b3aa5"
+$Template_AccountProtection = "0f2b5d70-d4e9-4156-8c16-1397eb6c54a5"
 
 
 ###################################################################################################
@@ -1941,7 +1941,7 @@ $Config_Win10DelayedUpdate = @"
     "deviceManagementApplicabilityRuleOsEdition":  null,
     "deviceManagementApplicabilityRuleOsVersion":  null,
     "deviceManagementApplicabilityRuleDeviceMode":  null,
-    "description":  "This update ring delays quality updates by one week and feature updates by two weeks. Optionally, you may apply this ring to a broad population of users and use the default ring against pilot users in your organization.",
+    "description":  "This update ring delays quality updates by one week and feature updates by two weeks.",
     "displayName":  "[ITPM Corporate] Delayed Update Ring",
     "deliveryOptimizationMode":  "userDefined",
     "prereleaseFeatures":  "userDefined",
@@ -2202,7 +2202,7 @@ $SB_WinBase = @"
 
 {
     "displayName":  "[ITPM Corporate] Modified Baseline for Windows 10",
-    "description":  "Assign this profile to Company owned Windows 10 devices. This baseline has been modified to remove overlap with other Endpoint Security profiles; for example BitLocker, Credential Guard, Firewall, and Microsoft Defender settings.",
+    "description":  "Assign this profile to Company owned Windows 10 devices. This baseline has been modified to remove overlap with other Endpoint Security profiles; for example BitLocker, Firewall, Microsoft Defender settings and more.",
     "settingsDelta":  [
                           {
                               "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
@@ -4214,7 +4214,7 @@ $SB_EdgeBase = @"
 
 {
     "displayName":  "[ITPM Corporate] Edge Chromium baseline",
-    "description":  "Assign this profile to Company owned Windows 10 devices. WARNING: This policy will disable all browser extensions by default; please create a Device configuration profile to allow specific extensions to be installed from the Edge add-ons store.",
+    "description":  "Assign this profile to Company owned Windows 10 devices. WARNING: This policy will disable all browser extensions by default; create a Device configuration profile to allow specific extensions to be installed from the Edge add-ons store.",
     "settingsDelta":  [
                           {
                               "@odata.type":  "#microsoft.graph.deviceManagementCollectionSettingInstance",
@@ -5787,7 +5787,7 @@ $ES_DeviceControl = @"
 
 {
     "displayName":  "[ITPM Corporate] Optional: Block removable storage",
-    "description":  "Assign this policy to Company owned Windows 10 devices. This policy will block removable storage devices.",
+    "description":  "This policy will block removable storage devices.",
     "settingsDelta":  [
                           {
                               "@odata.type":  "#microsoft.graph.deviceManagementAbstractComplexSettingInstance",
@@ -6190,37 +6190,39 @@ $Answer = Read-Host "Do you want to import the Corporate Endpoint security profi
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
 ## RECOMMENDED: Import Endpoint Security policies
+Write-Host "Adding Corporate Endpoint security profiles..." -ForegroundColor Cyan
+Write-Host
 Write-Host "Adding Microsoft Defender Antivirus policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_Antivirus.id -JSON $ES_Antivirus #OK
+Add-EndpointSecurityPolicy -TemplateId $Template_Antivirus -JSON $ES_Antivirus #OK
 Write-Host
 Write-Host "Adding Windows Security Center policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_SecurityCenter.id -JSON $ES_SecurityCenter #OK
+Add-EndpointSecurityPolicy -TemplateId $Template_SecurityCenter -JSON $ES_SecurityCenter #OK
 Write-Host
 Write-Host "Adding BitLocker silent enablement policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_BitLocker.id -JSON $ES_BitLocker
+Add-EndpointSecurityPolicy -TemplateId $Template_BitLocker -JSON $ES_BitLocker
 Write-Host
 Write-Host "Adding BitLocker removable drive protection policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_BitLocker.id -JSON $ES_BitLockerRD
+Add-EndpointSecurityPolicy -TemplateId $Template_BitLocker -JSON $ES_BitLockerRD
 Write-Host
 Write-Host "Adding Windows Firewall policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_Firewall.id -JSON $ES_Firewall
+Add-EndpointSecurityPolicy -TemplateId $Template_Firewall -JSON $ES_Firewall
 Write-Host
 Write-Host "Adding Attack surface reduction rules audit policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_ASR.id -JSON $ES_ASRAudit
+Add-EndpointSecurityPolicy -TemplateId $Template_ASR -JSON $ES_ASRAudit
 Write-Host
 Write-Host "Adding Attack surface reduction rules enable policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_ASR.id -JSON $ES_ASREnable
+Add-EndpointSecurityPolicy -TemplateId $Template_ASR -JSON $ES_ASREnable
 Write-Host
 Write-Host "Adding Device Control Block removable storage policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_DeviceControl.id -JSON $ES_DeviceControl
+Add-EndpointSecurityPolicy -TemplateId $Template_DeviceControl -JSON $ES_DeviceControl
 Write-Host
 Write-Host "Adding Account Protection Windows Hello policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_AccountProtection.id -JSON $ES_WindowsHello
+Add-EndpointSecurityPolicy -TemplateId $Template_AccountProtection -JSON $ES_WindowsHello
 Write-Host
 } else
 {
 Write-Host
-Write-Host "Corporate security profiles will not be imported" -ForegroundColor Red
+Write-Host "Corporate Endpoint security profiles will not be imported" -ForegroundColor Red
 Write-Host 
 }
 
@@ -6230,13 +6232,13 @@ Write-Host
 $Answer = Read-Host "Do you want to import the Microsoft Security baseline profiles? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 ## RECOMMENDED: Import Endpoint Security Baseline profiles
-Write-Host "Adding Corporate Endpoint Security policies..." -ForegroundColor Cyan
+Write-Host "Adding Microsoft Security baseline profiles..." -ForegroundColor Cyan
 Write-Host
 Write-Host "Adding Windows 10 Baseline policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_WinBase.id -JSON $SB_WinBase #OK
+Add-EndpointSecurityPolicy -TemplateId $Template_WinBase -JSON $SB_WinBase #OK
 Write-Host
 Write-Host "Adding Edge Chromium Baseline policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_EdgeBase.id -JSON $SB_EdgeBase #OK
+Add-EndpointSecurityPolicy -TemplateId $Template_EdgeBase -JSON $SB_EdgeBase #OK
 Write-Host
 } else
 {
