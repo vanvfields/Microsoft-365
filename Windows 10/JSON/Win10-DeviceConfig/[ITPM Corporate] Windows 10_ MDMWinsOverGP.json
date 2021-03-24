@@ -1,0 +1,19 @@
+{
+    "@odata.type":  "#microsoft.graph.windows10CustomConfiguration",
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "description":  "Assign this profile to Hybrid Azure AD Joined Windows 10 devices. Allows MDM settings to override conflicts with Group Policy.",
+    "displayName":  "[ITPM Corporate] Windows 10: MDM wins over Group Policy",
+    "omaSettings":  [
+                        {
+                            "@odata.type":  "#microsoft.graph.omaSettingInteger",
+                            "displayName":  "ControlPolicyConflict/MDMWinsOverGP",
+                            "description":  "MDMWinsOverGP",
+                            "omaUri":  "./Device/Vendor/MSFT/Policy/Config/ControlPolicyConflict/MDMWinsOverGP",
+                            "isEncrypted":  false,
+                            "value":  1,
+                            "isReadOnly":  false
+                        }
+                    ]
+}
