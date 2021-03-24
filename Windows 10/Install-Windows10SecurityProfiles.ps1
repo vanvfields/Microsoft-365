@@ -19,7 +19,7 @@ https://github.com/microsoftgraph/powershell-intune-samples
     FileName:    Install-Windows10SecurityProfiles.ps1
     Author:      Alex Fields (ITProMentor.com)
     Created:     October 2019
-    Revised:     March 2021
+	Revised:     March 2021
     
 #>
 ###################################################################################################
@@ -1875,6 +1875,32 @@ $Config_Win10DisableAnimation = @"
                     ]
 }
 
+
+"@
+
+####################################################
+
+$Config_Win10MDMWins = @"
+
+{
+    "@odata.type":  "#microsoft.graph.windows10CustomConfiguration",
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "description":  "Assign this profile to Hybrid Azure AD Joined Windows 10 devices. Allows MDM settings to override conflicts with Group Policy.",
+    "displayName":  "[ITPM Corporate] Windows 10: MDM wins over Group Policy",
+    "omaSettings":  [
+                        {
+                            "@odata.type":  "#microsoft.graph.omaSettingInteger",
+                            "displayName":  "ControlPolicyConflict/MDMWinsOverGP",
+                            "description":  "MDMWinsOverGP",
+                            "omaUri":  "./Device/Vendor/MSFT/Policy/Config/ControlPolicyConflict/MDMWinsOverGP",
+                            "isEncrypted":  false,
+                            "value":  1,
+                            "isReadOnly":  false
+                        }
+                    ]
+}
 
 "@
 
@@ -6150,6 +6176,9 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 ## Import Corproate Device configuration profiles
 Write-Host "Adding Corporate Device configuration profiles..." -ForegroundColor Cyan
 Write-Host
+Write-Host "Adding MDM wins over GP profile..." -ForegroundColor Yellow
+Add-DeviceConfigurationPolicy -JSON $Config_Win10MDMWins
+Write-Host 
 Write-Host "Adding Allow Autopilot reset profile..." -ForegroundColor Yellow
 Add-DeviceConfigurationPolicy -JSON $Config_Win10AllowReset
 Write-Host
