@@ -12,7 +12,10 @@
     FileName:    Enable-SensitivityLabelsForGroups.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     November 2020
-	Updated:     November 2020
+	Updated:     April 2021
+
+.NOTES
+    You will be prompted twice since you must authenticate against both Azure AD and Exchange Online
 
 #>
 ###################################################################################################
