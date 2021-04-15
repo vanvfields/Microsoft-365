@@ -1,15 +1,14 @@
-<##################################################################################################
+﻿<##################################################################################################
 #
 .SYNOPSIS
     This script will create the following recommended Baseline Conditional Access policies in your tenant:
     1. [All cloud apps] BLOCK: Legacy authentication clients
     2. [All cloud apps] GRANT: Require MFA for Admin users
     3. [All cloud apps] GRANT: Require MFA for All users
-    4. [All cloud apps] BLOCK: Unsupported device platforms
-    5. [Office 365] GRANT: Require approved app for mobile access (MAM)
-    6. [Office 365] GRANT: Require compliant device for supported platforms (MDM)
-    7. [Office 365] SESSION: Prevent downloads from unmanaged devices and browsers
-
+    4. [All cloud apps] BLOCK: Device platforms such as Linux and Chromebook
+    5. [Office 365] GRANT: Require approved apps and browsers for mobile access (MAM)
+    6. [Office 365] GRANT: Require managed devices for client apps on Windows & MacOS (MDM)
+    7. [Office 365] SESSION: Prevent web downloads from unmanaged devices
 
 .NOTES
     1. You may need to disable the 'Security defaults' first. See https://aka.ms/securitydefaults
@@ -18,7 +17,7 @@
     4. Be sure to populate the 'Exclude from CA' security group with at least one admin account for emergency access
 
 .HOW-TO
-    1. To install the Azure AD PowerShell module use: Install-Module AzureAD
+    1. To install the Azure AD Preview PowerShell module use: Install-Module AzureADPreview
     2. Connect to Azure AD via PowerShell to run this script: Connect-AzureAD 
     3. Run .\Baseline-ConditionalAccessPolicies.ps1
     4. Reference: https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0#installing-the-azure-ad-module
@@ -32,7 +31,6 @@
 #>
 ###################################################################################################
 
-
 ## Check for the existence of the "Exclude from CA" security group, and create the group if it does not exist
 
 $ExcludeCAGroupName = "sg-Exclude From CA"
@@ -45,8 +43,6 @@ if ($ExcludeCAGroup -eq $null -or $ExcludeCAGroup -eq "") {
 else {
     Write-Host "Exclude from CA group already exists"
 }
-
-
 
 ########################################################
 
@@ -118,7 +114,7 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = "Block"
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] BLOCK: Unsupported device platforms" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] BLOCK: Device platforms such as Linux and Chromebook" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
@@ -141,32 +137,8 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('ApprovedApplication', 'CompliantApplication')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require approved app for mobile access (MAM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require approved apps and browsers for mobile access (MAM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
-########################################################
-<#
-## This policy is optional, and enables MDM enforcement for iOS and Android devices (i.e. company-owned devices)
-## MDM NOTES:
-##     1. For iOS: Configure Apple enrollment certificate, and optionally connect Apple Business Manager (company-owned)
-##     2. For Android: Link your Managed Google Play account, and optionally configure corporate-owned dedicated or fully managed devices
-##     3. Personal devices: Both iOS and Android users should download the Authenticator app, and the Company Portal app to sign-in
-
-$conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
-$conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
-$conditions.Applications.IncludeApplications = "Office365"
-$conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
-$conditions.Users.IncludeUsers = "All"
-$conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
-$conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
-$conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
-$conditions.Platforms.IncludePlatforms = @('Android', 'IOS')
-$conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
-$controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
-$controls._Operator = "OR"
-$controls.BuiltInControls = @('CompliantDevice')
-
-New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require compliant device for mobile access (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
-#>
 ########################################################
 
 ## This policy enforces device compliance (or Hybrid Azure AD join) for supported platforms: Windows, macOS, Android, and iOS
@@ -175,7 +147,7 @@ New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require c
 ##    2. Azure AD joined or Hybrid Joined devices will be managed without taking additional action
 ##    3. Users with personal devices should use the Company Portal app to enroll
 ##    4. This policy blocks unmanaged device access from Mobile and desktop client apps (e.g. Outlook, OneDrive, etc.)
-##    5. Optionally, you may remove Android and IOS from the IncludePlatforms condition (some choose to enforce MAM only)
+##    5. Optionally, you may add Android and IOS from the IncludePlatforms condition (if you want both MAM and MDM for mobile)
 ##    6. Optionally, you may add 'Browser' to the ClientAppTypes condition in lieu of the next policy (SESSION policy)
 
 $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
@@ -186,13 +158,13 @@ $conditions.Users.IncludeUsers = "All"
 $conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
 $conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
 $conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
-$conditions.Platforms.IncludePlatforms = @('Android', 'IOS', 'Windows', 'macOS')
+$conditions.Platforms.IncludePlatforms = @('Windows', 'macOS')
 $conditions.ClientAppTypes = @('MobileAppsAndDesktopClients')
 $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('DomainJoinedDevice', 'CompliantDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require compliant device for supported platforms (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require managed devices for client apps on Windows & MacOS (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
