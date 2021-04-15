@@ -2,12 +2,12 @@
 #
 .SYNOPSIS
     This script can create the following Device-based Conditional Access policies in your tenant:
-    1. [ITPM Mobile] Require managed apps for Office 365 access (MAM)
-    2. [ITPM Mobile] Require compliant device for Office 365 client app access (MDM)
-    3. [ITPM MacOS] Require compliant device for Office 365 client app access
-    4. [ITPM Windows] Require compliant device or hybrid join for Office 365 client app access
-    5. [ITPM Browsers] Prevent web downloads from Office 365 on unmanaged devices
-    6. [ITPM Strict] Block all access on unmanaged devices for supported platforms
+    1. [Office 365 Mobile] GRANT: Require managed apps and browsers (MAM)
+    2. [Office 365 Mobile] GRANT: Require compliant device for client app access (MDM)
+    3. [Office 365 MacOS] GRANT: Require compliant device for client app access
+    4. [Office 365 Windows] GRANT: Require compliant device or hybrid join for client app access
+    5. [Office 365 Browsers] SESSION: Prevent web downloads on unmanaged devices
+    6. [Office 365 Strict] GRANT: Require compliant device for all platforms
 
 .NOTES
     1. You may need to disable the 'Security defaults' first. See https://aka.ms/securitydefaults
@@ -30,15 +30,15 @@
 #>
 ###################################################################################################
 
-Connect-AzureAD
+Import-Module AzureADPreview
+#Connect-AzureAD
 
 ########################################################
 
-## This policy enforces MAM for browser and client app access on iOS and Android devices
+## This policy enforces MAM for iOS and Android devices
 ## MAM NOTES: 
 ##     1. End-users will not be able to access company data from built-in browser or mail apps for iOS or Android; they must use approved apps (e.g. Outlook, Edge)
 ##     2. Android and iOS users must have the Authenticator app configured, and Android users must also download the Company Portal app
-##     3. You must also deploy App protection policies for iOS and Android
 
 $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
 $conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
@@ -54,14 +54,13 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('ApprovedApplication', 'CompliantApplication')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Baseline] Office 365 Mobile access: Require managed apps (MAM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
-
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365 Mobile] GRANT: Require approved apps and browsers (MAM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
-## This policy requires MDM for client app access on iOS and Android devices (i.e. Company-owned devices)
+## [OPTIONAL POLICY] Enforces MDM compliance for client app access on iOS and Android devices (i.e. Company-owned devices)
 ## MDM NOTES:
-##     1. For iOS: Configure Apple enrollment certificate, and optionally connect Apple Business Manager (Company-owned)
+##     1. For iOS: Configure Apple enrollment certificate, and optionally connect Apple Business Manager (company-owned)
 ##     2. For Android: Link your Managed Google Play account, and optionally configure corporate-owned dedicated or fully managed devices
 ##     3. Personal devices: Both iOS and Android users should download the Authenticator app, and the Company Portal app to sign-in
 
@@ -74,16 +73,16 @@ $conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
 $conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
 $conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
 $conditions.Platforms.IncludePlatforms = @('Android', 'IOS')
-$conditions.ClientAppTypes = @('MobileAppsAndDesktopClients')
+$conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
 $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('CompliantDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Mobile] Require compliant device for Office 365 client app access (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365 Mobile] GRANT: Require compliant device for client apps (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
-## This policy requires MDM for client app access on macOS devices 
+## This policy enforces MDM compliance for client app access on macOS devices 
 ## MDM NOTES:
 ##     1. For macOS: Configure Apple enrollment certificate, and optionally connect Apple Business Manager (Company-owned)
 ##     2. Personal devices: Users need the Company Portal app to enroll
@@ -102,10 +101,9 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('CompliantDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM MacOS] Require compliant device for Office 365 client app access" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365 MacOS] GRANT: Require compliant device for client apps (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
-
 ## This policy requires compliant device or Hybrid Azure AD join for client app access on Windows devices 
 ## MDM NOTES:
 ##     1. For Windows: Configure Microsoft Store (Intune) or Hybrid Azure AD Join (On-premises/Azure AD Connect)
@@ -125,7 +123,7 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('DomainJoinedDevice', 'CompliantDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Windows] Require compliant device for Office 365 client app access" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365 Windows] GRANT: Require compliant device or Hybrid Azure AD Join" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
@@ -147,7 +145,7 @@ $conditions.ClientAppTypes = @('Browser')
 $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
 $controls.ApplicationEnforcedRestrictions = $true
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Browsers] Prevent web downloads from Office 365 on unmanaged devices" -State "Disabled" -Conditions $conditions -SessionControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365 Browsers] SESSION: Prevent web downloads from unmanaged devices" -State "Disabled" -Conditions $conditions -SessionControls $controls 
 
 ########################################################
 
@@ -172,6 +170,6 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('DomainJoinedDevice', 'CompliantDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Strict] Block all access on unmanaged devices for supported platforms" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Offie 365 Strict] Require compliant device for apps and browsers on all platforms" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################

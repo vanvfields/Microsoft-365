@@ -2,12 +2,12 @@
 #
 .SYNOPSIS
     This script will create the following recommended Baseline Conditional Access policies in your tenant:
-    1. [ITPM Baseline] Block legacy authentication clients
-    2. [ITPM Baseline] Block unsupported device platforms
-    3. [ITPM Baseline] Require MFA for Admin users
-    4. [ITPM Baseline] Require MFA for Azure Management
-    4. [ITPM Baseline] Require MFA for unmanaged devices 
-    5. [ITPM Baseline] Require MFA to join or register a device
+    1. [All cloud apps] BLOCK: Legacy authentication clients
+    2. [All cloud apps] BLOCK: Unsupported device platforms
+    3. [All cloud apps] GRANT: Require MFA for Admin users
+    4. [All cloud apps] GRANT: Require MFA for All users
+    5. [Azure Management] GRANT: Require MFA for All users 
+    6. [User action] GRANT: Require MFA to join or register a device
 
 
 .NOTES
@@ -30,6 +30,7 @@
 #>
 ###################################################################################################
 
+Import-Module AzureADPreview
 Connect-AzureAD
 
 ## Check for the existence of the "Exclude from CA" security group, and create the group if it does not exist
@@ -44,7 +45,6 @@ if ($ExcludeCAGroup -eq $null -or $ExcludeCAGroup -eq "") {
 else {
     Write-Host "Exclude from CA group already exists"
 }
-
 
 
 ########################################################
@@ -62,7 +62,7 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = "Block"
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Baseline] Block legacy authentication clients" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] BLOCK: Legacy authentication clients" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
@@ -82,7 +82,7 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = "Block"
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Baseline] Block unsupported device platforms" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] BLOCK: Unsupported device platforms" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
@@ -99,25 +99,7 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = "MFA"
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Baseline] Require MFA for Admin users" -State "Disabled" -Conditions $conditions -GrantControls $controls 
-
-########################################################
-
-## This policy requires Multi-factor Authentication for Azure Management
-
-$conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
-$conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
-$conditions.Applications.IncludeApplications = "797f4846-ba00-4fd7-ba43-dac1f8f63013"
-$conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
-$conditions.Users.IncludeUsers = "All"
-$conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
-$conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
-$conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
-$controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
-$controls._Operator = "OR"
-$controls.BuiltInControls = "MFA"
-
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Baseline] Require MFA for Azure Management" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] GRANT: Require MFA for Admin users" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
@@ -135,7 +117,25 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('MFA', 'CompliantDevice', 'DomainJoinedDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Baseline] Require MFA for unmanaged devices" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] GRANT: Require MFA OR compliant device for All users" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+
+########################################################
+
+## This policy requires Multi-factor Authentication for Azure Management
+
+$conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
+$conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
+$conditions.Applications.IncludeApplications = "797f4846-ba00-4fd7-ba43-dac1f8f63013"
+$conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
+$conditions.Users.IncludeUsers = "All"
+$conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
+$conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
+$conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
+$controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
+$controls._Operator = "OR"
+$controls.BuiltInControls = "MFA"
+
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Azure Management] GRANT: Require MFA for All users " -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
@@ -152,7 +152,7 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = "MFA"
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[ITPM Baseline] Require MFA to register or join devices" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[User action] GRANT: Require MFA to join or register a device" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 
 ########################################################
