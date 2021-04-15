@@ -15,17 +15,27 @@ https://docs.microsoft.com/en-us/microsoft-365/admin/create-groups/manage-creati
 .NOTES
     FileName:    Limit-GroupsCreation.ps1
     Author:      Alex Fields, ITProMentor.com
-    Created:     02-01-2020
-	Revised:     02-01-2020
-    Version:     1.0
+    Created:     February 2020
+    Revised:     April 2021
+    Version:     1.1
     
 #>
 ###################################################################################################
 
 
-
-$GroupName = "Group Creators"
+$GroupName = "sg-Group Creators"
 $AllowGroupCreation = "False"
+
+
+$CheckForGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -eq $GroupName
+
+if ($CheckForGroup -eq $null -or $CheckForGroup -eq "") {
+    New-AzureADGroup -DisplayName $GroupName -SecurityEnabled $true -MailEnabled $false -MailNickName $GroupName
+    $CheckForGroup = Get-AzureADGroup -All $true | Where-Object DisplayName -eq $GroupName
+}
+else {
+    Write-Host "Security group for Group Creators already exists"
+}
 
 
 $settingsObjectID = (Get-AzureADDirectorySetting | Where-object -Property Displayname -Value "Group.Unified" -EQ).id
