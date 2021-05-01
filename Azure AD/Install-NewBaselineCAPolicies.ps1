@@ -4,7 +4,7 @@
     This script will create the following recommended Baseline Conditional Access policies in your tenant:
     1. [All cloud apps] BLOCK: Legacy authentication clients
     2. [All cloud apps] GRANT: Require MFA for Admin users
-    3. [All cloud apps] GRANT: Require MFA OR compliant device for All users
+    3. [All cloud apps] GRANT: Require MFA for All users
     4. [Azure Management] GRANT: Require MFA for All users 
     5. [User action] GRANT: Require MFA to join or register a device
     6. [Office 365] GRANT: Require approved apps for mobile access (MAM)
@@ -24,10 +24,10 @@
     5. Reference: https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0#installing-the-azure-ad-module
 
 .DETAILS
-    FileName:    Install-AuthenticationCAPolicies.ps1
+    FileName:    Install-NewBaselineCAPolicies.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     September 2020
-	Updated:     April 2021
+	Updated:     May 2021
 
 #>
 ###################################################################################################
@@ -97,9 +97,9 @@ $conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
 $conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
 $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
 $controls._Operator = "OR"
-$controls.BuiltInControls = @('MFA', 'CompliantDevice', 'DomainJoinedDevice')
+$controls.BuiltInControls = @('MFA')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] GRANT: Require MFA OR compliant device for All users" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] GRANT: Require MFA for All users" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
