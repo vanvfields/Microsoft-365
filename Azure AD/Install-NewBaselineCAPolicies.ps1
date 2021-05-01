@@ -4,32 +4,36 @@
     This script will create the following recommended Baseline Conditional Access policies in your tenant:
     1. [All cloud apps] BLOCK: Legacy authentication clients
     2. [All cloud apps] GRANT: Require MFA for Admin users
-    3. [All cloud apps] GRANT: Require MFA for All users
-    4. [All cloud apps] BLOCK: Device platforms such as Linux and ChromeOS
-    5. [Office 365] GRANT: Require approved apps for mobile access (MAM)
-    6. [Office 365] GRANT: Require managed devices Windows & MacOS (MDM)
-    7. [Office 365] SESSION: Prevent web downloads from unmanaged devices
+    3. [All cloud apps] GRANT: Require MFA OR compliant device for All users
+    4. [Azure Management] GRANT: Require MFA for All users 
+    5. [User action] GRANT: Require MFA to join or register a device
+    6. [Office 365] GRANT: Require approved apps for mobile access (MAM)
+    7. [Office 365] GRANT: Require managed devices Windows & MacOS (MDM)
 
 .NOTES
     1. You may need to disable the 'Security defaults' first. See https://aka.ms/securitydefaults
     2. None of the policies created by this script will be enabled by default.
     3. Before enabling policies, you should notify end users about the expected impacts
-    4. Be sure to populate the 'Exclude from CA' security group with at least one admin account for emergency access
+    4. Be sure to populate the security group 'sg-Exclude from CA' with at least one admin account for emergency access
 
 .HOW-TO
-    1. To install the Azure AD Preview PowerShell module use: Install-Module AzureADPreview
-    2. Connect to Azure AD via PowerShell to run this script: Connect-AzureAD 
-    3. Run .\Baseline-ConditionalAccessPolicies.ps1
-    4. Reference: https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0#installing-the-azure-ad-module
+    1. To install the Azure AD Preview PowerShell module use: Install-Module AzureADPreview -AllowClobber
+    2. To import the module run: Import-Module AzureADPreview 
+    3. To connect to Azure AD via PowerShell run: Connect-AzureAD
+    4. Run .\Install-BaselineConditionalAccessPolicies.ps1
+    5. Reference: https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0#installing-the-azure-ad-module
 
 .DETAILS
-    FileName:    Baseline-ConditionalAccessPolicies.ps1
+    FileName:    Install-AuthenticationCAPolicies.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     September 2020
-    Updated:     February 2021
+	Updated:     April 2021
 
 #>
 ###################################################################################################
+
+Import-Module AzureADPreview
+Connect-AzureAD
 
 ## Check for the existence of the "Exclude from CA" security group, and create the group if it does not exist
 
@@ -43,6 +47,7 @@ if ($ExcludeCAGroup -eq $null -or $ExcludeCAGroup -eq "") {
 else {
     Write-Host "Exclude from CA group already exists"
 }
+
 
 ########################################################
 
@@ -63,7 +68,7 @@ New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] BLOCK: Legac
 
 ########################################################
 
-## This policy requires Multi-factor authentication for Admin users
+## This policy requires Multi-factor Authentication for Admin users
 
 $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
 $conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
@@ -80,7 +85,7 @@ New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] GRANT: Requi
 
 ########################################################
 
-## This policy requires Multi-factor authentication for All users
+## This policy requires Multi-factor Authentication for all users on unmanaged devices
 
 $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
 $conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
@@ -92,29 +97,44 @@ $conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
 $conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
 $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
 $controls._Operator = "OR"
-$controls.BuiltInControls = "MFA"
+$controls.BuiltInControls = @('MFA', 'CompliantDevice', 'DomainJoinedDevice')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] GRANT: Require MFA for All users" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] GRANT: Require MFA OR compliant device for All users" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
-## This policy blocks unsupported device platforms such as Linux and ChromeOS
+## This policy requires Multi-factor Authentication for Azure Management
 
 $conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
 $conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
-$conditions.Applications.IncludeApplications = "All"
+$conditions.Applications.IncludeApplications = "797f4846-ba00-4fd7-ba43-dac1f8f63013"
 $conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
 $conditions.Users.IncludeUsers = "All"
 $conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
 $conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
-$conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
-$conditions.Platforms.IncludePlatforms = "All"
-$conditions.Platforms.ExcludePlatforms = @('Android', 'IOS', 'Windows', 'macOS')
+$conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
 $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
 $controls._Operator = "OR"
-$controls.BuiltInControls = "Block"
+$controls.BuiltInControls = "MFA"
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "[All cloud apps] BLOCK: Device platforms such as Linux and ChromeOS" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "[Azure Management] GRANT: Require MFA for All users " -State "Disabled" -Conditions $conditions -GrantControls $controls 
+
+########################################################
+
+## This policy requires Multi-factor Authentication when registering or joining a new device
+
+$conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
+$conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
+$conditions.Applications.IncludeUserActions = "urn:user:registerdevice"
+$conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
+$conditions.Users.IncludeUsers = "All"
+$conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
+$conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
+$controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
+$controls._Operator = "OR"
+$controls.BuiltInControls = "MFA"
+
+New-AzureADMSConditionalAccessPolicy -DisplayName "[User action] GRANT: Require MFA to join or register a device" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
 
@@ -159,33 +179,11 @@ $conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
 $conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
 $conditions.Platforms = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessPlatformCondition
 $conditions.Platforms.IncludePlatforms = @('Windows', 'macOS')
-$conditions.ClientAppTypes = @('MobileAppsAndDesktopClients')
+$conditions.ClientAppTypes = @('Browser', 'MobileAppsAndDesktopClients')
 $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('DomainJoinedDevice', 'CompliantDevice')
 
 New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] GRANT: Require managed devices for Windows & MacOS (MDM)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
-
-########################################################
-
-## This policy prevents web downloads from unmanaged devices and unmanaged web browsers 
-## Policy NOTES:
-##     1. You must take additional action in Exchange Online and SharePoint Online to complete the set up for this policy to take effect
-##     2. See my Conditional Access Best Practices guide for more details on those additional steps 
-##     3. Unmanaged browsers (e.g. Firefox) will also be impacted by this policy, even on managed devices
-##     4. End users should be advised to use Edge (Chromium version) with Office 365
-
-$conditions = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet
-$conditions.Applications = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition
-$conditions.Applications.IncludeApplications = "Office365"
-$conditions.Users = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition
-$conditions.Users.IncludeUsers = "All"
-$conditions.Users.ExcludeUsers = "GuestsOrExternalUsers"
-$conditions.Users.ExcludeGroups = $ExcludeCAGroup.ObjectId
-$conditions.ClientAppTypes = @('Browser')
-$controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessSessionControls
-$controls.ApplicationEnforcedRestrictions = $true
-
-New-AzureADMSConditionalAccessPolicy -DisplayName "[Office 365] SESSION: Prevent web downloads from unmanaged devices" -State "Disabled" -Conditions $conditions -SessionControls $controls 
 
 ########################################################
