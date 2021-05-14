@@ -1163,7 +1163,7 @@ $Sharepoint = $EnterpriseDomain.Split(".")[0]
 
 $Template_WinBase = "c04a010a-e7c5-44b1-a814-88df6f053f16"
 $Template_EdgeBase = "a8d6fa0e-1e66-455b-bb51-8ce0dde1559e"
-$Template_Antivirus = "b595dad1-920f-440e-ba12-22da622d5d92"
+$Template_Antivirus = "559a267f-e084-426d-b739-ade77ea07471"
 $Template_SecurityCenter = "da332b88-bd29-4def-a442-e0993ed08e24"
 $Template_BitLocker = "2b595bcc-ef65-42ce-a0e3-67389ae50b8e"
 $Template_Firewall = "c53e5a9f-2eec-4175-98a1-2b3d38084b91"
@@ -5689,8 +5689,8 @@ $ES_ASREnable = @"
                               "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
                               "id":  "67937792-0537-4a7d-b545-775df0de6bdb",
                               "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderAdobeReaderLaunchChildProcess",
-                              "valueJson":  "\"enable\"",
-                              "value":  "enable"
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
                           },
                           {
                               "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
@@ -5759,8 +5759,8 @@ $ES_ASREnable = @"
                               "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
                               "id":  "13e092c8-53fb-4c08-923d-cb4605874b8b",
                               "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderUntrustedExecutableType",
-                              "valueJson":  "\"block\"",
-                              "value":  "block"
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
                           },
                           {
                               "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
@@ -5780,8 +5780,8 @@ $ES_ASREnable = @"
                               "@odata.type":  "#microsoft.graph.deviceManagementStringSettingInstance",
                               "id":  "e11dd36f-f1b2-4a16-a318-5b1a0a5d16f7",
                               "definitionId":  "deviceConfiguration--windows10EndpointProtectionConfiguration_defenderGuardMyFoldersType",
-                              "valueJson":  "\"enable\"",
-                              "value":  "enable"
+                              "valueJson":  "\"auditMode\"",
+                              "value":  "auditMode"
                           },
                           {
                               "@odata.type":  "#microsoft.graph.deviceManagementCollectionSettingInstance",
