@@ -12,7 +12,9 @@ I have found these scripts to be useful during Incident Response in Microsoft 36
 
 <b>5) Investigate-UserSignInHistory.ps1:</b> Use this script to get available sign-in data for the specified username. You must have the AzureADIncidentResponse module installed.
 
-<b>6) Investigate-SignInByIpAddress.ps1:</b> Use this script to get available sign-in data for the specified IP address. You must have the AzureADIncidentResponse module installed. 
+<b>6) Investigate-UserActivityHistory.ps1:</b> Use this script to get activities from the Unified audit log for the specified username. You must have the ExchangeOnlineManagement module.  
+  
+<b>7) Investigate-SignInByIpAddress.ps1:</b> Use this script to get available sign-in data for the specified IP address. You must have the AzureADIncidentResponse module installed. 
 
-<b>7) Remediate-CompromisedUser.ps1:</b> Use this script to disable and revoke access, and reset a user's password (and optionally re-enable access). You must have the AzureAD module installed.
+<b>8) Remediate-CompromisedUser.ps1:</b> Use this script to disable and revoke access, and reset a user's password (and optionally re-enable access). You must have the AzureAD module installed.
 
