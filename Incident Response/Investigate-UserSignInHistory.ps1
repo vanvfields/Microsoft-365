@@ -10,7 +10,7 @@
 
 
 .NOTES
-    FileName:    Investigate-PrivilegedUserActions.ps1
+    FileName:    Investigate-UserSignInHistory.ps1
     Author:      Alex Fields 
     Created:     June 2021
 	Revised:     June 2021
@@ -52,29 +52,27 @@ mkdir $OutputPath
 cd $OutputPath
 
 #############################################################
-## Connect to Azure AD
+## Connect to Azure AD IR Module
 $TenantID = Get-AzureADIRTenantId -DomainName $DomainName
 Connect-AzureADIR -TenantId $TenantID 
 
 #############################################################
 
-$PrivUsers = Get-AzureADIRPrivilegedRoleAssignment -TenantId $TenantID | Where-Object RoleMemberObjectType -EQ User
+$User = Read-Host "Enter the user's primary email address (UPN)"
 
-foreach ($User in $PrivUsers) {
+$DisplayName = (Get-AzureADUser -ObjectId $User).DisplayName
 
-    $DisplayToID = Get-AzureADIRDisplayNameToObjectId -DisplayName $User.RoleMemberName -ObjectType User
+$DisplayToID = Get-AzureADIRDisplayNameToObjectId -DisplayName $DisplayName -ObjectType User
 
-    $RoleMemberEmail = $User.RoleMemberMail
+$SignInDetail = Get-AzureADIRSignInDetail -TenantId $TenantID -UserId $DisplayToID.ObjectId
 
-    $AuditDetail = Get-AzureADIRAuditActivity -TenantId $TenantID -InitiatedByUser $DisplayToID.ObjectId
-
-        if (!$AuditDetail) {
+        if (!$SignInDetail) {
         Write-Host
         } else {
 
-        $AuditDetail | Export-Csv $OutputPath\$RoleMemberEmail-ActivityDetail.csv
+        $SignInDetail | Out-GridView
+        $SignInDetail | Export-Csv $OutputPath\$User-SignInDetail.csv
 
         }
 
-}
 

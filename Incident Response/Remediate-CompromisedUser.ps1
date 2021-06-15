@@ -1,13 +1,11 @@
 ﻿<##################################################################################################
 #
 .SYNOPSIS
-    This script will disable and revoke all refresh tokens for the specified user account
-    You will also reset the password and optionally re-enable the account
-
-    You must connect to Azure AD before running this script:
+    1. This script will disable and revoke all refresh tokens for the specified user account
+    2. You will also reset the password and optionally re-enable the account
+    3. You must connect to Azure AD before running this script, i.e.:
     
-    Connect-AzureAD
-
+        Connect-AzureAD
 
 .NOTES
     FileName:    Remediate-CompromisedUser.ps1

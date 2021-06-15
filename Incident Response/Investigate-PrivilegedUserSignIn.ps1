@@ -4,7 +4,6 @@
     1. This script exports several data points from the Azure AD Incident Response PowerShell module
     2. You can set the Output Path using the variable $OutputPath, or just run the script and it will prompt
     3. Specify the primary $DomainName associated with the tenant in order to run the script, or it will prompt
-    4. See additional examples of the AzureADIR functions in the comments at the end of the script
     4. You must have the AzureADIncidentResponse PowerShell module installed in order to use this script, i.e.:
 
         Install-Module AzureADIncidentResponse
