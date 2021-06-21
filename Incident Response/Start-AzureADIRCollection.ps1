@@ -23,18 +23,11 @@ Import-Module AzureAD
 Import-Module AzureADIncidentResponse
 
 #############################################################
-## Gather the parameters and set the working directory
+## Gather the parameters 
 ## You may set the parameters in the script or enter by prompt
 
 $DomainName = ""
 $OutputPath = ""
-
-
-## If the DomainName variable is undefined, prompt for input
-if ($DomainName -eq "") {
-Write-Host
-$DomainName = Read-Host 'Enter the primary domain name associated with the tenant'
-}
 
 
 ## If the OutputPath variable is undefined, prompt for input
@@ -46,21 +39,35 @@ $OutputPath = Read-Host 'Enter the output path, e.g. C:\IROutput'
 ## If the output path does not exist, then create it
 $CheckOutputPath = Get-Item $OutputPath
 if (!$CheckOutputPath) {
+Write-Host
+Write-Host "Output path does not exist, so the directory will be created." -ForegroundColor Yellow
 mkdir $OutputPath
 }
 
+## If the DomainName variable is undefined, prompt for input
+if ($DomainName -eq "") {
+Write-Host
+$DomainName = Read-Host 'Enter the primary domain name associated with the tenant'
+}
+
+$CheckSubDir = Get-Item $OutputPath\$DomainName
+if (!$CheckSubDir) {
+Write-Host
+Write-Host "Domain sub-directory does not exist, so the sub-directory will be created." -ForegroundColor Yellow
+mkdir $OutputPath\$DomainName
+}
+
 ## Change directory to the OutputPath 
-cd $OutputPath
+cd $OutputPath\$DomainName
 
 #############################################################
-## Connect to Azure AD
+## Get the tenant ID and connect to Azure AD
 $TenantID = Get-AzureADIRTenantId -DomainName $DomainName
 Connect-AzureADIR -TenantId $TenantID 
-
 #############################################################
 
 ## Get a current list of Azure AD Privileged role assignments 
-Get-AzureADIRPrivilegedRoleAssignment -TenantId $TenantID -CsVOutput
+Get-AzureADIRPrivilegedRoleAssignment -TenantId $TenantID -CsvOutput
 
 ## Gets two lists of applications with assigned permissions: delegated (user) permissions and application permissions
 Get-AzureADIRPermission -TenantId $TenantID -CsvOutput
@@ -95,8 +102,6 @@ Write-Host "There is no data returned for the function Get-AzureADIRSsprUsageHis
 } else {
 Get-AzureADIRSsprUsageHistory -TenantId $TenantID -CsvOutput
 }
-
-
 
 ######################################################################
 Write-Host "Please review the files in your output directory" -ForegroundColor Cyan
@@ -136,7 +141,7 @@ Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName ("Consent to
 
 #############################################################
 ## Gets stale user accounts not signed in within last 30 days (including guests)
-Get-AzureADIRUserLastSignInActivity -TenantId $TenantID -StaleThreshold 30 -GuestInfo | Export-Csv -Path $OutputPath\SignInLog_StaleAccountsLastSignIn.csv
+Get-AzureADIRUserLastSignInActivity -TenantId $TenantID -StaleThreshold 30 -GuestInfo | Export-Csv -Path $OutputPath\$DomainName\SignInLog_StaleAccountsLastSignIn.csv
 
 #############################################################
 ## Get Azure AD CA policies and output to XML file

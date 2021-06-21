@@ -16,10 +16,11 @@
     
 #>
 ###################################################################################################
-
-
+<#
 ## Import module and Connect to Exchange Online
 Import-Module ExchangeOnlineManagement
+Connect-ExchangeOnline
+#>
 
 ## Define variables
 $OutputPath = ""
@@ -41,12 +42,26 @@ if (!$CheckLog) {
     ## If OutputPath does not exist, create it
     $CheckOutputPath = Get-Item $OutputPath
     if (!$CheckOutputPath) {
+        Write-Host
+        Write-Host "Output path does not exist, so the directory will be created." -ForegroundColor Yellow
         mkdir $OutputPath
         }
 
     ## Set Start and End Dates
     $StartDate = (Get-Date).AddDays(-$DaysAgo)
     $EndDate = Get-Date
+
+    ## Get Primary Domain Name (used in naming output files)
+    $PrimaryDomain = Get-AcceptedDomain | Where-Object Default -eq $true
+    $DomainName = $PrimaryDomain.DomainName
+
+
+    $CheckSubDir = Get-Item $OutputPath\$DomainName
+    if (!$CheckSubDir) {
+    Write-Host
+    Write-Host "Domain sub-directory does not exist, so the sub-directory will be created." -ForegroundColor Yellow
+    mkdir $OutputPath\$DomainName
+    }
 
     $IPAddress = Read-Host "Enter the IP address of interest"
     $History = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -IPAddresses $IPAddress -SessionCommand ReturnLargeSet 
@@ -59,7 +74,7 @@ if (!$CheckLog) {
 
         ## Output the events to CSV
         $History | Out-GridView
-        $History | Export-Csv -Path $OutputPath\$IPAddress-AuditLogActivities.csv
+        $History | Export-Csv -Path $OutputPath\$DomainName\$IPAddress-AuditLogActivities.csv
         Write-Host
         Write-Host "See IP address activities in the OutputPath" -ForegroundColor Yellow
         Write-Host

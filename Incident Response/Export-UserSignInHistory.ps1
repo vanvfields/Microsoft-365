@@ -17,24 +17,16 @@
     
 #>
 ###################################################################################################
-
+<#
 Import-Module AzureAD
 Import-Module AzureADIncidentResponse
-
+#>
 #############################################################
 ## Gather the parameters and set the working directory
 ## You may set the parameters in the script or enter by prompt
 
 $DomainName = ""
 $OutputPath = ""
-
-
-## If the DomainName variable is undefined, prompt for input
-if ($DomainName -eq "") {
-Write-Host
-$DomainName = Read-Host 'Enter the primary domain name associated with the tenant'
-}
-
 
 ## If the OutputPath variable is undefined, prompt for input
 if (!$OutputPath) {
@@ -45,14 +37,26 @@ $OutputPath = Read-Host 'Enter the output path, e.g. C:\IROutput'
 ## If the output path does not exist, then create it
 $CheckOutputPath = Get-Item $OutputPath
 if (!$CheckOutputPath) {
+Write-Host
+Write-Host "Output path does not exist, so the directory will be created." -ForegroundColor Yellow
 mkdir $OutputPath
 }
 
-## Change directory to the OutputPath 
-cd $OutputPath
+## If the DomainName variable is undefined, prompt for input
+if ($DomainName -eq "") {
+Write-Host
+$DomainName = Read-Host 'Enter the primary domain name associated with the tenant'
+}
+
+$CheckSubDir = Get-Item $OutputPath\$DomainName
+if (!$CheckSubDir) {
+Write-Host
+Write-Host "Domain sub-directory does not exist, so the sub-directory will be created." -ForegroundColor Yellow
+mkdir $OutputPath\$DomainName
+}
 
 #############################################################
-## Connect to Azure AD IR Module
+## Get the tenant ID and connect to Azure AD 
 $TenantID = Get-AzureADIRTenantId -DomainName $DomainName
 Connect-AzureADIR -TenantId $TenantID 
 
@@ -71,7 +75,7 @@ $SignInDetail = Get-AzureADIRSignInDetail -TenantId $TenantID -UserId $DisplayTo
         } else {
 
         $SignInDetail | Out-GridView
-        $SignInDetail | Export-Csv $OutputPath\$User-SignInDetail.csv
+        $SignInDetail | Export-Csv $OutputPath\$DomainName\$User-SignInDetail.csv
 
         }
 
