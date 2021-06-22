@@ -20,5 +20,5 @@ I have found these scripts to be useful during Incident Response in Microsoft 36
 
 <b>9) Import-AzureADProtectionAlerts.ps1:</b> Use this script to import alert policies for Azure AD monitoring. You must have the ExchangeOnlineManagement module installed.
 
-<b>10) Remediate-CompromisedUser.ps1:</b> Use this script to disable and revoke access, and reset a user's password (and optionally re-enable access). You must have the AzureAD module installed.
+<b>10) Remediate-CompromisedUser.ps1:</b> Use this script to disable and revoke access, and reset a user's password (and optionally re-enable access). You must have the AzureAD module installed. There is also an option to reset all admin passwords at once, excluding breakglass and current user account (this option requires the AzureADIncidentResponse module).
 
