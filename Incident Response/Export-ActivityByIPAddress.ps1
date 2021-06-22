@@ -40,7 +40,7 @@ if (!$CheckLog) {
         }
 
     ## If OutputPath does not exist, create it
-    $CheckOutputPath = Get-Item $OutputPath
+    $CheckOutputPath = Get-Item $OutputPath -ErrorAction SilentlyContinue
     if (!$CheckOutputPath) {
         Write-Host
         Write-Host "Output path does not exist, so the directory will be created." -ForegroundColor Yellow
@@ -56,7 +56,7 @@ if (!$CheckLog) {
     $DomainName = $PrimaryDomain.DomainName
 
 
-    $CheckSubDir = Get-Item $OutputPath\$DomainName
+    $CheckSubDir = Get-Item $OutputPath\$DomainName -ErrorAction SilentlyContinue
     if (!$CheckSubDir) {
     Write-Host
     Write-Host "Domain sub-directory does not exist, so the sub-directory will be created." -ForegroundColor Yellow
@@ -74,7 +74,7 @@ if (!$CheckLog) {
 
         ## Output the events to CSV
         $History | Out-GridView
-        $History | Export-Csv -Path $OutputPath\$DomainName\$IPAddress-AuditLogActivities.csv
+        $History | Export-Csv -Path $OutputPath\$DomainName\$IPAddress-AuditLogDetail.csv
         Write-Host
         Write-Host "See IP address activities in the OutputPath" -ForegroundColor Yellow
         Write-Host

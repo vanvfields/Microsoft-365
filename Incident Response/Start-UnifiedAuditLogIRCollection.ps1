@@ -41,7 +41,7 @@ if (!$CheckLog) {
     }
 
     ## If OutputPath does not exist, create it
-    $CheckOutputPath = Get-Item $OutputPath
+    $CheckOutputPath = Get-Item $OutputPath -ErrorAction SilentlyContinue
     if (!$CheckOutputPath) {
     Write-Host
     Write-Host "Output path does not exist, so the directory will be created." -ForegroundColor Yellow
@@ -56,7 +56,7 @@ if (!$CheckLog) {
     $PrimaryDomain = Get-AcceptedDomain | Where-Object Default -eq $true
     $DomainName = $PrimaryDomain.DomainName
 
-    $CheckSubDir = Get-Item $OutputPath\$DomainName
+    $CheckSubDir = Get-Item $OutputPath\$DomainName -ErrorAction SilentlyContinue
     if (!$CheckSubDir) {
     Write-Host
     Write-Host "Domain sub-directory does not exist, so the sub-directory will be created." -ForegroundColor Yellow

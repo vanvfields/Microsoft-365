@@ -37,7 +37,7 @@ $OutputPath = Read-Host 'Enter the output path, e.g. C:\IROutput'
 }
 
 ## If the output path does not exist, then create it
-$CheckOutputPath = Get-Item $OutputPath
+$CheckOutputPath = Get-Item $OutputPath -ErrorAction SilentlyContinue
 if (!$CheckOutputPath) {
 Write-Host
 Write-Host "Output path does not exist, so the directory will be created." -ForegroundColor Yellow
@@ -50,7 +50,7 @@ Write-Host
 $DomainName = Read-Host 'Enter the primary domain name associated with the tenant'
 }
 
-$CheckSubDir = Get-Item $OutputPath\$DomainName
+$CheckSubDir = Get-Item $OutputPath\$DomainName -ErrorAction SilentlyContinue
 if (!$CheckSubDir) {
 Write-Host
 Write-Host "Domain sub-directory does not exist, so the sub-directory will be created." -ForegroundColor Yellow

@@ -10,7 +10,7 @@
 
 
 .NOTES
-    FileName:    Export-PrivilegedUserActions.ps1
+    FileName:    Export-SignInByUser.ps1
     Author:      Alex Fields 
     Created:     June 2021
 	Revised:     June 2021
@@ -22,7 +22,7 @@ Import-Module AzureAD
 Import-Module AzureADIncidentResponse
 #>
 #############################################################
-## Gather the parameters 
+## Gather the parameters and set the working directory
 ## You may set the parameters in the script or enter by prompt
 
 $DomainName = ""
@@ -48,7 +48,6 @@ Write-Host
 $DomainName = Read-Host 'Enter the primary domain name associated with the tenant'
 }
 
-
 $CheckSubDir = Get-Item $OutputPath\$DomainName -ErrorAction SilentlyContinue
 if (!$CheckSubDir) {
 Write-Host
@@ -56,33 +55,28 @@ Write-Host "Domain sub-directory does not exist, so the sub-directory will be cr
 mkdir $OutputPath\$DomainName
 }
 
-
 #############################################################
-## Get the tenant ID and connect to Azure AD
+## Get the tenant ID and connect to Azure AD 
 $TenantID = Get-AzureADIRTenantId -DomainName $DomainName
 Connect-AzureADIR -TenantId $TenantID 
+
 #############################################################
 
-$PrivUsers = Get-AzureADIRPrivilegedRoleAssignment -TenantId $TenantID | Where-Object RoleMemberObjectType -EQ User
+$User = Read-Host "Enter the user's primary email address (UPN)"
 
-foreach ($User in $PrivUsers) {
+$DisplayName = (Get-AzureADUser -ObjectId $User).DisplayName
 
-    $DisplayToID = Get-AzureADIRDisplayNameToObjectId -DisplayName $User.RoleMemberName -ObjectType User
+$DisplayToID = Get-AzureADIRDisplayNameToObjectId -DisplayName $DisplayName -ObjectType User
 
-    $RoleMemberEmail = $User.RoleMemberMail
+$SignInDetail = Get-AzureADIRSignInDetail -TenantId $TenantID -UserId $DisplayToID.ObjectId
 
-    $AuditDetail = Get-AzureADIRAuditActivity -TenantId $TenantID -InitiatedByUser $DisplayToID.ObjectId
-
-        if (!$AuditDetail) {
+        if (!$SignInDetail) {
         Write-Host
         } else {
 
-        $AuditDetail | Export-Csv $OutputPath\$DomainName\$RoleMemberEmail-AADActivityDetail.csv
+        $SignInDetail | Out-GridView
+        $SignInDetail | Export-Csv $OutputPath\$DomainName\$User-SignInDetail.csv
 
         }
 
-}
 
-Write-Host
-Write-Host "See the output in the domain subdirectory." -ForegroundColor Cyan
-Write-Host
