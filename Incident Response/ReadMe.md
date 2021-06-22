@@ -16,7 +16,7 @@ I have found these scripts to be useful during Incident Response in Microsoft 36
   
 <b>7) Export-SignInByIpAddress.ps1:</b> Use this script to get available sign-in data for the specified IP address. You must have the AzureADIncidentResponse module installed. 
 
-<b>8) Import-RecommendedProtectionAlerts.ps1:</b> Use this script to import alert policies for additional Azure AD monitoring. You must have the ExchangeOnlineManagement module.
+<b>8) Import-AzureADProtectionAlerts.ps1:</b> Use this script to import alert policies for additional Azure AD monitoring. You must have the ExchangeOnlineManagement module.
 
 <b>9) Remediate-CompromisedUser.ps1:</b> Use this script to disable and revoke access, and reset a user's password (and optionally re-enable access). You must have the AzureAD module installed.
 
