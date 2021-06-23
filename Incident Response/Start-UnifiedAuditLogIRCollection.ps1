@@ -63,147 +63,163 @@ if (!$CheckLog) {
     mkdir $OutputPath\$DomainName
     }
 
-    ## Get changes to membership in Azure AD roles (could indicate escalation of privilege)
-    $AzureADRoles = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add member to role.","Remove member from role.") -SessionCommand ReturnLargeSet 
+    ## Get changes to membership in Azure AD roles (new adds could indicate escalation of privilege)
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add member to role.","Remove member from role.") -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$AzureADRoles) {
+        if (!$SearchResults) {
         Write-Host
-        Write-Host "There are no Azure AD Role events for the time period specified" -ForegroundColor Cyan
+        Write-Host "There are no events matching Azure AD role changes for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $AzureADRoles | Export-Csv -Path $OutputPath\$DomainName\AuditLog_AzureADRolesChanges.csv
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_AzureADRoleChanges.csv
         Write-Host
-        Write-Host "See Azure AD Roles Changes events in the OutputPath" -ForegroundColor Yellow
+        Write-Host "See Azure AD Roles Changes events in the output path" -ForegroundColor Yellow
         Write-Host
         }
 
     ## Get changes to applications, client app credentials, permissions, and new consents (could indicate app abuse)
-    $AppEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add application.","Update application – Certificates and secrets","Add app role assignment to service principal.","Add app role assignment grant to user.","Add delegated permission grant.","Consent to application.") -SessionCommand ReturnLargeSet 
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add application.","Add service principal.","Add service principal credentials.","Update application – Certificates and secrets","Add app role assignment to service principal.","Add app role assignment grant to user.","Add delegated permission grant.","Consent to application.") -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$AppEvents) { 
-        Write-Host "There are no Azure AD App events for the time period specified" -ForegroundColor Cyan
+        if (!$SearchResults) { 
+        Write-Host "There are no events matching Azure AD app changes for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $AppEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_ApplicationChanges.csv
-        Write-Host "See Application Changes events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_AzureADAppChanges.csv
+        Write-Host "See Azure AD application events in the output path" -ForegroundColor Yellow
         Write-Host
         }
 
 
     ## Get Conditional Access policy changes 
-    $CAEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add policy.","Update policy.","Delete policy.") -SessionCommand ReturnLargeSet 
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add policy.","Update policy.","Delete policy.") -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$CAEvents) {
+        if (!$SearchResults) {
         Write-Host "There are no Conditional Access events for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $CAEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_ConditionalAccessPolicyChanges.csv
-        Write-Host "See Conditional Access Policy Changes events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_ConditionalAccessPolicyChanges.csv
+        Write-Host "See Conditional Access Policy events in the output path" -ForegroundColor Yellow
         Write-Host
         }
 
 
     ## Get Domain changes 
-    $DomainEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add domain to company.","Remove domain from company.","Set domain authentication.","Set federation settings on domain.","Set DirSyncEnabled flag.","Update domain.","Verify domain.","Verify email verified domain.") -SessionCommand ReturnLargeSet 
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add domain to company.","Remove domain from company.","Set domain authentication.","Set federation settings on domain.","Set DirSyncEnabled flag.","Update domain.","Verify domain.","Verify email verified domain.") -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$DomainEvents) {
+        if (!$SearchResults) {
         Write-Host "There are no Domain Management events for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $DomainEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_DomainChanges.csv
-        Write-Host "See Domain Management events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_AzureADDomainChanges.csv
+        Write-Host "See Domain Management events in the output path" -ForegroundColor Yellow
         Write-Host
         }
 
 
     ## Get Partner changes 
-    $PartnerEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add partner to company.","Remove partner from company.") -SessionCommand ReturnLargeSet 
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add partner to company.","Remove partner from company.") -SessionCommand ReturnLargeSet 
     
         ## Check to see if the variable is null
-        if (!$PartnerEvents) {
+        if (!$SearchResults) {
         Write-Host "There are no Partner management events for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $PartnerEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_PartnerManagementChanges.csv
-        Write-Host "See Partner Management events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_PartnerManagementChanges.csv
+        Write-Host "See Partner Management events in the output path" -ForegroundColor Yellow
         Write-Host
         }
     
 
-    ## Get user add events 
-    $UserAddEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add user.") -SessionCommand ReturnLargeSet 
+    ## Get user add and delete events 
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add user.", "Delete user.") -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$UserAddEvents) { 
+        if (!$SearchResults) { 
         Write-Host "There are no Users Added events for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $UserAddEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_UsersAdded.csv
-        Write-Host "See Users Added events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_UsersAddedOrDeleted.csv
+        Write-Host "See events matching 'Add user' and 'Delete user' in the output path" -ForegroundColor Yellow
         Write-Host
         }
 
 
     ## Get password changes
-    $PasswordEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Change user password.","Reset user password.","Set force change user password.") -SessionCommand ReturnLargeSet 
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Change user password.","Reset user password.","Set force change user password.") -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$PasswordEvents) {
+        if (!$SearchResults) {
         Write-Host "There are no Password events for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $PasswordEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_UsersPasswords.csv
-        Write-Host "See Users Passwords events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_PasswordResetsAndChanges.csv
+        Write-Host "See password events in the output path" -ForegroundColor Yellow
         Write-Host
         }
 
-    ## Get Azure AD Device add events
-    $DeviceAddEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add device.") -SessionCommand ReturnLargeSet 
+    ## Get user update events (this includes MFA registration / security info changes)
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Update user.") -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$DeviceAddEvents) {
-        Write-Host "There are no Device Added events for the time period specified" -ForegroundColor Cyan
+        if (!$SearchResults) { 
+        Write-Host "There are no events matching 'Update user' for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $DeviceAddEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_DevicesAdded.csv
-        Write-Host "See Devices Added events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv $OutputPath\$DomainName\AuditLog_UpdateUser.csv
+        Write-Host "See events matching 'Update user' in the output path (this includes MFA method updates)" -ForegroundColor Yellow
+        Write-Host
+
+    }
+    
+    ## Get Azure AD Device add and delete events
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType AzureActiveDirectory -Operations ("Add device.", "Delete device.") -SessionCommand ReturnLargeSet 
+
+        ## Check to see if the variable is null
+        if (!$SearchResults) {
+        Write-Host "There are no events matching 'Add device' or 'Delete device' for the time period specified" -ForegroundColor Cyan
+        Write-Host
+        } else {
+
+        ## Output the events to CSV
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_DevicesAddedOrDeleted.csv
+        Write-Host "See events matching 'Add device' or 'Delete device' in the output path" -ForegroundColor Yellow
         Write-Host
         }
 
 
 
-    ## Get high-impact Exchange admin events such as New-InboxRule, Set-Mailbox, and Add-MailboxPermission
-    $MbxRuleEvents = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType ExchangeAdmin -Operations ("New-InboxRule","Set-Mailbox","Add-MailboxPermission") -SessionCommand ReturnLargeSet 
+    ## Get the Exchange admin log events (this includes stuff like new inbox rules, mailbox forwarding, mailbox permissions and delegations, etc.)
+    $SearchResults = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -RecordType ExchangeAdmin -SessionCommand ReturnLargeSet 
 
         ## Check to see if the variable is null
-        if (!$MbxRuleEvents) {
-        Write-Host "There are no new inbox rules, redirects, or mailbox permission events for the time period specified" -ForegroundColor Cyan
+        if (!$SearchResults) {
+        Write-Host "There are no Exchange admin events for the time period specified" -ForegroundColor Cyan
         Write-Host
         } else {
 
         ## Output the events to CSV
-        $MbxRuleEvents | Export-Csv -Path $OutputPath\$DomainName\AuditLog_ExchangeAdminEvents.csv
-        Write-Host "See Exchage Admin events in the OutputPath" -ForegroundColor Yellow
+        $SearchResults | Export-Csv -Path $OutputPath\$DomainName\AuditLog_ExchangeAdminEvents.csv
+        Write-Host "See Exchage Admin events in the output path" -ForegroundColor Yellow
         Write-Host
         }
 

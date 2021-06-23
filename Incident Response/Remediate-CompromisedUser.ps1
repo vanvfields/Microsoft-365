@@ -140,7 +140,8 @@ $PrivUsers = Get-AzureADIRPrivilegedRoleAssignment -TenantId $TenantID | Where-O
 ## Loop through admins and set new complex passwords (using generated GUIDs).
 foreach ($User in $PrivUsers) {
     if ($User.RoleMemberUPN -notin $BreakGlassUser -and $User.RoleMemberUPN -ne $CurrentUser) {
-        Write-Host "Setting new password for $($User.RoleMemberUPN)..." -ForegroundColor Yellow
+        Write-Host "Setting new password and revoking current tokens for $($User.RoleMemberUPN)..." -ForegroundColor Yellow
+        Revoke-AzureADUserAllRefreshToken -ObjectId $User.RoleMemberUPN
         Set-AzureADUserPassword -ObjectId $User.RoleMemberUPN -Password (ConvertTo-SecureString (New-Guid).Guid -AsPlainText -Force)
         Set-AzureADUserPassword -ObjectId $User.RoleMemberUPN -Password (ConvertTo-SecureString (New-Guid).Guid -AsPlainText -Force)
     } else {

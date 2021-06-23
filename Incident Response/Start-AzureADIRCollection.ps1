@@ -103,9 +103,19 @@ Write-Host "There is no data returned for the function Get-AzureADIRSsprUsageHis
 Get-AzureADIRSsprUsageHistory -TenantId $TenantID -CsvOutput
 }
 
+## Get Azure AD Conditional Access policies 
+$CAPolicy = Get-AzureADIRConditionalAccessPolicy -TenantId $TenantID
+if (!$CAPolicy) {
+Write-Host "There is no data returned for the function Get-AzureADIRConditionalAccessPolicy" -ForegroundColor Cyan
+} else {
+Get-AzureADIRConditionalAccessPolicy -TenantId $TenantID -All -XmlOutput
+}
+
 ######################################################################
 Write-Host "Please review the files in your output directory" -ForegroundColor Cyan
-
+Write-Host 
+Write-Host "Script completed." -ForegroundColor Cyan
+Write-Host 
 
 <#
 #############################################################
@@ -126,8 +136,11 @@ Get-AzureADIRAuditActivity -TenantId $TenantID -Category "ApplicationManagement"
 #############################################################
 ## Collect Azure AD Audit logs for specific activities
 
-## Gets a list of new apps 
-Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName ("Add application") -Out | Out-GridView
+## Gets new MFA method registrations
+Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName "User registered security info" | Out-GridView
+
+## Gets newly added applications
+Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName ("Add application") | Out-GridView
 
 ## Gets a list of newly added application permissions
 Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName ("Add app role assignment to service principal") | Out-GridView
@@ -135,17 +148,15 @@ Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName ("Add app ro
 ## Gets a list of newly added delegated user permissions
 Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName ("Add delegated permission grant") | Out-GridView
 
-## Gets a list of application consents
+## Gets a list of newly consented application permissions
 Get-AzureADIRAuditActivity -TenantId $TenantID -ActivityDisplayName ("Consent to application") | Out-GridView
-
 
 #############################################################
 ## Gets stale user accounts not signed in within last 30 days (including guests)
-Get-AzureADIRUserLastSignInActivity -TenantId $TenantID -StaleThreshold 30 -GuestInfo | Export-Csv -Path $OutputPath\$DomainName\SignInLog_StaleAccountsLastSignIn.csv
+Get-AzureADIRUserLastSignInActivity -TenantId $TenantID -StaleThreshold 30 -GuestInfo | Export-Csv -Path $OutputPath\$DomainName\AADLog_StaleAccountsLastSignIn.csv
 
 #############################################################
-## Get Azure AD CA policies and output to XML file
-Get-AzureADIRConditionalAccessPolicy -TenantId $TenantID -All -XmlOutput
+
 
 
 #>
