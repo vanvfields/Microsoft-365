@@ -21,7 +21,7 @@ Connect-IPPSSession
 
 $notifyUser = ""
 
-if ($notifyUser = "") {
+if (!$notifyUser) {
 $notifyUser = Read-Host "Enter the email address at which you will recieve alerts."
 Write-Host
 }
@@ -52,5 +52,5 @@ New-ProtectionAlert -Name "Conditional Access policy deleted" -Category Others -
 Write-Host
 Write-Host "Script completed." -ForegroundColor Cyan
 Write-Host 
-Write-Host "You should also add your alerts email address the default protection alerts at: https://protection.office.com/alertpolicies" -ForegroundColor Cyan
+Write-Host "You should also edit the email address for the default protection alerts at: https://protection.office.com/alertpolicies" -ForegroundColor Cyan
 Write-Host
