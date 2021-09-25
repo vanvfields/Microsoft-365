@@ -7,10 +7,10 @@
     2. Connect to the Security & Compliance center using Connect-IPPSSession
 
 .DETAILS
-    FileName:    Install-RetentionPolicies.ps1
+    FileName:    Install-DataRetentionPolicies.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     September 2021
-	Updated:     September 2021
+    Updated:     September 2021
 
 #>
 
