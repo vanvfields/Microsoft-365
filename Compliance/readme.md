@@ -1,4 +1,4 @@
-##Compliance
+## Compliance
 
 These scripts help organizations to better govern their data using features like Sensitivity labels and Retention policies.
 <p><b>Enable-SensitivityLabelsForGroups.ps1</b> - This script will turn on the Groups features for Sensitivity labels
