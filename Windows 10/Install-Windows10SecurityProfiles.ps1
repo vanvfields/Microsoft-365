@@ -1159,18 +1159,44 @@ $Sharepoint = $EnterpriseDomain.Split(".")[0]
 ###################################################################################################
 ## Get Current Template IDs for use with the Endpoint Security Profiles
 ###################################################################################################
-## $Templates = Get-EndpointSecurityTemplate ## Gets the most current templates
+$Templates = Get-EndpointSecurityTemplate ## Gets the most current templates
 
-$Template_WinBase = "c04a010a-e7c5-44b1-a814-88df6f053f16"
-$Template_EdgeBase = "a8d6fa0e-1e66-455b-bb51-8ce0dde1559e"
-$Template_Antivirus = "559a267f-e084-426d-b739-ade77ea07471"
-$Template_SecurityCenter = "da332b88-bd29-4def-a442-e0993ed08e24"
-$Template_BitLocker = "2b595bcc-ef65-42ce-a0e3-67389ae50b8e"
-$Template_Firewall = "c53e5a9f-2eec-4175-98a1-2b3d38084b91"
-$Template_ASR = "0e237410-1367-4844-bd7f-15fb0f08943b"
-$Template_DeviceControl = "4648b50e-d3ef-4ba0-848e-b0ef561b3aa5"
-$Template_AccountProtection = "0f2b5d70-d4e9-4156-8c16-1397eb6c54a5"
+#$IDAV = "ccef13ea-d0a2-49b5-9a8a-5e397faeb9e4"
+$TempAV = $Templates |Where-Object displayName -eq "Microsoft Defender Antivirus"
+$IDAV = $TempAV.id
 
+#$IDWinExp = "8227e75a-da4d-4f8f-8566-9a080cb43961"
+$TempWinExp = $Templates |Where-Object displayName -eq "Windows Security experience"
+$IDWinExp = $TempWinExp.id
+
+#$IDBL = "d1174162-1dd2-4976-affc-6667049ab0ae"
+$TempBL = $Templates |Where-Object displayName -eq "BitLocker"
+$IDBL = $TempBL.id
+
+#$IDFW = "c53e5a9f-2eec-4175-98a1-2b3d38084b91"
+$TempFW = $Templates |Where-Object displayName -eq "Microsoft Defender Firewall"
+$IDFW = $TempFW.id
+
+#$IDASR = "0e237410-1367-4844-bd7f-15fb0f08943b"
+$TempASR = $Templates |Where-Object displayName -eq "Attack surface reduction rules"
+$IDASR = $TempASR.id
+
+#$IDDC = "4648b50e-d3ef-4ba0-848e-b0ef561b3aa5"
+$TempDC = $Templates |Where-Object displayName -eq "Device control"
+$IDDC = $TempDC.id
+
+#$IDAC = "0f2b5d70-d4e9-4156-8c16-1397eb6c54a5"
+$TempAC = $Templates |Where-Object displayName -eq "Account protection (Preview)"
+$IDAC = $TempAC.id
+
+
+#$IDWin = "c04a010a-e7c5-44b1-a814-88df6f053f16"
+$TempWin = $Templates |Where-Object displayName -eq "MDM Security Baseline for Windows 10 and later for Decemeber 2020"
+$IDWin = $TempWin.id
+
+#$IDEdge = "a8d6fa0e-1e66-455b-bb51-8ce0dde1559e"
+$TempEdge = $Templates |Where-Object displayName -eq "Microsoft Edge baseline"
+$IDEdge = $TempEdge.id
 
 ###################################################################################################
 ## JSON describing the policies to be imported
@@ -6213,45 +6239,86 @@ Write-Host
 }
 
 
-Write-Host "Endpoint Security profiles include BitLocker, Microsoft Defender, Attack Surface Reduction and more."
-Write-Host
-$Answer = Read-Host "Do you want to import the Corporate Endpoint security profiles? Type Y or N and press Enter to continue"
+$Answer = Read-Host "Do you want to import the antivirus policies? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
-## RECOMMENDED: Import Endpoint Security policies
-Write-Host "Adding Corporate Endpoint security profiles..." -ForegroundColor Cyan
+Write-Host "Adding Antivirus security profiles..." -ForegroundColor Cyan
 Write-Host
 Write-Host "Adding Microsoft Defender Antivirus policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_Antivirus -JSON $ES_Antivirus #OK
+Add-EndpointSecurityPolicy -TemplateId $IDAV -JSON $ES_Antivirus #OK
 Write-Host
 Write-Host "Adding Windows Security Center policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_SecurityCenter -JSON $ES_SecurityCenter #OK
-Write-Host
-Write-Host "Adding BitLocker silent enablement policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_BitLocker -JSON $ES_BitLocker
-Write-Host
-Write-Host "Adding BitLocker removable drive protection policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_BitLocker -JSON $ES_BitLockerRD
-Write-Host
-Write-Host "Adding Windows Firewall policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_Firewall -JSON $ES_Firewall
-Write-Host
-Write-Host "Adding Attack surface reduction rules audit policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_ASR -JSON $ES_ASRAudit
-Write-Host
-Write-Host "Adding Attack surface reduction rules enable policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_ASR -JSON $ES_ASREnable
-Write-Host
-Write-Host "Adding Device Control Block removable storage policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_DeviceControl -JSON $ES_DeviceControl
-Write-Host
-Write-Host "Adding Account Protection Windows Hello policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_AccountProtection -JSON $ES_WindowsHello
+Add-EndpointSecurityPolicy -TemplateId $IDWinExp -JSON $ES_SecurityCenter #OK
 Write-Host
 } else
 {
 Write-Host
-Write-Host "Corporate Endpoint security profiles will not be imported" -ForegroundColor Red
+Write-Host "Antivirus policies will not be imported" -ForegroundColor Red
+Write-Host 
+}
+
+
+$Answer = Read-Host "Do you want to import the BitLocker policies? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+Write-Host "Adding BitLocker silent enablement policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $IDBL -JSON $ES_BitLocker
+Write-Host
+Write-Host "Adding BitLocker removable drive protection policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $IDBL -JSON $ES_BitLockerRD
+Write-Host
+}else
+{
+Write-Host
+Write-Host "BitLocker policies will not be imported" -ForegroundColor Red
+Write-Host 
+}
+
+
+
+$Answer = Read-Host "Do you want to import the Windows firewall policies? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+
+Write-Host "Adding Windows Firewall policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $IDFW -JSON $ES_Firewall
+Write-Host
+}else
+{
+Write-Host
+Write-Host "Windows firewall policies will not be imported" -ForegroundColor Red
+Write-Host 
+}
+
+
+$Answer = Read-Host "Do you want to import the Attack Surface Reduction policies? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+
+Write-Host "Adding Attack surface reduction rules audit policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $IDASR -JSON $ES_ASRAudit
+Write-Host
+Write-Host "Adding Attack surface reduction rules enable policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $IDASR -JSON $ES_ASREnable
+Write-Host
+Write-Host "Adding Device Control Block removable storage policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $IDDC -JSON $ES_DeviceControl
+Write-Host
+}else
+{
+Write-Host
+Write-Host "Attack Surface Reduction policies will not be imported" -ForegroundColor Red
+Write-Host 
+}
+
+
+$Answer = Read-Host "Do you want to import the Windows Hello policy? Type Y or N and press Enter to continue"
+if ($Answer -eq 'y' -or $Answer -eq 'yes') {
+
+Write-Host "Adding Account Protection Windows Hello policy..." -ForegroundColor Yellow
+Add-EndpointSecurityPolicy -TemplateId $IDAC -JSON $ES_WindowsHello
+Write-Host
+}else
+{
+Write-Host
+Write-Host "Windows Hello policy will not be imported" -ForegroundColor Red
 Write-Host 
 }
 
@@ -6264,10 +6331,10 @@ if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 Write-Host "Adding Microsoft Security baseline profiles..." -ForegroundColor Cyan
 Write-Host
 Write-Host "Adding Windows 10 Baseline policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_WinBase -JSON $SB_WinBase #OK
+Add-EndpointSecurityPolicy -TemplateId $IDWin -JSON $SB_WinBase #OK
 Write-Host
 Write-Host "Adding Edge Chromium Baseline policy..." -ForegroundColor Yellow
-Add-EndpointSecurityPolicy -TemplateId $Template_EdgeBase -JSON $SB_EdgeBase #OK
+Add-EndpointSecurityPolicy -TemplateId $IDEdge -JSON $SB_EdgeBase #OK
 Write-Host
 } else
 {
