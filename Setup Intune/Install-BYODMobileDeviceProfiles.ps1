@@ -12,9 +12,9 @@ https://github.com/microsoftgraph/powershell-intune-samples
 .NOTES
     FileName:    Install-BYODMobileDeviceProfiles.ps1
     Author:      Alex Fields 
-    Based on:    Per Larsen / Frank Simorjay
+	Based on:    Per Larsen / Frank Simorjay
     Created:     February 2021
-    Revised:     February 2021
+	Revised:     February 2021
     Version:     1.0 
     
 #>
@@ -1597,7 +1597,7 @@ $BaselineAndroidBYOD = @"
 {
     "@odata.type":  "#microsoft.graph.androidWorkProfileCompliancePolicy",
     "description":  "Use this policy for personally-owned Android devices",
-    "displayName":  "[ITPM Baseline] BYOD Android Enterprise",
+    "displayName":  "[ITPM Baseline] BYOD Android Work Profile",
     "passwordRequired":  true,
     "passwordMinimumLength":  6,
     "passwordRequiredType":  "numericComplex",
@@ -1685,6 +1685,7 @@ Write-Host
 }
 
 
+<#
 $Answer = Read-Host "Do you want to import the Strict MAM policies for iOS and Android (block unmanaged app sharing)? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
 
@@ -1702,7 +1703,7 @@ Write-Host
 { Write-Host "Strict MAM policies will not be imported" -ForegroundColor Yellow
 Write-Host
 }
-
+#>
 
 ####################################################
 
