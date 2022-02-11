@@ -1,5 +1,5 @@
 ﻿<##################################################################################################
-#
+#NOTE: This script is legacy; the latest scripts are called Install-BaselineCAPolices.ps1 and Install-DataProtectionCAPolicies.ps1
 .SYNOPSIS
     This script will create the following recommended Baseline Conditional Access policies in your tenant:
     1. [All cloud apps] BLOCK: Legacy authentication clients
