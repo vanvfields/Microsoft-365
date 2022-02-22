@@ -1,5 +1,5 @@
 ﻿<##################################################################################################
-#
+#NOTE: This script is legacy, the latest complete baseline is Install-ITPMBaselineCAPolicies.ps1
 .SYNOPSIS
     This script will create the following optional Conditional Access policies in your tenant:
 
