@@ -30,7 +30,7 @@
     FileName:    Install-ITPMBaselineCAPolicies.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     February 2022
-	Updated:     February 2022
+    Updated:     February 2022
     VERSION:     1.0
 
 #>
