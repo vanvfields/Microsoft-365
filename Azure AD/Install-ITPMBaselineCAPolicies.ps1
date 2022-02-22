@@ -10,7 +10,7 @@
     05. CA101: Require MFA for admin users
     06. CA201: Require MFA for internal users
     07. CA202: Securing security info registration
-    08. CA203: Require MAM or MDM on iOS & Android (Office 365)
+    08. CA203: Require MAM or MDM for mobile device access (Office 365)
     09. CA204: Require managed devices for desktop client access (Office 365)
     10. CA301: Block guest access to unsupported apps
     11: CA302: Require MFA for guests & external users
@@ -191,7 +191,7 @@ $controls.BuiltInControls = "MFA"
 New-AzureADMSConditionalAccessPolicy -DisplayName "CA202: Securing security info registration" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 ########################################################
-## CA203: Require MAM or MDM for iOS & Android (Office 365)
+## CA203: Require MAM or MDM for mobile device access (Office 365)
 ## This policy enforces either MAM or MDM for iOS and Android devices
 ## NOTES: 
 ##     1. End-user must either use approved Microsoft apps (e.g. Outlook, Edge) OR enroll their device using Company Portal (in order to use other apps)
@@ -211,7 +211,7 @@ $controls = New-Object -TypeName Microsoft.Open.MSGraph.Model.ConditionalAccessG
 $controls._Operator = "OR"
 $controls.BuiltInControls = @('CompliantDevice', 'ApprovedApplication', 'CompliantApplication')
 
-New-AzureADMSConditionalAccessPolicy -DisplayName "CA203: Require MAM or MDM for iOS & Android (Office 365)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
+New-AzureADMSConditionalAccessPolicy -DisplayName "CA203: Require MAM or MDM for mobile device access (Office 365)" -State "Disabled" -Conditions $conditions -GrantControls $controls 
 
 
 ########################################################
