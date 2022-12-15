@@ -6167,7 +6167,7 @@ Write-Host
 }
 
 ####################################################
-
+<#
 ## Import desktop apps and Edge (Chromium)
 Write-Host "Corporate applications such as Outlook, Word, and Excel can be deployed automatically to enrolled devices."
 Write-Host
@@ -6191,6 +6191,7 @@ Write-Host
 Write-Host "Chromium Edge and Office apps will not be imported" -ForegroundColor Red
 Write-Host 
 }
+#>
 
 ####################################################
 
