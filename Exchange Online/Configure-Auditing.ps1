@@ -35,7 +35,7 @@ Write-Host
 $Answer = Read-Host "Do you want to set the audit log age limit and enable all auditing actions on all mailboxes? Type Y or N and press Enter to continue"
 if ($Answer -eq 'y' -or $Answer -eq 'yes') {
         Write-Host 
-        $AuditLogAgeLimit = Read-Host "Enter the new audit log age limit in days; recommended value 180 or greater (or press Enter to continue without making changes)"
+        $AuditLogAgeLimit = Read-Host "Enter the new audit log age limit in days (or press Enter to continue without making changes)"
         if ($AuditLogAgeLimit -eq $null -or $AuditLogAgeLimit -eq "" -or $AuditLogAgeLimit -eq 'n' -or $AuditLogAgeLimit -eq 'no'){
             Write-Host
             Write-Host -ForegroundColor $AssessmentColor "The audit log age limit and audit actions will not be modified"
