@@ -7,10 +7,10 @@ Connect to Exchange Online via PowerShell using MFA:
 https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-exchange-online-powershell/mfa-connect-to-exchange-online-powershell?view=exchange-ps
 
 .NOTES
-    FileName:    Setup-OME.ps1
+    FileName:    Customize-MessageEncryption.ps1
     Author:      Alex Fields, ITProMentor.com
     Created:     April 2021
-	Revised:     April 2021
+	Revised:     February 2023
 
     
 #>
