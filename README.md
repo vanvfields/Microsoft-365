@@ -14,7 +14,7 @@ Legacy; see ThreatDefenseScripts.zip for latest and greatest versions of these. 
 These scripts I have found to to be useful during Incident Response. 
 
 ## mggraph-samples
-These scripts utilize the newer Graph SDK PowerShell module, and replace the scripts I had previously kept under Azure AD, Intune, Windows 10, etc.
+These scripts utilize the newer Graph SDK PowerShell module, and replace the scripts I had previously maintained in this repo.
 
 ## Setup Intune
 Legacy; no longer updating this directory. 
