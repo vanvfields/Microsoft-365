@@ -10,11 +10,15 @@ Legacy; no longer updating this directory.
 ## Exchange Online
 Legacy; see ThreatDefenseScripts.zip for latest and greatest versions of these. <a href="https://www.itpromentor.com/email-security-checklist/"> <b><u>The Office 365 Email Security Checklist</b></u></a>: For anyone with an Exchange Online subscription for Email hosted in Office 365, start here. Scripts from this guide are located in the Exchange Online folder. 
 
+## Incident Response
+These scripts I have found to to be useful during Incident Response. 
+
+## mggraph-samples
+These scripts utilize the newer Graph SDK PowerShell module, and replace the scripts I had previously kept under Azure AD, Intune, Windows 10, etc.
+
 ## Setup Intune
 Legacy; no longer updating this directory. 
 
 ## Windows 10
 Legacy; no longer updating this directory. 
 
-## Incident Response
-These scripts I have found to to be useful during Incident Response. 
