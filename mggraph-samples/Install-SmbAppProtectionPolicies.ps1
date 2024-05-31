@@ -112,7 +112,7 @@ function New-AppProtectionPolicy {
 
 #region json
 
-# JSON Data - Sample Android APP policy 
+# JSON Data - Android APP policy 
 $json_Android = @"
 
 {
@@ -332,7 +332,7 @@ $json_Android = @"
 }
 "@
 
-# JSON Data - Sample iOS APP policy 
+# JSON Data - iOS APP policy 
 $json_iOS = @"
 {
     "@odata.context":  "https://graph.microsoft.com/beta/$metadata#deviceAppManagement/iosManagedAppProtections(apps())/$entity",

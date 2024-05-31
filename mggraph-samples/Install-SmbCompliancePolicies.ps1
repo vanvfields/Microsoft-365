@@ -164,7 +164,7 @@ $smbDefender = @'
 {
     "@odata.type":  "#microsoft.graph.windows10CompliancePolicy",
     "description":  "Defender for Business compliance settings to apply after 24 hour grace period\n",
-    "displayName":  "[SMB] Windows - Defender compliance",
+    "displayName":  "[SMB] Windows - Defender for Business compliance",
     "deviceThreatProtectionEnabled":  true,
     "deviceThreatProtectionRequiredSecurityLevel":  "low",
     "scheduledActionsForRule":  [

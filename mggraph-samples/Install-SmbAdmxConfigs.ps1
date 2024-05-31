@@ -1,9 +1,9 @@
 ﻿<##################################################################################################
 #
 .SYNOPSIS
-This script installs ADMX configuration profiles from JSON:
-1. [SMB] Windows - OneDrive for Business client
-2. [SMB] Windows - Edge browser baseline
+This script installs ADMX configuration profiles:
+01. [SMB] Windows - OneDrive for Business client
+02. [SMB] Windows - Edge browser baseline
 
 .NOTES
     FileName:    Install-SmbAdmxConfigs.ps1
@@ -138,11 +138,13 @@ function Get-TenantID {
     }
 }
 
+#Retrieve the tenant ID
+$myTenantID = Get-TenantID
+
 #endregion
 
 #region json
 
-# Define the JSON data
 $smbEdgeBrowser = @"
 [
     {
@@ -233,9 +235,6 @@ $smbOdfbClient = @"
 #endregion
 
 #region create policies
-
-#Retrieve the tenant ID
-$myTenantID = Get-TenantID
 
 #Create the OneDrive profile
 $profileId = New-GroupPolicyConfiguration -DisplayName "[SMB] Windows - OneDrive client" -Description "Settings for the OneDrive client."
