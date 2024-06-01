@@ -60,7 +60,7 @@ function Connect-ToGraph {
 }
 
 #Define the required scopes
-$RequiredScopes = @("Policy.ReadWrite.ConditionalAccess", "Directory.ReadWrite.All")
+$RequiredScopes = @("Policy.ReadWrite.ConditionalAccess", "Policy.Read.All", "Application.Read.All")
 
 #Define the required modules
 $RequiredModules = @("Microsoft.Graph.Authentication", "Microsoft.Graph.Identity.SignIns")

@@ -84,7 +84,7 @@ function Connect-ToGraph {
 }
 
 #Define the required scopes
-$RequiredScopes = @("Policy.ReadWrite.ConditionalAccess", "DeviceManagementApps.ReadWrite.All", "DeviceManagementConfiguration.ReadWrite.All", "Directory.Read.All")
+$RequiredScopes = @("Policy.ReadWrite.ConditionalAccess", "DeviceManagementApps.ReadWrite.All", "DeviceManagementConfiguration.ReadWrite.All", "Directory.Read.All", "Policy.Read.All", "Application.Read.All")
 
 #Define the required modules
 $RequiredModules = @("Microsoft.Graph.Authentication", "Microsoft.Graph.Identity.SignIns", "Microsoft.Graph.Devices.CorporateManagement", "Microsoft.Graph.DeviceManagement")
